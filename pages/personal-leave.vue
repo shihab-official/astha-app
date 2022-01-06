@@ -6,9 +6,9 @@
 
 <script lang="ts">
 export default {
-  name: 'Personal-Leave',
+  name: 'PersonalLeave',
   mounted: () => {
-      document.title="Personal Leave";
+    document.title="Personal Leave";
   }
 }
 </script>

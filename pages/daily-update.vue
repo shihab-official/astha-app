@@ -6,7 +6,7 @@
 export default {
   name: 'Daily-Update',
   mounted: () => {
-      document.title="Daily Task Update";
+    document.title="Daily Task Update";
   }
 }
 </script>
