@@ -1,4 +1,7 @@
-export default {
+module.exports = {
+  dev: process.env.NODE_ENV !== 'production',
+  telemetry: false,
+
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
 
