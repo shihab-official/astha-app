@@ -1,6 +1,6 @@
 <template>
   <a-layout id="components-layout-top" class="layout">
-    <a-layout-header>
+    <a-layout-header type="flex">
       <NuxtLink class="logo" to="/">
         <NuxtLogo style="width: 50px" />
       </NuxtLink>
@@ -44,9 +44,10 @@
 <script lang="ts">
 export default {
   computed: {
-      copyrightYear: () => {
-          return (new Date()).getFullYear()
-      },
+    copyrightYear: () => {
+        // return new Date().getFullYear()
+      return new Date().getFullYear()
+    },
   },
-};
+}
 </script>

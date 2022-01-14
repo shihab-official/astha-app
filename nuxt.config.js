@@ -27,6 +27,14 @@ module.exports = {
     'ant-design-vue/dist/antd.css'
   ],
 
+  // tailwindcss: {
+  //   cssPath: '~/assets/css/tailwind.css',
+  //   configPath: 'tailwind.config.js',
+  //   exposeConfig: false,
+  //   config: {},
+  //   injectPosition: 0,
+  // },
+
   router: {
     middleware: ['auth']
   },
@@ -43,6 +51,7 @@ module.exports = {
   buildModules: [
     // https://go.nuxtjs.dev/typescript
     '@nuxt/typescript-build',
+    '@nuxtjs/tailwindcss'
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
