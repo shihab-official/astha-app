@@ -74,5 +74,6 @@ module.exports = {
     analyze: {
         analyzerMode: 'static'
     }
-  }
+  },
+  serverMiddleware: ['~/server-middleware/logger']
 }
