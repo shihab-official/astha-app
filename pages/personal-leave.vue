@@ -7,6 +7,7 @@
 <script lang="ts">
 export default {
   name: 'PersonalLeave',
+  // auth: false,
   mounted: () => {
     document.title="Personal Leave";
   }

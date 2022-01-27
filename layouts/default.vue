@@ -7,7 +7,6 @@
       <a-menu
         theme="dark"
         mode="horizontal"
-        :default-selected-keys="['2']"
         :style="{ lineHeight: '64px' }"
       >
         <a-menu-item key="1">
