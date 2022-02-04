@@ -75,7 +75,7 @@ module.exports = {
         clientId: '404813405788-t9nfhnn1n8lqo8d438rk7je6fjsdajlu.apps.googleusercontent.com',
         codeChallengeMethod: '',
         scope: ['profile', 'email'],
-        responseType: 'code',
+        responseType: 'token'
       },
     },
   },

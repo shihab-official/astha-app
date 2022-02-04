@@ -17,7 +17,7 @@
           <NuxtLink to="./personal-leave">Personal Leave</NuxtLink>
         </a-menu-item>
         <a-menu-item key="x">
-          <NuxtLink to="./logout">Logout</NuxtLink>
+          <span @click="$auth.logout('google')">Logout</span>
         </a-menu-item>
       </a-menu>
     </a-layout-header>
