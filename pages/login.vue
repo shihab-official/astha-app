@@ -1,16 +1,32 @@
 <template>
-  <div class="text-center">
-    <h4 v-if="$auth.loggedIn">Authenticated successfully. Redirecting shortly...</h4>
-    <h4 v-else>Authentication failed. Please try again.</h4>
+  <div>
+    <h3>Welcome to APP-DIRECTORY.</h3>
+    <button v-if="$auth.loggedIn" @click="$auth.logout('google')">
+      Logout
+    </button>
+    <button v-else @click="login()">Login with Google</button>
+
+    <br />
+    <br />
+    <test @click="log($event)">Test Button</test>
   </div>
 </template>
 
 <script>
 export default {
   mounted() {
-    if (this.$auth.loggedIn) {
-      this.$router.push('/');
-    }
-  }
+    // if (this.$auth.loggedIn) {
+    //   this.$router.push('/');
+    // }
+    console.log(this.$auth);
+  },
+  methods: {
+    login() {
+      this.$auth.loginWith('google');
+    },
+    log(event) {
+      console.log(event);
+    },
+  },
 };
 </script>

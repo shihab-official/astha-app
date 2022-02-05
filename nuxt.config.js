@@ -21,7 +21,10 @@ module.exports = {
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: ['ant-design-vue/dist/antd.css'],
+  css: [
+    'ant-design-vue/dist/antd.css',
+    '@/assets/css/global.css'
+  ],
 
   // tailwindcss: {
   //   cssPath: '~/assets/css/tailwind.css',
@@ -36,7 +39,9 @@ module.exports = {
   },
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: ['@/plugins/antd-ui'],
+  plugins: [
+    '@/plugins/antd-ui'
+  ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -78,7 +83,7 @@ module.exports = {
         clientId: '404813405788-t9nfhnn1n8lqo8d438rk7je6fjsdajlu.apps.googleusercontent.com',
         codeChallengeMethod: '',
         scope: ['profile', 'email'],
-        responseType: 'token'
+        responseType: 'token id_token'
       },
     },
   },
