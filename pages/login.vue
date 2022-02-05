@@ -15,6 +15,7 @@
 <script>
 export default {
   mounted() {
+    document.title = 'Login';
     // if (this.$auth.loggedIn) {
     //   this.$router.push('/');
     // }

@@ -17,7 +17,7 @@
           <NuxtLink to="./personal-leave">Personal Leave</NuxtLink>
         </a-menu-item>
         <a-menu-item key="x">
-          <span @click="$auth.logout('google')">Logout</span>
+          <span @click="logout()">Logout</span>
         </a-menu-item>
       </a-menu>
     </a-layout-header>
@@ -46,5 +46,10 @@ export default {
       return new Date().getFullYear()
     },
   },
+  methods: {
+    logout() {
+      this.$auth.logout('google').then(() => {this.$router.push('/login')})
+    }
+  }
 }
 </script>
