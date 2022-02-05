@@ -1,3 +1,13 @@
 <template>
-    <button><slot/></button>
+  <button @click="click($event)"><slot /></button>
 </template>
+
+<script>
+export default {
+  methods: {
+    click(event) {
+      this.$emit('click', event);
+    },
+  },
+};
+</script>

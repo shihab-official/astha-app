@@ -53,7 +53,10 @@ module.exports = {
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
     '@nuxtjs/auth-next',
+    '@nuxt/content'
   ],
+
+  content: {},
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
