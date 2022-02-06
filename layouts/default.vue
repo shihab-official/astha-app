@@ -11,7 +11,7 @@
         :style="{ lineHeight: '64px' }"
       >
         <a-menu-item key="1">
-          <NuxtLink to="./daily-update">Daily Task Update</NuxtLink>
+          <NuxtLink to="./work-update">Daily Task Update</NuxtLink>
         </a-menu-item>
         <a-menu-item key="2">
           <NuxtLink to="./personal-leave">Personal Leave</NuxtLink>
