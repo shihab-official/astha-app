@@ -39,7 +39,7 @@
 }
 </style>
 
-<script lang="ts">
+<script>
 export default {
   computed: {
     copyrightYear: () => {
