@@ -1,2 +1,0 @@
-- managing team
-- studying various stuff specially vue + nuxt

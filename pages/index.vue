@@ -19,6 +19,7 @@ import Vue from 'vue';
 
 export default Vue.extend({
   name: 'Home',
+  middleware: ['create-directory'],
   mounted: function () {
     document.title = 'App Directory';
     console.log(this.$auth);
