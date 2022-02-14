@@ -1,6 +1,6 @@
 const adminEmails = [
   'hasnaeen@asthait.com',
-  's.bhuiyan@asthait.com'
+  // 's.bhuiyan@asthait.com'
 ];
 
 export default function ({ $auth }) {

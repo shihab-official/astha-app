@@ -3,7 +3,7 @@ const { initStorage } = require('./utilities/storage');
 const { unicode, color } = require('./utilities/style-log');
 
 app.post('/data-store', (req, res) => {
-  initStorage(`/content/work-update`, req.body);
+  initStorage(req.body);
   res.json(color.green(`${unicode.check}`) + ' Storage initialized.');
 });
 

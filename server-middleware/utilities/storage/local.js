@@ -2,9 +2,9 @@
 const fs = require('fs');
 const path = require('path');
 
-const initStorage = (dir, user) => {
+const initStorage = (user) => {
   try {
-    const fullPath = path.resolve(`${path.resolve('.')}/${dir}/${user.email}`);
+    const fullPath = path.resolve(`${path.resolve('.')}/content/${user.email}`);
     if (!fs.existsSync(fullPath)) {
       fs.mkdirSync(fullPath, {
         recursive: true,
@@ -19,4 +19,7 @@ const initStorage = (dir, user) => {
     console.error(err);
   }
 };
+
+// const getUser
+
 module.exports = { initStorage };
