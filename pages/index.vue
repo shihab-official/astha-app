@@ -5,10 +5,10 @@
     Please select your purpose of visit.
     <ul>
       <li>
-        <nuxt-link to="/work-update">Log work update</nuxt-link>
+        <nuxt-link to="/work-update">Work update</nuxt-link>
       </li>
       <li>
-        <nuxt-link to="/personal-leave">Apply for a leave</nuxt-link>
+        <nuxt-link to="/personal-leave">Personal leave</nuxt-link>
       </li>
     </ul>
   </div>
@@ -19,10 +19,9 @@ import Vue from 'vue';
 
 export default Vue.extend({
   name: 'Home',
-  middleware: ['data-store'],
   mounted: function () {
     document.title = 'App Directory';
-    console.log(this.$auth);
+    console.log('AUTH', this.$auth);
   },
 });
 </script>

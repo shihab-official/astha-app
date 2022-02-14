@@ -2,11 +2,17 @@
 const fs = require('fs');
 const path = require('path');
 
-const initStorage = (dir) => {
+const initStorage = (dir, user) => {
   try {
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(path.resolve(`${path.resolve('.')}/${dir}`), {
+    const fullPath = path.resolve(`${path.resolve('.')}/${dir}/${user.email}`);
+    if (!fs.existsSync(fullPath)) {
+      fs.mkdirSync(fullPath, {
         recursive: true,
+      });
+    }
+    if (!fs.existsSync(`${fullPath}/user.json`)) {
+      fs.writeFile(`${fullPath}/user.json`, JSON.stringify(user), (err) => {
+        console.error(err);
       });
     }
   } catch (err) {
