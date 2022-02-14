@@ -1,17 +1,17 @@
 // import * as fs from 'fs';
 const fs = require('fs');
 const path = require('path');
+const root = path.resolve(`${path.resolve('.')}/content`);
 
 const initStorage = (user) => {
   try {
-    const fullPath = path.resolve(`${path.resolve('.')}/content/${user.email}`);
-    if (!fs.existsSync(fullPath)) {
-      fs.mkdirSync(fullPath, {
+    if (!fs.existsSync(`${root}/${user.email}`)) {
+      fs.mkdirSync(`${root}/${user.email}`, {
         recursive: true,
       });
     }
-    if (!fs.existsSync(`${fullPath}/user.json`)) {
-      fs.writeFile(`${fullPath}/user.json`, JSON.stringify(user), (err) => {
+    if (!fs.existsSync(`${root}/${user.email}.json`)) {
+      fs.writeFile(`${root}/${user.email}.json`, JSON.stringify(user), (err) => {
         console.error(err);
       });
     }
@@ -20,6 +20,25 @@ const initStorage = (user) => {
   }
 };
 
-// const getUser
+const getUsers = () => {
+  try {
+    return fs.readdirSync(root, { withFileTypes: true })
+      .filter((file) => !file.isDirectory())
+      .sort((a, b) => a<b)
+      .map((file) => {
+        console.log(`${root}/${file.name}`);
+        try {
+          return JSON.parse(fs.readFileSync(`${root}\\${file.name}`, {encoding:'utf8', flag:'r'}));
+        } catch (error) {
+          console.error(error);
+          return {};
+        }
+      });
+  } catch (err) {
+    console.error(err);
+  }
+};
 
-module.exports = { initStorage };
+const getUser = (email) => {};
+
+module.exports = { initStorage, getUsers, getUser };

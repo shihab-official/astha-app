@@ -14,14 +14,12 @@
   </div>
 </template>
 
-<script lang="ts">
-import Vue from 'vue';
-
-export default Vue.extend({
+<script>
+export default {
   name: 'Home',
   mounted: function () {
     document.title = 'App Directory';
     console.log('AUTH', this.$auth);
   },
-});
+};
 </script>

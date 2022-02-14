@@ -1,7 +1,7 @@
 export default function ({ $auth, $axios }) {
   if ($auth.loggedIn) {
     $axios
-      .post(`/data-store`, {
+      .post(`/api/data-store`, {
         name: $auth.user.name,
         email: $auth.user.email
       })
