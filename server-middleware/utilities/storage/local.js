@@ -63,13 +63,11 @@ const getLog = (email) => {
 };
 
 const setLog = (logData) => {
-  console.log(logData);
-  // try {
-  //   const dir = `${root}\\${email}`;
-  //   fs.writeFileSync(`${root}/${user.email}.json`, JSON.stringify(user));
-  // } catch (err) {
-  //   console.error(err);
-  // }
+  try {
+    fs.writeFileSync(`${root}\\${logData.email}\\${logData.date}`, logData.log, {encoding:'utf8', flag:'a+'});
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 module.exports = { initStorage, getUsers, getUser, getLog, setLog };

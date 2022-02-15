@@ -37,11 +37,14 @@ export default {
     submit: function () {
       this.$axios
         .post(`/api/log`, {
+          email: this.$auth.user.email,
           date: this.date?.format('DD-MMM-YYYY'),
           log: this.log,
         })
         .then((res) => {
-          console.log(res.data);
+          if(res.status == 200) {
+            this.$router.push(`/work-update/${this.$auth.user.email}`);
+          }
         })
         .catch((error) => {
           // console.error(error);
