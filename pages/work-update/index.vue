@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import { ADMIN_EMAILS } from '~/constants';
 export default {
   name: 'Work-Update',
   middleware({redirect, $auth}) {
@@ -35,7 +36,11 @@ export default {
     this.$axios
       .get(`/api/users`)
       .then((res) => {
-        this.users = res.data;
+        this.users = res.data.filter(user => {
+          if (!user.admin) {
+            return user;
+          }
+        });
       })
       .catch((error) => {
         // console.error(error);

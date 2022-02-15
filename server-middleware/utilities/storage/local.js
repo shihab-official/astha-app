@@ -26,7 +26,6 @@ const getUsers = () => {
       .filter((file) => !file.isDirectory())
       .sort((a, b) => a<b)
       .map((file) => {
-        console.log(`${root}/${file.name}`);
         try {
           return JSON.parse(fs.readFileSync(`${root}\\${file.name}`, {encoding:'utf8', flag:'r'}));
         } catch (error) {
