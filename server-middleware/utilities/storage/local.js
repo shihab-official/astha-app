@@ -41,4 +41,27 @@ const getUsers = () => {
 
 const getUser = (email) => {};
 
-module.exports = { initStorage, getUsers, getUser };
+const getLog = (email) => {
+  try {
+    const dir = `${root}\\${email}`;
+    return fs.readdirSync(dir, { withFileTypes: true })
+      .filter((file) => !file.isDirectory())
+      // .sort((a, b) => a<b)
+      .map((file) => {
+        try {
+          return {
+            date: file.name,
+            content: fs.readFileSync(`${dir}\\${file.name}`, {encoding:'utf8', flag:'r'})
+          };
+        } catch (error) {
+          console.error(error);
+          return {};
+        }
+      });
+  } catch (err) {
+    console.error(err);
+  }
+  // return {folder: email};
+};
+
+module.exports = { initStorage, getUsers, getUser, getLog };

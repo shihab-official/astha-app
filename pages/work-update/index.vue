@@ -20,6 +20,11 @@
 <script>
 export default {
   name: 'Work-Update',
+  middleware({redirect, $auth}) {
+    if(!$auth.user.isAdmin){
+     return redirect(`/work-update/${$auth.user.email}`);
+    }
+  },
   data() {
     return {
       users: [],
