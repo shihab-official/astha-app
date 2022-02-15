@@ -6,24 +6,26 @@
         <a-date-picker @change="onChange" :value="date" :format="dateFormat" />
       </a-form-item>
       <a-form-item label="Log">
-        <a-textarea placeholder="Update log" :rows="4" />
+        <a-textarea placeholder="Update log" v-model="log" :rows="4" />
       </a-form-item>
       <a-form-item>
-        <a-button type="primary"> Submit </a-button>
+        <a-button type="primary" @click="submit()"> Submit </a-button>
       </a-form-item>
     </a-form>
   </div>
 </template>
 
 <script>
+import moment from 'moment';
+
 export default {
   name: 'Log-Work-Update',
   data() {
     return {
       dateFormat: 'DD-MMM-YYYY',
-      date: null,
-      log: ''
-    }
+      date: moment(new Date()),
+      log: '',
+    };
   },
   mounted: () => {
     document.title = 'Log Work Update';
@@ -31,8 +33,20 @@ export default {
   methods: {
     onChange: function (m) {
       this.date = m;
-      console.log(this.date?.format('DD-MMM-YYYY'));
-    }
-  }
+    },
+    submit: function () {
+      this.$axios
+        .post(`/api/log`, {
+          date: this.date?.format('DD-MMM-YYYY'),
+          log: this.log,
+        })
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((error) => {
+          // console.error(error);
+        });
+    },
+  },
 };
 </script>

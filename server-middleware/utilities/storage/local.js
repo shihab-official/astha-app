@@ -24,7 +24,7 @@ const getUsers = () => {
   try {
     return fs.readdirSync(root, { withFileTypes: true })
       .filter((file) => !file.isDirectory())
-      .sort((a, b) => a<b)
+      .sort((a, b) => a - b)
       .map((file) => {
         try {
           return JSON.parse(fs.readFileSync(`${root}\\${file.name}`, {encoding:'utf8', flag:'r'}));
@@ -45,7 +45,7 @@ const getLog = (email) => {
     const dir = `${root}\\${email}`;
     return fs.readdirSync(dir, { withFileTypes: true })
       .filter((file) => !file.isDirectory())
-      // .sort((a, b) => a<b)
+      .sort((a, b) => a - b)
       .map((file) => {
         try {
           return {
@@ -60,7 +60,16 @@ const getLog = (email) => {
   } catch (err) {
     console.error(err);
   }
-  // return {folder: email};
 };
 
-module.exports = { initStorage, getUsers, getUser, getLog };
+const setLog = (logData) => {
+  console.log(logData);
+  // try {
+  //   const dir = `${root}\\${email}`;
+  //   fs.writeFileSync(`${root}/${user.email}.json`, JSON.stringify(user));
+  // } catch (err) {
+  //   console.error(err);
+  // }
+};
+
+module.exports = { initStorage, getUsers, getUser, getLog, setLog };

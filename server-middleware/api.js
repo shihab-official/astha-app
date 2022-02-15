@@ -1,6 +1,6 @@
 const app = require('./express');
 const { unicode, color } = require('./utilities/style-log');
-const { initStorage, getUsers, getLog } = require('./utilities/storage');
+const { initStorage, getUsers, getLog, setLog } = require('./utilities/storage');
 
 app.post('/api/data-store', (req, res) => {
   initStorage(req.body);
@@ -13,6 +13,10 @@ app.get('/api/users', (req, res) => {
 
 app.get('/api/log', (req, res) => {
   res.json(getLog(req.query.email));
+});
+
+app.post('/api/log', (req, res) => {
+  res.json(setLog(req.body));
 });
 
 module.exports = app;
