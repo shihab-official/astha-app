@@ -1,4 +1,57 @@
+:root {
+  --scrollbar-track-color: #f1f1f1;
+  --scrollbar-thumb-color: #d3d3d3;
+  --table-border-color: #eaeaea;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb-color);
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--scrollbar-track-color);
+}
+
+* {
+  outline: none !important;
+  scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
+  scrollbar-width: thin;
+}
+
 body {
   font-size: 16px;
   line-height: 1.5;
+}
+
+.table-wrapper {
+  width: 100%;
+  white-space: nowrap;
+  overflow: auto;
+  max-height: 800px;
+  border: 1px solid var(--table-border-color);
+}
+
+table {
+  border-spacing: 0px;
+  border-collapse: separate;
+  min-width: 100%;
+}
+
+table th,
+table td {
+  background-color: #fff;
+  border: solid 1px var(--table-border-color);
+  border-top-width: 0;
+  border-left-width: 0;
+  padding: 6px 10px;
+}
+
+.position-sticky {
+  position: sticky;
+  z-index: 1;
 }
