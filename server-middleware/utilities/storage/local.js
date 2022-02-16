@@ -1,6 +1,7 @@
 // import * as fs from 'fs';
 const fs = require('fs');
 const path = require('path');
+const moment = require('moment');
 const root = path.resolve(`${path.resolve('.')}/content`);
 
 const initStorage = (user) => {
@@ -45,11 +46,12 @@ const getLog = (email) => {
     const dir = `${root}\\${email}`;
     return fs.readdirSync(dir, { withFileTypes: true })
       .filter((file) => !file.isDirectory())
-      .sort((a, b) => a - b)
+      // .sort((a, b) => b - a)
+      .sort().reverse()
       .map((file) => {
         try {
           return {
-            date: file.name,
+            date: moment(file.name, 'YYYYMMDD').format('DD-MMM-YYYY'),
             content: fs.readFileSync(`${dir}\\${file.name}`, {encoding:'utf8', flag:'r'})
           };
         } catch (error) {

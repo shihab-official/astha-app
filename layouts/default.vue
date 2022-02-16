@@ -11,10 +11,10 @@
         :style="{ lineHeight: '64px' }"
       >
         <a-menu-item key="1">
-          <NuxtLink to="/work-update">Daily Task Update</NuxtLink>
+          <NuxtLink to="/work-update" nuxt-link-active nuxt-link-exact-active="false">Daily Task Update</NuxtLink>
         </a-menu-item>
         <a-menu-item key="2">
-          <NuxtLink to="/personal-leave">Personal Leave</NuxtLink>
+          <NuxtLink to="/personal-leave" nuxt-link-active>Personal Leave</NuxtLink>
         </a-menu-item>
         <a-menu-item key="x">
           <span @click="logout()">Logout</span>
@@ -27,7 +27,7 @@
       </div>
     </a-layout-content>
     <a-layout-footer style="text-align: center" :style="{backgroundColor:'#e0e4ea'}">
-      &copy; {{ copyrightYear }}; Astha IT Ventures
+      &copy; {{ copyrightYear }} Astha IT Ventures
     </a-layout-footer>
   </a-layout>
 </template>

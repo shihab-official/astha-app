@@ -25,6 +25,11 @@
 
 <script>
 export default {
+  middleware({params, $auth, redirect}) {
+    if(!$auth.user.isAdmin && params.email != $auth.user.email) {
+     return redirect(`/work-update/${$auth.user.email}`);
+    }
+  },
   async asyncData({ params, redirect, $axios }) {
     const content = await $axios
       .get(`/api/log`, {
@@ -38,7 +43,7 @@ export default {
       });
     return {
       // logs: content.map(l => ({...l, content: l.content.replace(/(?:\r\n|\r|\n)/g, '<br>')}))
-      logs: content,
+      logs: content
     };
   },
   mounted: () => {

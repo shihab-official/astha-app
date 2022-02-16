@@ -22,10 +22,14 @@ export default {
   name: 'Log-Work-Update',
   data() {
     return {
-      dateFormat: 'DD-MMM-YYYY',
       date: moment(new Date()),
       log: '',
     };
+  },
+  computed: {
+    dateFormat: function() {
+      return 'DD-MMM-YYYY';
+    }
   },
   mounted: () => {
     document.title = 'Log Work Update';
@@ -38,7 +42,7 @@ export default {
       this.$axios
         .post(`/api/log`, {
           email: this.$auth.user.email,
-          date: this.date?.format('DD-MMM-YYYY'),
+          date: this.date?.format('YYYYMMDD'),
           log: this.log,
         })
         .then((res) => {
