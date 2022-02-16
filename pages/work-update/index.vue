@@ -5,6 +5,7 @@
       <a-range-picker
         class="range-picker"
         :disabled-date="disabledDate"
+        :allowClear="false"
         :value="dateRange"
         :format="dateFormat"
         @change="onChange"
