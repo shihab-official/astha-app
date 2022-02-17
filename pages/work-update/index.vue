@@ -17,12 +17,9 @@
         <thead>
           <tr>
             <th class="position-sticky left-0"></th>
-            <template v-for="(i, day) in daysInRange">
-              <th
-                :key="day"
-                :class="`${weekend(addDays(day)) ? 'weekend' : ''}`"
-              >
-                {{ addDays(day) }}
+            <template v-for="date in datesInRange">
+              <th :key="date.code" :class="`${date.weekend ? 'weekend' : ''}`">
+                {{ date.formatted }}
               </th>
             </template>
           </tr>
@@ -34,13 +31,11 @@
                 user.name
               }}</NuxtLink>
             </td>
-            <template v-for="(i, day) in daysInRange">
+            <template v-for="date in datesInRange">
               <td
-                :key="day"
+                :key="date.code"
                 class="log-content"
-                :class="`${addDays(day)} ${
-                  weekend(addDays(day)) ? 'weekend' : ''
-                }`"
+                :class="`${date.formatted} ${date.weekend ? 'weekend' : ''}`"
               ></td>
             </template>
           </tr>
@@ -80,8 +75,7 @@ td {
 }
 td.weekend:before {
   content: 'Weekend';
-  font-size: 84%;
-  font-weight: 500;
+  font-size: 75%;
   letter-spacing: 0.5px;
 }
 </style>
@@ -109,8 +103,20 @@ export default {
     dateFormat: function () {
       return 'DD-MMM-YYYY';
     },
-    daysInRange: function () {
-      return this.dateRange[1].diff(this.dateRange[0], 'days') + 1;
+    datesInRange: function () {
+      const dates = [],
+        diff = this.dateRange[1].diff(this.dateRange[0], 'days');
+
+      for (let n = 0; n <= diff; n++) {
+        const date = n === 0 ? this.dateRange[0] : (n === diff ? this.dateRange[1] : this.dateRange[0].clone().add(n, 'day'));
+        dates.push({
+          moment: date,
+          formatted: date.format(this.dateFormat),
+          code: date.format('YYYYMMDD'),
+          weekend: date.day() > 4,
+        });
+      }
+      return dates;
     },
   },
   mounted: function () {
@@ -132,12 +138,6 @@ export default {
     moment,
     disabledDate: function (current) {
       return current && current.day() > 4;
-    },
-    addDays: function (n) {
-      return this.dateRange[0].clone().add(n, 'day').format(this.dateFormat);
-    },
-    weekend: function (date) {
-      return moment(date).day() > 4;
     },
     onChange: function (range) {
       this.dateRange = range;
