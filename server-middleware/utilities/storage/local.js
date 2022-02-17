@@ -12,9 +12,13 @@ const initStorage = (user) => {
       });
     }
     if (!fs.existsSync(`${root}/${user.email}.json`)) {
-      fs.writeFile(`${root}/${user.email}.json`, JSON.stringify(user), (err) => {
-        console.error(err);
-      });
+      fs.writeFile(
+        `${root}/${user.email}.json`,
+        JSON.stringify(user),
+        (err) => {
+          console.error(err);
+        }
+      );
     }
   } catch (err) {
     console.error(err);
@@ -23,12 +27,18 @@ const initStorage = (user) => {
 
 const getUsers = () => {
   try {
-    return fs.readdirSync(root, { withFileTypes: true })
+    return fs
+      .readdirSync(root, { withFileTypes: true })
       .filter((file) => !file.isDirectory())
       .sort((a, b) => a - b)
       .map((file) => {
         try {
-          return JSON.parse(fs.readFileSync(`${root}\\${file.name}`, {encoding:'utf8', flag:'r'}));
+          return JSON.parse(
+            fs.readFileSync(`${root}\\${file.name}`, {
+              encoding: 'utf8',
+              flag: 'r',
+            })
+          );
         } catch (error) {
           console.error(error);
           return {};
@@ -41,24 +51,57 @@ const getUsers = () => {
 
 const getUser = (email) => {};
 
-const getLog = (email) => {
+const readUserLog = (path) => {
+  let log = '';
+  if (fs.existsSync(path)) {
+    try {
+      log = fs.readFileSync(path, {
+        encoding: 'utf8',
+        flag: 'r',
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  return log;
+};
+
+const getLogsByDate = (dates) => {
+  const users = getUsers();
+  for (let user of users) {
+    user.log = {};
+    for (let date of dates) {
+      user.log[date] = readUserLog(`${root}/${user.email}/${date}`);
+    }
+  }
+  return users;
+};
+
+const getUserLogs = (email) => {
   try {
     const dir = `${root}\\${email}`;
-    return fs.readdirSync(dir, { withFileTypes: true })
-      .filter((file) => !file.isDirectory())
-      // .sort((a, b) => b - a)
-      .sort().reverse()
-      .map((file) => {
-        try {
-          return {
-            date: moment(file.name, 'YYYYMMDD').format('DD-MMM-YYYY'),
-            content: fs.readFileSync(`${dir}\\${file.name}`, {encoding:'utf8', flag:'r'})
-          };
-        } catch (error) {
-          console.error(error);
-          return {};
-        }
-      });
+    return (
+      fs
+        .readdirSync(dir, { withFileTypes: true })
+        .filter((file) => !file.isDirectory())
+        // .sort((a, b) => b - a)
+        .sort()
+        .reverse()
+        .map((file) => {
+          try {
+            return {
+              date: moment(file.name, 'YYYYMMDD').format('DD-MMM-YYYY'),
+              content: fs.readFileSync(`${dir}\\${file.name}`, {
+                encoding: 'utf8',
+                flag: 'r',
+              }),
+            };
+          } catch (error) {
+            console.error(error);
+            return {};
+          }
+        })
+    );
   } catch (err) {
     console.error(err);
   }
@@ -66,10 +109,21 @@ const getLog = (email) => {
 
 const setLog = (logData) => {
   try {
-    fs.writeFileSync(`${root}\\${logData.email}\\${logData.date}`, logData.log, {encoding:'utf8', flag:'a+'});
+    fs.writeFileSync(
+      `${root}\\${logData.email}\\${logData.date}`,
+      logData.log,
+      { encoding: 'utf8', flag: 'a+' }
+    );
   } catch (err) {
     console.error(err);
   }
 };
 
-module.exports = { initStorage, getUsers, getUser, getLog, setLog };
+module.exports = {
+  initStorage,
+  getUsers,
+  getUser,
+  getLogsByDate,
+  getUserLogs,
+  setLog,
+};

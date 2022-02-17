@@ -1,6 +1,6 @@
 const app = require('./express');
 const { unicode, color } = require('./utilities/style-log');
-const { initStorage, getUsers, getLog, setLog } = require('./utilities/storage');
+const { initStorage, getUsers, getLogsByDate, getUserLogs, setLog } = require('./utilities/storage');
 
 app.post('/api/data-store', (req, res) => {
   initStorage(req.body);
@@ -11,8 +11,12 @@ app.get('/api/users', (req, res) => {
   res.json(getUsers());
 });
 
+app.get('/api/logs', (req, res) => {
+  res.json(getLogsByDate(req.query.range));
+});
+
 app.get('/api/log', (req, res) => {
-  res.json(getLog(req.query.email));
+  res.json(getUserLogs(req.query.email));
 });
 
 app.post('/api/log', (req, res) => {

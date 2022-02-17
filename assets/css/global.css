@@ -28,6 +28,14 @@ body {
   line-height: 1.5;
 }
 
+a {
+  color: #7300dc;
+}
+
+a:hover {
+  color: #b175e7;
+}
+
 .table-wrapper {
   width: 100%;
   white-space: nowrap;
