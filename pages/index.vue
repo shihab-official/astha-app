@@ -12,13 +12,21 @@
       />
     </div>
     <hr />
-    <div class="table-wrapper" v-if="users.length > 0">
+    <div class="table-wrapper" ref="tableWrapper" v-if="users.length > 0">
       <table>
         <thead>
           <tr>
             <th class="position-sticky left-0"></th>
             <template v-for="date in datesInRange">
-              <th :key="date.code" :class="`${date.weekend ? 'weekend text-center text-gray-400 bg-gray-50' : ''}`">
+              <th
+                :key="date.code"
+                :ref="date.today ? 'today' : null"
+                :class="`${date.today ? 'today' : ''} ${
+                  date.weekend
+                    ? 'weekend text-center text-gray-400 bg-gray-50'
+                    : ''
+                }`"
+              >
                 {{ date.formatted }}
                 <a-tag
                   v-if="date.today && !date.weekend"
@@ -40,7 +48,15 @@
               <td
                 :key="date.code"
                 class="log-content"
-                :class="`${date.formatted} ${date.weekend ? 'weekend text-center align-middle text-gray-400 bg-gray-50' : ''} ${user.log[date.code] && user.log[date.code].type === 'leave' ? 'on-leave bg-red-50' : ''}`"
+                :class="`${date.formatted} ${
+                  date.weekend
+                    ? 'weekend text-center align-middle text-gray-400 bg-gray-50'
+                    : ''
+                } ${
+                  user.log[date.code] && user.log[date.code].type === 'leave'
+                    ? 'on-leave bg-red-50'
+                    : ''
+                }`"
               >
                 <pre v-if="user.log[date.code]">{{
                   user.log[date.code].content || user.log[date.code].reason
@@ -117,19 +133,19 @@ export default {
       return 'DD-MMM-YYYY';
     },
     datesInRange: function () {
-      return getDatesInRange(this.dateRange[0], this.dateRange[1], this.dateFormat);
-    },
+      return getDatesInRange(
+        this.dateRange[0],
+        this.dateRange[1],
+        this.dateFormat
+      );
+    }
   },
   mounted: function () {
     document.title = 'Work Update';
     this.showLogs();
   },
-  directives: {
-    nl2br: {
-      inserted(el) {
-        el.innerHTML = el.textContent.replace(/(?:\r\n|\r|\n)/g, '<br />');
-      },
-    },
+  updated: function () {
+    this.$refs.tableWrapper.scrollTo(this.$refs.today[0].offsetLeft - 200, 0);
   },
   methods: {
     moment,
@@ -145,7 +161,7 @@ export default {
         .get(`/api/logs`, {
           params: {
             range: this.datesInRange.map(function (date) {
-                return date.code;
+              return date.code;
             }),
           },
         })
