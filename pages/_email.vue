@@ -19,8 +19,8 @@
         <summary class="text-slate-700 hover:opacity-75 cursor-pointer pb-1" :class="logData.log.type === 'leave' ? 'text-red-500' : ''">
           {{ logData.date }}
         </summary>
-        <div class="text-sm rounded bg-orange-50 px-3.5 py-2.5 ml-3 drop-shadow-md">
-          <pre>{{ logData.log.content }}</pre>
+        <div class="text-sm rounded px-3.5 py-2.5 ml-3 drop-shadow-md" :class="logData.log.type === 'leave' ? 'bg-red-50' : 'bg-sky-50'">
+          <pre>{{ logData.log.content || logData.log.reason }}</pre>
         </div>
       </details>
     </div>

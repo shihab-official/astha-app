@@ -17,7 +17,7 @@
             <a href="http://www.taobao.com/">2nd menu item</a>
           </a-menu-item>
           <a-menu-divider /> -->
-          <a-menu-item key="x"><span @click="logout()">Logout</span></a-menu-item>
+          <a-menu-item key="x"><span @click="logout">Logout</span></a-menu-item>
         </a-menu>
       </a-dropdown>
     </a-layout-header>
@@ -51,12 +51,12 @@ export default {
     user: function() {
       return this.$auth.user;
     },
-    copyrightYear: () => {
+    copyrightYear: function() {
       return new Date().getFullYear();
     },
   },
   methods: {
-    logout() {
+    logout: function() {
       this.$auth.logout('google').then(() => {
         this.$router.push('/login');
       });

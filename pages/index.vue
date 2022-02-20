@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="header flex justify-between">
-      <h1 class="m-0"> Summary </h1>
+      <h1 class="m-0">Summary</h1>
       <a-range-picker
         class="range-picker"
         :disabled-date="disabledDate"
@@ -18,7 +18,7 @@
           <tr>
             <th class="position-sticky left-0"></th>
             <template v-for="date in datesInRange">
-              <th :key="date.code" :class="`${date.weekend ? 'weekend' : ''}`">
+              <th :key="date.code" :class="`${date.weekend ? 'weekend text-center text-gray-400 bg-gray-50' : ''}`">
                 {{ date.formatted }}
                 <a-tag
                   v-if="date.today && !date.weekend"
@@ -34,17 +34,17 @@
         <tbody>
           <tr v-for="user in users" :key="user.email">
             <td class="position-sticky left-0">
-              <NuxtLink :to="`/${user.email}`">{{
-                user.name
-              }}</NuxtLink>
+              <NuxtLink :to="`/${user.email}`">{{ user.name }}</NuxtLink>
             </td>
             <template v-for="date in datesInRange">
               <td
                 :key="date.code"
                 class="log-content"
-                :class="`${date.formatted} ${date.weekend ? 'weekend' : ''}`"
+                :class="`${date.formatted} ${date.weekend ? 'weekend text-center align-middle text-gray-400 bg-gray-50' : ''} ${user.log[date.code] && user.log[date.code].type === 'leave' ? 'on-leave bg-red-50' : ''}`"
               >
-                <pre v-if="user.log[date.code]">{{ user.log[date.code].content }}</pre>
+                <pre v-if="user.log[date.code]">{{
+                  user.log[date.code].content || user.log[date.code].reason
+                }}</pre>
               </td>
             </template>
           </tr>
@@ -59,9 +59,6 @@
 .ant-calendar-disabled-cell {
   opacity: 0.6;
   background-color: #f5f5f5;
-}
-.range-picker {
-  width: 245px;
 }
 table {
   font-size: 0.9rem;
@@ -83,12 +80,6 @@ td {
 .log-content {
   vertical-align: top;
 }
-.weekend {
-  color: #a7a7a7;
-  text-align: center;
-  background-color: #f5f5f5;
-  vertical-align: middle;
-}
 td.weekend:before {
   content: 'Weekend';
   font-size: 75%;
@@ -102,6 +93,7 @@ td pre {
 
 <script>
 import moment from 'moment';
+import { getDatesInRange } from '~/server-middleware/utilities/date';
 
 export default {
   name: 'Work-Update',
@@ -125,25 +117,7 @@ export default {
       return 'DD-MMM-YYYY';
     },
     datesInRange: function () {
-      const dates = [],
-        diff = this.dateRange[1].diff(this.dateRange[0], 'days');
-
-      for (let n = 0; n <= diff; n++) {
-        const date =
-          n === 0
-            ? this.dateRange[0]
-            : n === diff
-            ? this.dateRange[1]
-            : this.dateRange[0].clone().add(n, 'day');
-        dates.push({
-          moment: date,
-          formatted: date.format(this.dateFormat),
-          code: date.format('YYYYMMDD'),
-          today: moment().isSame(date, 'day'),
-          weekend: date.day() > 4,
-        });
-      }
-      return dates;
+      return getDatesInRange(this.dateRange[0], this.dateRange[1], this.dateFormat);
     },
   },
   mounted: function () {
@@ -166,26 +140,12 @@ export default {
       this.dateRange = range;
       this.showLogs();
     },
-    // getUsers: function() {
-    //   this.$axios
-    //   .get(`/api/users`)
-    //   .then((res) => {
-    //     this.users = res.data.filter((user) => {
-    //       if (!user.admin) {
-    //         return user;
-    //       }
-    //     });
-    //   })
-    //   .catch((error) => {
-    //     // console.error(error);
-    //   });
-    // },
     showLogs: function () {
       this.$axios
         .get(`/api/logs`, {
           params: {
             range: this.datesInRange.map(function (date) {
-              return date.code;
+                return date.code;
             }),
           },
         })

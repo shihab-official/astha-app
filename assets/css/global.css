@@ -59,10 +59,15 @@ table td {
   padding: 6px 10px;
 }
 
+.range-picker {
+  width: 245px;
+}
+
 .position-sticky {
   position: sticky;
   z-index: 1;
 }
+
 pre {
   margin: 0;
 }
