@@ -63,3 +63,6 @@ table td {
   position: sticky;
   z-index: 1;
 }
+pre {
+  margin: 0;
+}

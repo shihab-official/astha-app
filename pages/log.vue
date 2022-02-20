@@ -1,6 +1,7 @@
 <template>
   <div>
     <h1>Log update</h1>
+    <hr />
     <a-form>
       <a-form-item label="Date">
         <a-date-picker @change="onChange" :value="date" :format="dateFormat" />
@@ -43,11 +44,14 @@ export default {
         .post(`/api/log`, {
           email: this.$auth.user.email,
           date: this.date?.format('YYYYMMDD'),
-          log: this.log,
+          log: {
+            type: 'work',
+            content: this.log
+          },
         })
         .then((res) => {
           if(res.status == 200) {
-            this.$router.push(`/work-update/${this.$auth.user.email}`);
+            this.$router.push(`/${this.$auth.user.email}`);
           }
         })
         .catch((error) => {

@@ -52,29 +52,18 @@ const getUsers = () => {
 const getUser = (email) => {};
 
 const readUserLog = (path) => {
-  let log = '';
+  let log = null;
   if (fs.existsSync(path)) {
     try {
-      log = fs.readFileSync(path, {
+      log = JSON.parse(fs.readFileSync(path, {
         encoding: 'utf8',
         flag: 'r',
-      });
+      }));
     } catch (err) {
       console.error(err);
     }
   }
   return log;
-};
-
-const getLogsByDate = (dates) => {
-  const users = getUsers();
-  for (let user of users) {
-    user.log = {};
-    for (let date of dates) {
-      user.log[date] = readUserLog(`${root}/${user.email}/${date}`);
-    }
-  }
-  return users;
 };
 
 const getUserLogs = (email) => {
@@ -91,10 +80,7 @@ const getUserLogs = (email) => {
           try {
             return {
               date: moment(file.name, 'YYYYMMDD').format('DD-MMM-YYYY'),
-              content: fs.readFileSync(`${dir}\\${file.name}`, {
-                encoding: 'utf8',
-                flag: 'r',
-              }),
+              log: readUserLog(`${dir}\\${file.name}`),
             };
           } catch (error) {
             console.error(error);
@@ -107,12 +93,23 @@ const getUserLogs = (email) => {
   }
 };
 
+const getLogsByDate = (dates) => {
+  const users = getUsers();
+  for (let user of users) {
+    user.log = {};
+    for (let date of dates) {
+      user.log[date] = readUserLog(`${root}/${user.email}/${date}`);
+    }
+  }
+  return users;
+};
+
 const setLog = (logData) => {
   try {
     fs.writeFileSync(
       `${root}\\${logData.email}\\${logData.date}`,
-      logData.log,
-      { encoding: 'utf8', flag: 'a+' }
+      JSON.stringify(logData.log),
+      { encoding: 'utf8' }
     );
   } catch (err) {
     console.error(err);
