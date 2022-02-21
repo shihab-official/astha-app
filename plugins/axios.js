@@ -1,7 +1,6 @@
 export default function ({ $auth, $axios, redirect }) {
   $axios.onRequest(config => {
-    console.log('$axios.onRequest');
-    config.headers.Authorization = 'CancelToken';
+    // config.headers.Authorization = 'CancelToken';
   });
 
   // $axios.onResponse(response => {
