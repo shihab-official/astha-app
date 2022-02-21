@@ -27,7 +27,6 @@
       "@nuxt/types",
       "@nuxtjs/axios",
       "@nuxtjs/auth-next",
-      "@nuxt/content",
       "@types/node"
     ]
   },
