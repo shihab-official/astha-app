@@ -1,3 +1,5 @@
+const { GOOGLE_CLIENT_ID } = require("./constants");
+
 module.exports = {
   dev: process.env.NODE_ENV !== 'production',
   telemetry: false,
@@ -7,7 +9,7 @@ module.exports = {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'app-dir',
+    title: 'App Directory',
     htmlAttrs: {
       lang: 'en',
     },
@@ -80,8 +82,7 @@ module.exports = {
   auth: {
     strategies: {
       google: {
-        clientId:
-          '404813405788-t9nfhnn1n8lqo8d438rk7je6fjsdajlu.apps.googleusercontent.com',
+        clientId: GOOGLE_CLIENT_ID,
         codeChallengeMethod: '',
         scope: ['profile', 'email'],
         responseType: 'token id_token',

@@ -5,10 +5,6 @@
       Logout
     </button>
     <button v-else @click="login()">Login with Google</button>
-
-    <br />
-    <br />
-    <test @click="log($event)">Test Button</test>
   </div>
 </template>
 

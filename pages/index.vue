@@ -16,7 +16,7 @@
       <table>
         <thead>
           <tr>
-            <th class="position-sticky left-0"></th>
+            <th class="position-sticky left-0 bg-violet-100"></th>
             <template v-for="date in datesInRange">
               <th
                 :key="date.code"
@@ -41,7 +41,7 @@
         </thead>
         <tbody>
           <tr v-for="user in users" :key="user.email">
-            <td class="position-sticky left-0">
+            <td class="position-sticky left-0 bg-violet-50">
               <NuxtLink :to="`/${user.email}`">{{ user.name }}</NuxtLink>
             </td>
             <template v-for="date in datesInRange">
@@ -101,6 +101,12 @@ td.weekend:before {
   font-size: 75%;
   letter-spacing: 0.5px;
 }
+th.position-sticky {
+  box-shadow: 0 -25px 8px #ddd, 0 10px 8px #ddd;
+}
+td.position-sticky {
+  box-shadow: 0 10px 8px #ddd;
+}
 td pre {
   font-size: 0.8rem;
   white-space: break-spaces;
@@ -138,14 +144,16 @@ export default {
         this.dateRange[1],
         this.dateFormat
       );
-    }
+    },
   },
   mounted: function () {
     document.title = 'Work Update';
     this.showLogs();
   },
   updated: function () {
-    this.$refs.tableWrapper.scrollTo(this.$refs.today[0].offsetLeft - 200, 0);
+    if (this.$refs.today.length > 0) {
+      this.$refs.tableWrapper.scrollTo(this.$refs.today[0].offsetLeft - 200, 0);
+    }
   },
   methods: {
     moment,
