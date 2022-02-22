@@ -16,5 +16,5 @@ if (config.dev) {
 
 // Listen the server
 app.listen(port, () => {
-  console.log(`Server is listening on port: ${port}`);
+  console.info(`Server is listening on port: ${port}`);
 });

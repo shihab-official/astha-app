@@ -7,7 +7,7 @@ export default function ({ $auth, $axios }) {
         admin: $auth.user.isAdmin
       })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
       })
       .catch((error) => {
         // console.error(error);

@@ -16,7 +16,7 @@
       <table>
         <thead>
           <tr>
-            <th class="position-sticky left-0 bg-violet-100"></th>
+            <th class="position-sticky left-0 bg-orange-100"></th>
             <template v-for="date in datesInRange">
               <th
                 :key="date.code"
@@ -41,7 +41,7 @@
         </thead>
         <tbody>
           <tr v-for="user in users" :key="user.email">
-            <td class="position-sticky left-0 bg-violet-50">
+            <td class="position-sticky left-0 bg-orange-50">
               <NuxtLink :to="`/${user.email}`">{{ user.name }}</NuxtLink>
             </td>
             <template v-for="date in datesInRange">
@@ -151,7 +151,7 @@ export default {
     this.showLogs();
   },
   updated: function () {
-    if (this.$refs.today.length > 0) {
+    if (this.$refs?.today?.length > 0) {
       this.$refs.tableWrapper.scrollTo(this.$refs.today[0].offsetLeft - 200, 0);
     }
   },
