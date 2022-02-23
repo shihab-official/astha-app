@@ -15,14 +15,10 @@ export default {
     // if (this.$auth.loggedIn) {
     //   this.$router.push('/');
     // }
-    console.log(this.$auth);
   },
   methods: {
     login() {
       this.$auth.loginWith('google');
-    },
-    log(event) {
-      console.log(event);
     },
   },
 };

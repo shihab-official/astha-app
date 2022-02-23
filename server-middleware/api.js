@@ -1,6 +1,6 @@
 const app = require('./express');
 const { unicode, color } = require('./utilities/style-log');
-const { initStorage, getUsers, getLogsByDate, getUserLogs, setLog, leaveApplication } = require('./utilities/storage');
+const { initStorage, getLogsByDate, getUserLogs, setLog, leaveApplication } = require('./utilities/storage');
 
 app.post('/api/data-store', (req, res) => {
   initStorage(req.body);
