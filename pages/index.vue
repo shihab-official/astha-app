@@ -54,7 +54,7 @@
                     : ''
                 } ${
                   user.log[date.code] && user.log[date.code].type === 'leave'
-                    ? 'on-leave bg-red-50'
+                    ? 'on-leave bg-red-100'
                     : ''
                 }`"
               >

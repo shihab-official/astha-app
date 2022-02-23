@@ -27,12 +27,10 @@ module.exports = {
   },
 
   getUserLogs: (email) => {
-    const user = getUser(email);
-    console.log('getUserLogs', user);
     try {
       const dir = `${root}\\${email}`;
       return {
-        user,
+        user: getUser(email),
         logs: fs
           .readdirSync(dir, { withFileTypes: true })
           .filter((file) => !file.isDirectory())
