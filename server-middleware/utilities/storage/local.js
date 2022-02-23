@@ -27,10 +27,13 @@ module.exports = {
   },
 
   getUserLogs: (email) => {
+    const user = getUser(email);
+    console.log('getUserLogs', user);
     try {
       const dir = `${root}\\${email}`;
-      return (
-        fs
+      return {
+        user,
+        logs: fs
           .readdirSync(dir, { withFileTypes: true })
           .filter((file) => !file.isDirectory())
           // .sort((a, b) => b - a)
@@ -46,8 +49,8 @@ module.exports = {
               console.error(error);
               return {};
             }
-          })
-      );
+          }),
+      };
     } catch (err) {
       console.error(err);
     }
@@ -117,20 +120,26 @@ module.exports = {
   },
 };
 
+const getUser = (email) => {
+  try {
+    return JSON.parse(fs.readFileSync(`${root}\\${email}.json`, {
+      encoding: 'utf8',
+      flag: 'r',
+    }));
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 const getUsers = () => {
   try {
     return fs
       .readdirSync(root, { withFileTypes: true })
-      .filter((file) => !file.isDirectory())
+      .filter((file) => file.isFile())
       .sort((a, b) => a - b)
       .map((file) => {
         try {
-          return JSON.parse(
-            fs.readFileSync(`${root}\\${file.name}`, {
-              encoding: 'utf8',
-              flag: 'r',
-            })
-          );
+          return getUser(file.name.replace('.json', ''));
         } catch (error) {
           console.error(error);
           return {};

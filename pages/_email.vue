@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="header flex">
-      <h1 class="m-0 mr-auto">My Board</h1>
+      <h1 class="m-0 mr-auto"> {{heading}} </h1>
       <NuxtLink
         to="/log"
         class="text-sm h-fit py-2 px-4 mr-3 bg-sky-500 text-white hover:bg-sky-600 hover:text-white rounded"
@@ -43,7 +43,7 @@ export default {
       return redirect(`/${$auth.user.email}`);
     }
   },
-  async asyncData({ params, redirect, $axios }) {
+  async asyncData({ params, redirect, $auth, $axios }) {
     const content = await $axios
       .get(`/api/log`, {
         params: {
@@ -55,8 +55,8 @@ export default {
         console.error(error);
       });
     return {
-      // logs: content.map(l => ({...l, content: l.content.replace(/(?:\r\n|\r|\n)/g, '<br>')}))
-      logs: content,
+      logs: content.logs,
+      heading: params.email === $auth.user.email ? 'My Board' : `Board of ${content.user.name}`,
     };
   },
   mounted: () => {
