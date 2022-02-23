@@ -6,10 +6,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 const GOOGLE_CLIENT_ID =
-  '404813405788-t9nfhnn1n8lqo8d438rk7je6fjsdajlu.apps.googleusercontent.com';
+  '404813405788-t9nfhnn1n8lqo8d438rk7je6fjsdajlu.apps.googleusercontent.com'; // asthait.com
+// const GOOGLE_CLIENT_ID = '534945197316-8gukqtrpiac0v3m3e94vdvrfhag1t3mj.apps.googleusercontent.com'; // any
 
 app.use('/api/*', async (req, res, next) => {
   const token = (req.header('authorization') || '').replace('Bearer ', '');
+  const current_user_email = req.header('Current-User-Email');
+
   if (!token) {
     res.status(403);
     res.send('Unauthorized request.');
@@ -19,7 +22,11 @@ app.use('/api/*', async (req, res, next) => {
 
   try {
     const tokenInfo = await client.getTokenInfo(token);
-    if (tokenInfo.aud !== GOOGLE_CLIENT_ID) {
+
+    if (
+      tokenInfo.aud !== GOOGLE_CLIENT_ID ||
+      current_user_email !== tokenInfo.email
+    ) {
       res.status(403);
       res.send('Unauthorized request.');
       return;

@@ -170,7 +170,7 @@ export default {
           params: {
             range: this.datesInRange.map(function (date) {
               return date.code;
-            }),
+            })
           },
         })
         .then((res) => {

@@ -34,7 +34,7 @@ module.exports = {
   // },
 
   router: {
-    middleware: ['auth', 'user-role', 'data-store'],
+    middleware: ['auth', 'user-role', 'data-store', 'axios'],
   },
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
