@@ -4,20 +4,14 @@
       <NuxtLink class="logo" to="/">
         <NuxtLogo style="width: 50px" />
       </NuxtLink>
+      <NuxtLink to="/dummy">Dummy</NuxtLink>
       <a-dropdown v-if="$auth.loggedIn" :trigger="['click']">
         <a class="ant-dropdown-link text-white hover:text-orange-400" @click="(e) => e.preventDefault()">
           {{user.given_name}}
           <img class="w-10 h-10 rounded-full ml-1" :src="user.picture" :alt="user.name">
         </a>
         <a-menu slot="overlay">
-          <!-- <a-menu-item key="0">
-            <a href="http://www.alipay.com/">1st menu item</a>
-          </a-menu-item>
-          <a-menu-item key="1">
-            <a href="http://www.taobao.com/">2nd menu item</a>
-          </a-menu-item>
-          <a-menu-divider /> -->
-          <a-menu-item key="x"><span @click="logout">Logout</span></a-menu-item>
+          <a-menu-item key="x"><span @click="logout()">Logout</span></a-menu-item>
         </a-menu>
       </a-dropdown>
     </a-layout-header>

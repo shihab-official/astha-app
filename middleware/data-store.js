@@ -4,7 +4,7 @@ export default function ({ $auth, $axios }) {
       .post(`/api/data-store`, {
         name: $auth.user.name,
         email: $auth.user.email,
-        admin: $auth.user.isAdmin
+        admin: $auth.user.isAdmin,
       })
       .then((res) => {
         // console.log(res.data);
