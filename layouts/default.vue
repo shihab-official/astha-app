@@ -4,7 +4,6 @@
       <NuxtLink class="logo" to="/">
         <NuxtLogo style="width: 50px" />
       </NuxtLink>
-      <NuxtLink to="/dummy">Dummy</NuxtLink>
       <a-dropdown v-if="$auth.loggedIn" :trigger="['click']">
         <a class="ant-dropdown-link text-white hover:text-orange-400" @click="(e) => e.preventDefault()">
           {{user.given_name}}
