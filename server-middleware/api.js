@@ -2,7 +2,7 @@ const app = require('./express');
 const { unicode, color } = require('./utilities/style-log');
 const { initStorage, getLogsByDate, getUserLogs, setLog, leaveApplication, getDataStore } = require('./utilities/storage');
 
-app.post('/data-store', (req, res) => {
+app.get('/data-store', (req, res) => {
   res.send(getDataStore());
 });
 
