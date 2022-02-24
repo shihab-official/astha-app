@@ -3,7 +3,7 @@ const { unicode, color } = require('./utilities/style-log');
 const { initStorage, getLogsByDate, getUserLogs, setLog, leaveApplication, getDataStore } = require('./utilities/storage');
 
 app.post('/data-store', (req, res) => {
-  res.json(getDataStore());
+  res.send(getDataStore());
 });
 
 app.post('/api/data-store', (req, res) => {

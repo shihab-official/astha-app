@@ -105,7 +105,8 @@ module.exports = {
   getDataStore: () => {
     try {
       return fs
-        .readdirSync(root, { withFileTypes: true });
+        .readdirSync(root, { withFileTypes: true })
+        .map((file) => file.name);
     } catch (err) {
       console.error(err);
     }
