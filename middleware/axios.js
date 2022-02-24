@@ -1,5 +1,5 @@
-export default function ({ $auth, $axios }) {
-  if ($auth.loggedIn) {
-    $axios.setHeader('Current-User-Email', $auth.$state.user.email);
-  }
+import axiosHelper from "~/helpers/axios-helper";
+
+export default function (context) {
+  axiosHelper(context);
 }
