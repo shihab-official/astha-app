@@ -43,30 +43,48 @@ export default {
       return redirect(`/${$auth.user.email}`);
     }
   },
-  async asyncData({ params, redirect, $auth, $axios }) {
-    const content = await $axios
-      .get(`/api/log`, {
-        params: {
-          email: params.email,
-        },
-      })
-      .then((res) => res.data)
-      .catch((error) => {
-        console.error(error);
-      });
-    console.log(content);
-    return {
-      logs: content.logs,
-      heading: params.email === $auth.user.email ? 'My Board' : `Board of ${content.user.name}`,
-    };
-  },
+  // async asyncData({ params, redirect, $auth, $axios }) {
+  //   const content = await $axios
+  //     .get(`/api/log`, {
+  //       params: {
+  //         email: params.email,
+  //       },
+  //     })
+  //     .then((res) => res.data)
+  //     .catch((error) => {
+  //       console.error(error);
+  //     });
+
+  //   return {
+  //     heading: params.email === $auth.user.email ? 'My Board' : `Board of ${content.user.name}`,
+  //     logs: content.logs,
+  //   };
+  // },
   data() {
     return {
+      heading: '',
       logs: []
     }
   },
-  mounted: () => {
+  mounted: function() {
     document.title = 'Work Update';
+
+    this.$axios
+      .get(`/api/log`, {
+        params: {
+          email: this.$route.params.email,
+        },
+      })
+      .then((res) => {
+        this.heading = this.$route.params.email === this.$auth.user.email ? 'My Board' : `Board of ${res.data.user.name}`
+        this.logs = res.data.logs;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   },
+  // methods: {
+  //   showLogs: function()
+  // }
 };
 </script>
