@@ -27,32 +27,30 @@ module.exports = {
   },
 
   getUserLogs: (email) => {
+    const dir = `${root}/${email}`;
+    const userLogs = {
+      user: getUser(email),
+      logs: []
+    };
+
     try {
-      const dir = `${root}/${email}`;
-      return {
-        user: getUser(email),
-        logs: fs
-          .readdirSync(dir, { withFileTypes: true })
-          .filter((file) => !file.isDirectory())
-          // .sort((a, b) => b - a)
-          .sort()
-          .reverse()
-          .map((file) => {
-            try {
-              return {
-                date: moment(file.name, 'YYYYMMDD').format('DD-MMM-YYYY'),
-                log: readUserLog(`${dir}/${file.name}`),
-              };
-            } catch (error) {
-              console.error(error);
-              return {};
-            }
-          }),
-      };
+      userLogs.logs = fs
+        .readdirSync(dir, { withFileTypes: true })
+        .filter((file) => file.isFile())
+        // .sort((a, b) => b - a)
+        .sort()
+        .reverse()
+        .map((file) => {
+          return {
+            date: moment(file.name, 'YYYYMMDD').format('DD-MMM-YYYY'),
+            log: readUserLog(`${dir}/${file.name}`),
+          };
+        });
     } catch (err) {
       console.error(err);
-      return err;
     }
+
+    return userLogs;
   },
 
   getLogsByDate: (dates) => {
@@ -122,6 +120,7 @@ const getUser = (email) => {
     }));
   } catch (error) {
     console.error(error);
+    return {};
   }
 };
 
@@ -145,7 +144,7 @@ const getUsers = () => {
 };
 
 const readUserLog = (path) => {
-  let log = null;
+  let log = {};
   if (fs.existsSync(path)) {
     try {
       log = JSON.parse(
