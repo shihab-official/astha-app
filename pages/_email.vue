@@ -54,6 +54,7 @@ export default {
       .catch((error) => {
         console.error(error);
       });
+    console.log(content);
     return {
       logs: content.logs,
       heading: params.email === $auth.user.email ? 'My Board' : `Board of ${content.user.name}`,
