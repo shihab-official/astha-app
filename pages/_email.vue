@@ -60,6 +60,11 @@ export default {
       heading: params.email === $auth.user.email ? 'My Board' : `Board of ${content.user.name}`,
     };
   },
+  data() {
+    return {
+      logs: []
+    }
+  },
   mounted: () => {
     document.title = 'Work Update';
   },
