@@ -8,14 +8,14 @@ const { unicode, color } = require('../style-log');
 module.exports = {
   initStorage: (user) => {
     try {
-      if (!fs.existsSync(`${root}/${user.email}`)) {
-        fs.mkdirSync(`${root}/${user.email}`, {
+      if (!fs.existsSync(`${root}\\${user.email}`)) {
+        fs.mkdirSync(`${root}\\${user.email}`, {
           recursive: true,
         });
       }
-      if (!fs.existsSync(`${root}/${user.email}.json`)) {
+      if (!fs.existsSync(`${root}\\${user.email}.json`)) {
         fs.writeFileSync(
-          `${root}/${user.email}.json`,
+          `${root}\\${user.email}.json`,
           JSON.stringify(user)
         );
       }
@@ -60,7 +60,7 @@ module.exports = {
     for (let user of users) {
       user.log = {};
       for (let date of dates) {
-        user.log[date] = readUserLog(`${root}/${user.email}/${date}`);
+        user.log[date] = readUserLog(`${root}\\${user.email}\\${date}`);
       }
     }
     return users;
