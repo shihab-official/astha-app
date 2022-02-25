@@ -2,24 +2,20 @@
 const fs = require('fs');
 const path = require('path');
 const moment = require('moment');
+const root = `${path.resolve('.')}/content`;
 const { unicode, color } = require('../style-log');
-let root = path.resolve('.');
 
 module.exports = {
   initStorage: (user) => {
     try {
-      if (!fs.existsSync(`${root}\\content`)) {
-        fs.mkdirSync(`${root}\\content`);
-      }
-
-      if (!fs.existsSync(`${root}\\${user.email}`)) {
-        fs.mkdirSync(`${root}\\${user.email}`, {
+      if (!fs.existsSync(`${root}/${user.email}`)) {
+        fs.mkdirSync(`${root}/${user.email}`, {
           recursive: true,
         });
       }
-      if (!fs.existsSync(`${root}\\${user.email}.json`)) {
+      if (!fs.existsSync(`${root}/${user.email}.json`)) {
         fs.writeFileSync(
-          `${root}\\${user.email}.json`,
+          `${root}/${user.email}.json`,
           JSON.stringify(user)
         );
       }
@@ -32,7 +28,7 @@ module.exports = {
 
   getUserLogs: (email) => {
     try {
-      const dir = `${root}\\${email}`;
+      const dir = `${root}/${email}`;
       return {
         user: getUser(email),
         logs: fs
@@ -45,7 +41,7 @@ module.exports = {
             try {
               return {
                 date: moment(file.name, 'YYYYMMDD').format('DD-MMM-YYYY'),
-                log: readUserLog(`${dir}\\${file.name}`),
+                log: readUserLog(`${dir}/${file.name}`),
               };
             } catch (error) {
               console.error(error);
@@ -64,7 +60,7 @@ module.exports = {
     for (let user of users) {
       user.log = {};
       for (let date of dates) {
-        user.log[date] = readUserLog(`${root}\\${user.email}\\${date}`);
+        user.log[date] = readUserLog(`${root}/${user.email}/${date}`);
       }
     }
     return users;
@@ -73,7 +69,7 @@ module.exports = {
   setLog: (logData) => {
     try {
       fs.writeFileSync(
-        `${root}\\${logData.email}\\${logData.date}`,
+        `${root}/${logData.email}/${logData.date}`,
         JSON.stringify(logData.log),
         { encoding: 'utf8' }
       );
@@ -90,7 +86,7 @@ module.exports = {
     for (let date of dates) {
       try {
         fs.writeFileSync(
-          `${root}\\${leaveData.email}\\${date.code}`,
+          `${root}/${leaveData.email}/${date.code}`,
           JSON.stringify({
             type: 'leave',
             option: leaveData.option,
@@ -120,7 +116,7 @@ module.exports = {
 
 const getUser = (email) => {
   try {
-    return JSON.parse(fs.readFileSync(`${root}\\${email}.json`, {
+    return JSON.parse(fs.readFileSync(`${root}/${email}.json`, {
       encoding: 'utf8',
       flag: 'r',
     }));
