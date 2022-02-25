@@ -33,7 +33,7 @@ app.use('/api/*', async (req, res, next) => {
   } catch (error) {
     res.status(error?.response?.status || 400);
     res.send(error?.response?.statusText || 'Invalid request.');
-    // console.error(error);
+    console.error(error);
   }
 });
 

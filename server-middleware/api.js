@@ -1,14 +1,12 @@
 const app = require('./express');
-const { unicode, color } = require('./utilities/style-log');
 const { initStorage, getLogsByDate, getUserLogs, setLog, leaveApplication, getDataStore } = require('./utilities/storage');
 
-app.get('/data-store', (req, res) => {
+app.get('/storage', (req, res) => {
   res.send(getDataStore());
 });
 
-app.post('/api/data-store', (req, res) => {
-  initStorage(req.body);
-  res.json(color.green(`${unicode.check}`) + ' Storage initialized.');
+app.post('/api/init-storage', (req, res) => {
+  res.json(initStorage(req.body));
 });
 
 app.get('/api/logs', (req, res) => {

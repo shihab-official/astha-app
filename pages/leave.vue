@@ -22,7 +22,7 @@
         </a-radio-group>
       </a-form-item>
       <a-form-item label="Reason">
-        <a-textarea placeholder="Reason" v-model="reason" :rows="4" />
+        <a-textarea placeholder="Reason" v-model="reason" :auto-size="{ minRows: 4 }" />
       </a-form-item>
       <a-form-item>
         <a-button type="primary" @click="submit"> Submit </a-button>
@@ -114,7 +114,7 @@ export default {
           }
         })
         .catch((error) => {
-          // console.error(error);
+          console.error(error);
         });
     },
   },

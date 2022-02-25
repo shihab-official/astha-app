@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const moment = require('moment');
 const root = path.resolve(`${path.resolve('.')}/content`);
+const { unicode, color } = require('../style-log');
 
 module.exports = {
   initStorage: (user) => {
@@ -13,16 +14,15 @@ module.exports = {
         });
       }
       if (!fs.existsSync(`${root}/${user.email}.json`)) {
-        fs.writeFile(
+        fs.writeFileSync(
           `${root}/${user.email}.json`,
-          JSON.stringify(user),
-          (err) => {
-            console.error(err);
-          }
+          JSON.stringify(user)
         );
       }
+      return color.green(`${unicode.check}`) + ' Storage initialized.';
     } catch (err) {
-      console.error(err);
+      console.log(err);
+      return err;
     }
   },
 
@@ -51,6 +51,7 @@ module.exports = {
       };
     } catch (err) {
       console.error(err);
+      return err;
     }
   },
 
@@ -106,7 +107,7 @@ module.exports = {
     try {
       return fs
         .readdirSync(root, { withFileTypes: true })
-        .map((file) => file.name);
+        .map((file) => ({ name: file.name, type: file.isFile() ? 'FILE' : 'DIR' }));
     } catch (err) {
       console.error(err);
     }

@@ -7,7 +7,7 @@
         <a-date-picker @change="onChange" :value="date" :format="dateFormat" />
       </a-form-item>
       <a-form-item label="Log">
-        <a-textarea placeholder="Update log" v-model="log" :rows="4" />
+        <a-textarea placeholder="Update log" v-model="log" :auto-size="{ minRows: 4 }" />
       </a-form-item>
       <a-form-item>
         <a-button type="primary" @click="submit()"> Submit </a-button>
@@ -55,7 +55,7 @@ export default {
           }
         })
         .catch((error) => {
-          // console.error(error);
+          console.error(error);
         });
     },
   },
