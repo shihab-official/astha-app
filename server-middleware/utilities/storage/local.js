@@ -2,12 +2,16 @@
 const fs = require('fs');
 const path = require('path');
 const moment = require('moment');
-const root = path.resolve(`${path.resolve('.')}/content`);
 const { unicode, color } = require('../style-log');
+let root = path.resolve('.');
 
 module.exports = {
   initStorage: (user) => {
     try {
+      if (!fs.existsSync(`${root}\\content`)) {
+        fs.mkdirSync(`${root}\\content`);
+      }
+
       if (!fs.existsSync(`${root}\\${user.email}`)) {
         fs.mkdirSync(`${root}\\${user.email}`, {
           recursive: true,
