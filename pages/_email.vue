@@ -68,23 +68,24 @@ export default {
   },
   mounted: function() {
     document.title = 'Work Update';
-
-    this.$axios
-      .get(`/api/log`, {
-        params: {
-          email: this.$route.params.email,
-        },
-      })
-      .then((res) => {
-        this.heading = this.$route.params.email === this.$auth.user.email ? 'My Board' : `Board of ${res.data.user.name}`
-        this.logs = res.data.logs;
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    this.showLogs();
   },
-  // methods: {
-  //   showLogs: function()
-  // }
+  methods: {
+    showLogs: function() {
+      this.$axios
+        .get(`/api/log`, {
+          params: {
+            email: this.$route.params.email
+          },
+        })
+        .then((res) => {
+          this.heading = this.$route.params.email === this.$auth.user.email ? 'My Board' : `Board of ${res.data.user.name}`
+          this.logs = res.data.logs;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  }
 };
 </script>
