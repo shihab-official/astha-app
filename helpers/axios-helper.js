@@ -5,6 +5,10 @@ const axiosHelper = function (context) {
       context.$axios.setHeader('Current-User-Name', context.$auth.$state.user.name);
     }
   });
+  context.$axios.onError((error) => {
+    const code = parseInt(error.response && error.response.status);
+    console.log(code, error);
+  });
 }
 
 export default axiosHelper;

@@ -33,22 +33,23 @@ module.exports = {
       logs: []
     };
 
-    try {
-      userLogs.logs = fs
-        .readdirSync(dir, { withFileTypes: true })
-        .filter((file) => file.isFile())
-        // .sort((a, b) => b - a)
-        .sort()
-        .reverse()
-        .map((file) => {
-          return {
-            date: moment(file.name, 'YYYYMMDD').format('DD-MMM-YYYY'),
-            log: readUserLog(`${dir}/${file.name}`),
-          };
-        });
-    } catch (err) {
-      console.error(err);
-    }
+    // try {
+    //   userLogs.logs = fs
+    //     .readdirSync(dir, { withFileTypes: true })
+    //     // .sort((a, b) => b - a)
+    //     .sort()
+    //     .reverse()
+    //     .map((file) => {
+    //       return {
+    //         date: moment(file.name, 'YYYYMMDD').format('DD-MMM-YYYY'),
+    //         log: readUserLog(`${dir}/${file.name}`),
+    //       };
+    //     });
+    // } catch (err) {
+    //   console.error(err);
+    // }
+
+    console.log(dir, userLogs);
 
     return userLogs;
   },
