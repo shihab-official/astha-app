@@ -14,7 +14,7 @@
       >
     </div>
     <hr />
-    <div class="logs">
+    <div class="logs" v-if="logs.length > 0">
       <details v-for="logData in logs" :key="logData.date" class="font-mono px-1 py-1" :class="logData.log.type">
         <summary class="text-slate-700 hover:opacity-75 cursor-pointer pb-1" :class="logData.log.type === 'leave' ? 'text-red-500' : ''">
           {{ logData.date }}
@@ -24,6 +24,7 @@
         </div>
       </details>
     </div>
+    <div v-else><a-empty /></div>
   </div>
 </template>
 
@@ -43,49 +44,49 @@ export default {
       return redirect(`/${$auth.user.email}`);
     }
   },
-  // async asyncData({ params, redirect, $auth, $axios }) {
-  //   const content = await $axios
-  //     .get(`/api/user-log`, {
-  //       params: {
-  //         email: params.email,
-  //       },
-  //     })
-  //     .then((res) => res.data)
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });
+  async asyncData({ params, redirect, $auth, $axios }) {
+    const content = await $axios
+      .get(`/api/user-log`, {
+        params: {
+          email: params.email,
+        },
+      })
+      .then((res) => res.data)
+      .catch((error) => {
+        console.error(error);
+      });
 
-  //   return {
-  //     heading: params.email === $auth.user.email ? 'My Board' : `Board of ${content.user.name}`,
-  //     logs: content.logs,
-  //   };
-  // },
-  data() {
     return {
-      heading: '',
-      logs: []
-    }
+      heading: params.email === $auth.user.email ? 'My Board' : `Board of ${content.user.name}`,
+      logs: content.logs,
+    };
   },
+  // data() {
+  //   return {
+  //     heading: '',
+  //     logs: []
+  //   }
+  // },
   mounted: function() {
     document.title = 'Work Update';
-    this.showLogs();
+    // this.showLogs();
   },
-  methods: {
-    showLogs: function() {
-      this.$axios
-        .get(`/api/user-log`, {
-          params: {
-            email: this.$route.params.email
-          },
-        })
-        .then((res) => {
-          this.heading = this.$route.params.email === this.$auth.user.email ? 'My Board' : `Board of ${res.data.user.name}`
-          this.logs = res.data.logs;
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    }
-  }
+  // methods: {
+  //   showLogs: function() {
+  //     this.$axios
+  //       .get(`/api/user-log`, {
+  //         params: {
+  //           email: this.$route.params.email
+  //         },
+  //       })
+  //       .then((res) => {
+  //         this.heading = this.$route.params.email === this.$auth.user.email ? 'My Board' : `Board of ${res.data.user.name}`
+  //         this.logs = res.data.logs;
+  //       })
+  //       .catch((error) => {
+  //         console.error(error);
+  //       });
+  //   }
+  // }
 };
 </script>
