@@ -166,7 +166,7 @@ export default {
     },
     showLogs: function () {
       this.$axios
-        .get(`/api/logs`, {
+        .get(`/api/user-logs`, {
           params: {
             range: this.datesInRange.map(function (date) {
               return date.code;

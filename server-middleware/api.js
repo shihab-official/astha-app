@@ -9,11 +9,11 @@ app.post('/api/init-storage', (req, res) => {
   res.json(initStorage(req.body));
 });
 
-app.get('/api/logs', (req, res) => {
+app.get('/api/user-logs', (req, res) => {
   res.json(getLogsByDate(req.query.range));
 });
 
-app.get('/api/log', (req, res) => {
+app.get('/api/user-log', (req, res) => {
   console.log(req.query);
   res.json(getUserLogs(req.query.email));
 });
