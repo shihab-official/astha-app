@@ -5,31 +5,30 @@
         <NuxtLogo style="width: 50px" />
       </NuxtLink>
       <div v-if="$auth.loggedIn">
-        <span class="text-white hover:text-orange-400 mr-5 cursor-pointer" @click="showModal">
-          Create User
-        </span>
-        <a-modal v-model="modalVisible" title="Prepare user storage" :width="350" footer>
-          <a-form :layout="formLayout" :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 19 }" @submit="submit">
-            <a-form-item label="Name">
-              <a-input v-decorator="['newUser.name', { rules: [{ required: true, message: 'Please provide name.' }] }]" />
-            </a-form-item>
-            <a-form-item label="Email">
-              <a-input v-decorator="['newUser.email', { rules: [{ required: true, message: 'Please provide email.' }] }]" addon-after="@asthait.com" />
-            </a-form-item>
-            <a-form-item :wrapper-col="{ span: 19, offset: 5 }" style="margin-bottom:0;">
-              <a-button type="primary" html-type="submit">
-                Submit
-              </a-button>
-            </a-form-item>
-          </a-form>
-        </a-modal>
-
         <a-dropdown :trigger="['click']">
           <a class="ant-dropdown-link text-white hover:text-orange-400" @click="(e) => e.preventDefault()">
             {{user.given_name}}
             <img class="w-10 h-10 rounded-full ml-1" :src="user.picture" :alt="user.name">
           </a>
           <a-menu slot="overlay">
+            <a-menu-item key="1">
+              <span @click="showModal()">Create User</span>
+              <a-modal v-model="modalVisible" title="Prepare user storage" :width="350" footer>
+                <a-form :layout="formLayout" :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 19 }" @submit="submit">
+                  <a-form-item label="Name">
+                    <a-input v-decorator="['newUser.name', { rules: [{ required: true, message: 'Please provide name.' }] }]" />
+                  </a-form-item>
+                  <a-form-item label="Email">
+                    <a-input v-decorator="['newUser.email', { rules: [{ required: true, message: 'Please provide email.' }] }]" addon-after="@asthait.com" />
+                  </a-form-item>
+                  <a-form-item :wrapper-col="{ span: 19, offset: 5 }" style="margin-bottom:0;">
+                    <a-button type="primary" html-type="submit">
+                      Submit
+                    </a-button>
+                  </a-form-item>
+                </a-form>
+              </a-modal>
+            </a-menu-item>
             <a-menu-item key="x"><span @click="logout()">Logout</span></a-menu-item>
           </a-menu>
         </a-dropdown>
