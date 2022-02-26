@@ -130,7 +130,7 @@ export default {
       logs: [],
       dateRange: [
         moment().startOf('week'),
-        moment().startOf('week').add(4, 'day'),
+        moment().endOf('week'),
       ],
     };
   },
