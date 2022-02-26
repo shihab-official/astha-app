@@ -41,7 +41,7 @@ export default {
     },
     submit: function () {
       this.$axios
-        .post(`/api/log`, {
+        .post(`/api/post-log`, {
           email: this.$auth.user.email,
           date: this.date?.format('YYYYMMDD'),
           log: {

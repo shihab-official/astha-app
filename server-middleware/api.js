@@ -18,7 +18,7 @@ app.get('/api/log', (req, res) => {
   res.json(getUserLogs(req.query.email));
 });
 
-app.post('/api/log', (req, res) => {
+app.post('/api/post-log', (req, res) => {
   res.json(setLog(req.body));
 });
 
