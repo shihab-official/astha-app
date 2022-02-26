@@ -6,8 +6,7 @@ const axiosHelper = function (context) {
     }
   });
   context.$axios.onError((error) => {
-    const code = parseInt(error.response && error.response.status);
-    console.log(code, error);
+    console.error('$axios.onError', error);
   });
 }
 

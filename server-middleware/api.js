@@ -14,7 +14,6 @@ app.get('/api/user-logs', (req, res) => {
 });
 
 app.get('/api/user-log', (req, res) => {
-  console.log(req.query);
   res.json(getUserLogs(req.query.email));
 });
 

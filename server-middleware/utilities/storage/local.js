@@ -21,7 +21,7 @@ module.exports = {
       }
       return color.green(`${unicode.check}`) + ' Storage initialized.';
     } catch (err) {
-      console.log(err);
+      console.error(err);
       return err;
     }
   },
@@ -48,8 +48,6 @@ module.exports = {
     } catch (err) {
       console.error(err);
     }
-
-    // console.log(dir, userLogs);
 
     return userLogs;
   },
