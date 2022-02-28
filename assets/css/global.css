@@ -1,3 +1,15 @@
+@-webkit-keyframes rotate {
+  100% {
+      -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes rotate {
+  100% {
+      transform: rotate(360deg);
+  }
+}
+
 :root {
   --scrollbar-track-color: #f1f1f1;
   --scrollbar-thumb-color: #d3d3d3;
@@ -70,4 +82,8 @@ table td {
 
 pre {
   margin: 0;
+}
+
+.spin {
+  animation: rotate 1s linear infinite;
 }

@@ -16,7 +16,9 @@
       <table>
         <thead>
           <tr>
-            <th class="position-sticky left-0 bg-orange-100"></th>
+            <th class="text-center position-sticky left-0 bg-orange-100 p-0 cursor-pointer" @click="showLogs()">
+              <span style="color: rgba(0, 0, 0, 0.85); font-size:18px;" :class="!loading ? 'spin' : ''">&#11118;</span>
+            </th>
             <template v-for="date in datesInRange">
               <th
                 :key="date.code"
@@ -126,6 +128,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       users: [],
       logs: [],
       dateRange: [
@@ -165,6 +168,7 @@ export default {
       this.showLogs();
     },
     showLogs: function () {
+      this.loading = true;
       this.$axios
         .get(`/api/user-logs`, {
           params: {
@@ -179,9 +183,11 @@ export default {
               return user;
             }
           });
+          this.loading = false;
         })
         .catch((error) => {
           console.error(error);
+          this.loading = false;
         });
     },
   },

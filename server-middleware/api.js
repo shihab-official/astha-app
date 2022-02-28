@@ -9,12 +9,12 @@ app.post('/api/init-storage', (req, res) => {
   res.json(initStorage(req.body));
 });
 
-app.get('/api/user-logs', (req, res) => {
-  res.json(getLogsByDate(req.query.range));
+app.get('/api/user-logs', async (req, res) => {
+  res.json(await getLogsByDate(req.query.range));
 });
 
-app.get('/api/user-log', (req, res) => {
-  res.json(getUserLogs(req.query.email));
+app.get('/api/user-log', async (req, res) => {
+  res.json(await getUserLogs(req.query.email));
 });
 
 app.post('/api/post-log', (req, res) => {
