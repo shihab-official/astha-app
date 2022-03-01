@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="header flex">
-      <h1 class="m-0 mr-auto"> {{heading}} </h1>
+      <h1 class="m-0 mr-auto">{{ heading }}</h1>
       <NuxtLink
         to="/log"
         class="text-sm h-fit py-2 px-4 mr-3 bg-sky-500 text-white hover:bg-sky-600 hover:text-white rounded"
@@ -15,12 +15,23 @@
     </div>
     <hr />
     <div class="logs" v-if="logs.length > 0">
-      <details v-for="logData in logs" :key="logData.date" class="font-mono px-1 py-1" :class="logData.log.type">
-        <summary class="text-slate-700 hover:opacity-75 cursor-pointer pb-1" :class="logData.log.type === 'leave' ? 'text-red-500' : ''">
+      <details
+        v-for="logData in logs"
+        :key="logData.date"
+        class="font-mono p-1"
+      >
+        <summary class="text-slate-700 hover:opacity-75 cursor-pointer pb-1">
           {{ logData.date }}
         </summary>
-        <div class="text-sm rounded px-3.5 py-2.5 ml-3 drop-shadow-md" :class="logData.log.type === 'leave' ? 'bg-red-50' : 'bg-sky-50'">
-          <pre>{{ logData.log.content || logData.log.reason }}</pre>
+        <div>
+          <template v-for="(data, i) in logData.log">
+            <pre
+              :key="i"
+              class="rounded px-3.5 py-2.5 ml-3 mb-2 drop-shadow-md"
+              :class="`${data.reason ? 'bg-red-50' : 'bg-sky-50'} ${i === 1 ? 'mt-3' : ''}`"
+              >{{ data.content || data.reason }}</pre
+            >
+          </template>
         </div>
       </details>
     </div>
@@ -56,18 +67,33 @@ export default {
         console.error(error);
       });
 
+    const logs = content.logs.map((userLog) => {
+      const newLog = [];
+      const keys = Object.keys(userLog.log);
+      if (keys.length === 1) {
+        newLog.push(userLog.log[keys[0]]);
+      } else if (keys.length === 2) {
+        newLog.push(userLog.log.work);
+        newLog.splice(userLog.log.leave.option, 0, userLog.log.leave);
+      }
+      return { ...userLog, log: newLog };
+    });
+
     return {
-      heading: params.email === $auth.user.email ? 'My Board' : `Board of ${content.user.name}`,
-      logs: content.logs,
+      heading:
+        params.email === $auth.user.email
+          ? 'My Board'
+          : `Board of ${content.user.name}`,
+      logs: logs,
     };
   },
   // data() {
   //   return {
   //     heading: '',
-  //     logs: []
+  //     logData: []
   //   }
   // },
-  mounted: function() {
+  mounted: function () {
     document.title = 'Work Update';
     // this.showLogs();
   },
@@ -81,7 +107,7 @@ export default {
   //       })
   //       .then((res) => {
   //         this.heading = this.$route.params.email === this.$auth.user.email ? 'My Board' : `Board of ${res.data.user.name}`
-  //         this.logs = res.data.logs;
+  //         this.logData = res.data.logs;
   //       })
   //       .catch((error) => {
   //         console.error(error);

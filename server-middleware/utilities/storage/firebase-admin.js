@@ -82,7 +82,12 @@ module.exports = {
     return users;
   },
 
-  setLog: (logData) => {},
+  setLog: async (logData) => {
+    const result = await db.doc(`logs/${logData.email}`).set(logData.log);
+    if (result._writeTime) {
+      return 'Log entry successful.';
+    }
+  },
 
   leaveApplication: (leaveData) => {},
 };

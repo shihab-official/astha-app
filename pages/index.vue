@@ -16,8 +16,15 @@
       <table>
         <thead>
           <tr>
-            <th class="text-center position-sticky left-0 bg-orange-100 p-0 cursor-pointer" @click="showLogs()">
-              <span style="color: rgba(0, 0, 0, 0.85); font-size:18px;" :class="!loading ? 'spin' : ''">&#11118;</span>
+            <th
+              class="text-center position-sticky left-0 bg-orange-100 p-0 cursor-pointer"
+              @click="showLogs()"
+            >
+              <span
+                style="color: rgba(0, 0, 0, 0.85); font-size: 18px"
+                :class="!loading ? 'spin' : ''"
+                >&#11118;</span
+              >
             </th>
             <template v-for="date in datesInRange">
               <th
@@ -47,23 +54,7 @@
               <NuxtLink :to="`/${user.email}`">{{ user.name }}</NuxtLink>
             </td>
             <template v-for="date in datesInRange">
-              <td
-                :key="date.code"
-                class="log-content"
-                :class="`${date.formatted} ${
-                  date.weekend
-                    ? 'weekend text-center align-middle text-gray-400 bg-gray-50'
-                    : ''
-                } ${
-                  user.log[date.code] && user.log[date.code].type === 'leave'
-                    ? 'on-leave bg-red-100'
-                    : ''
-                }`"
-              >
-                <pre v-if="user.log[date.code]">{{
-                  user.log[date.code].content || user.log[date.code].reason
-                }}</pre>
-              </td>
+              <user-log :key="date.code" :date="date" :email="user.email" :userLog="user.log" :logs="logs"></user-log>
             </template>
           </tr>
         </tbody>
@@ -84,34 +75,19 @@ table {
 th {
   font-size: 84%;
 }
-td:first-child {
-  min-width: 200px;
-  max-width: 200px;
-}
 td {
   white-space: normal;
-}
-.log-content:not(.weekend) {
-  min-width: 400px;
-  max-width: 400px;
-}
-.log-content {
-  vertical-align: top;
-}
-td.weekend:before {
-  content: 'Weekend';
-  font-size: 75%;
-  letter-spacing: 0.5px;
+  min-height: 34px;
+  padding: 0;
 }
 th.position-sticky {
   box-shadow: 0 -25px 8px #ddd, 0 10px 8px #ddd;
 }
 td.position-sticky {
+  width: 135px;
+  min-width: 135px;
+  padding: 6px 10px;
   box-shadow: 0 10px 8px #ddd;
-}
-td pre {
-  font-size: 0.8rem;
-  white-space: break-spaces;
 }
 </style>
 
@@ -130,11 +106,7 @@ export default {
     return {
       loading: false,
       users: [],
-      logs: [],
-      dateRange: [
-        moment().startOf('week'),
-        moment().endOf('week'),
-      ],
+      dateRange: [moment().startOf('week'), moment().endOf('week')],
     };
   },
   computed: {
@@ -147,6 +119,28 @@ export default {
         this.dateRange[1],
         this.dateFormat
       );
+    },
+    logs: function () {
+      const emails = {};
+      this.users.forEach((user) => {
+        const logCodes = Object.keys(user.log);
+        const userLogs = {};
+
+        logCodes.forEach((code) => {
+          const userLog = user.log[code];
+          const newLog = [];
+          const keys = Object.keys(userLog);
+          if (keys.length === 1) {
+            newLog.push(userLog[keys[0]]);
+          } else if (keys.length === 2) {
+            newLog.push(userLog.work);
+            newLog.splice(userLog.leave.option, 0, userLog.leave);
+          }
+          userLogs[code] = newLog;
+        });
+        emails[user.email] = userLogs;
+      });
+      return emails;
     },
   },
   mounted: function () {
@@ -174,7 +168,7 @@ export default {
           params: {
             range: this.datesInRange.map(function (date) {
               return date.code;
-            })
+            }),
           },
         })
         .then((res) => {

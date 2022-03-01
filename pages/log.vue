@@ -7,7 +7,11 @@
         <a-date-picker @change="onChange" :value="date" :format="dateFormat" />
       </a-form-item>
       <a-form-item label="Log">
-        <a-textarea placeholder="Update log" v-model="log" :auto-size="{ minRows: 4 }" />
+        <a-textarea
+          placeholder="Update log"
+          v-model="log"
+          :auto-size="{ minRows: 4 }"
+        />
       </a-form-item>
       <a-form-item>
         <a-button type="primary" @click="submit()"> Submit </a-button>
@@ -28,9 +32,9 @@ export default {
     };
   },
   computed: {
-    dateFormat: function() {
+    dateFormat: function () {
       return 'DD-MMM-YYYY';
-    }
+    },
   },
   mounted: () => {
     document.title = 'Log Work Update';
@@ -43,14 +47,16 @@ export default {
       this.$axios
         .post(`/api/post-log`, {
           email: this.$auth.user.email,
-          date: this.date?.format('YYYYMMDD'),
           log: {
-            type: 'work',
-            content: this.log
+            [this.date?.format('YYYYMMDD')]: {
+              work: {
+                content: this.log,
+              },
+            },
           },
         })
         .then((res) => {
-          if(res.status == 200) {
+          if (res.status == 200) {
             this.$router.push(`/${this.$auth.user.email}`);
           }
         })

@@ -17,8 +17,8 @@ app.get('/api/user-log', async (req, res) => {
   res.json(await getUserLogs(req.query.email));
 });
 
-app.post('/api/post-log', (req, res) => {
-  res.json(setLog(req.body));
+app.post('/api/post-log', async (req, res) => {
+  res.json(await setLog(req.body));
 });
 
 app.post('/api/leave-application', (req, res) => {
