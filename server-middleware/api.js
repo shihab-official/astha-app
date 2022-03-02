@@ -21,8 +21,8 @@ app.post('/api/post-log', async (req, res) => {
   res.json(await setLog(req.body));
 });
 
-app.post('/api/leave-application', (req, res) => {
-  res.json(leaveApplication(req.body));
+app.post('/api/leave-application', async (req, res) => {
+  res.json(await leaveApplication(req.body));
 });
 
 module.exports = app;

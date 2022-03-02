@@ -25,8 +25,8 @@ const db = getFirestore();
 
 module.exports = {
   initStorage: async (user) => {
-    await db.doc(`logs/${user.email}`).set({}, {merge: true});
-    await db.doc(`users/${user.email}`).set(user, {merge: true});
+    await db.doc(`logs/${user.email}`).set({}, { merge: true });
+    await db.doc(`users/${user.email}`).set(user, { merge: true });
   },
 
   getDataStore: () => {},
@@ -84,18 +84,16 @@ module.exports = {
 
   setLog: async (logData) => {
     try {
-      await db
-        .doc(`logs/${logData.email}`)
-        .set(
-          {
-            [logData.date]: {
-              work: {
-                content: logData.log
-              }
-            }
+      await db.doc(`logs/${logData.email}`).set(
+        {
+          [logData.date]: {
+            work: {
+              content: logData.log,
+            },
           },
-          { merge: true }
-        );
+        },
+        { merge: true }
+      );
       return 'Log entry successful.';
     } catch (error) {
       console.error(error);
@@ -103,25 +101,30 @@ module.exports = {
     }
   },
 
-  leaveApplication: (leaveData) => {
-    console.log(leaveData); 
-    // try {
-    //   await db
-    //     .doc(`logs/${logData.email}`)
-    //     .set(
-    //       {
-    //         [logData.date]: {
-    //           work: {
-    //             content: logData.log
-    //           }
-    //         }
-    //       },
-    //       { merge: true }
-    //     );
-    //   return 'Log entry successful.';
-    // } catch (error) {
-    //   console.error(error);
-    //   return error;
-    // }
+  leaveApplication: async (leaveData) => {
+    const dates = leaveData.dates.filter((date) => {
+      return !date.weekend;
+    });
+
+    try {
+      for (let date of dates) {
+        await db.doc(`logs/${leaveData.email}`).set(
+          {
+            [date.code]: {
+              leave: {
+                option: leaveData.option,
+                reason: leaveData.reason,
+              },
+            },
+          },
+          { merge: true }
+        );
+      }
+
+      return 'Leave applied.';
+    } catch (error) {
+      console.error(error);
+      return error;
+    }
   },
 };
