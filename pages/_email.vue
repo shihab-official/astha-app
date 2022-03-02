@@ -22,6 +22,9 @@
       >
         <summary class="font-semibold text-slate-700 hover:opacity-75 cursor-pointer pb-1">
           {{ logData.date }}
+          <a-tag v-if="logData.leave" color="red">
+            {{logData.leave}}
+          </a-tag>
         </summary>
         <div>
           <template v-for="(data, i) in logData.log">
@@ -66,6 +69,7 @@ export default {
 
     const logs = content.logs.map((userLog) => {
       const newLog = [];
+      let leave = '';
       const keys = Object.keys(userLog.log);
       if (keys.length === 1) {
         newLog.push(userLog.log[keys[0]]);
@@ -73,7 +77,10 @@ export default {
         newLog.push(userLog.log.work);
         newLog.splice(userLog.log.leave.option, 0, userLog.log.leave);
       }
-      return { ...userLog, log: newLog };
+      if (userLog.log.leave) {
+        leave = userLog.log.leave.option === 0 ? '1st Half' : (userLog.log.leave.option === 1 ? '2nd Half' : 'Full day');
+      }
+      return { ...userLog, log: newLog, leave };
     });
 
     return {
