@@ -25,11 +25,19 @@ const db = getFirestore();
 
 module.exports = {
   initStorage: async (user) => {
-    await db.doc(`logs/${user.email}`).set({}, { merge: true });
-    await db.doc(`users/${user.email}`).set(user, { merge: true });
+    const docRef = await db.doc(`users/${user.email}`).get();
+    if (!docRef.exists) {
+      await db.doc(`logs/${user.email}`).set({}, { merge: true });
+      await db.doc(`users/${user.email}`).set(user, { merge: true });
+    }
   },
 
   getDataStore: () => {},
+
+  getUser: async (email) => {
+    const userInfo = await db.doc(`users/${email}`).get();
+    return userInfo.data();
+  },
 
   getUserLogs: async (email) => {
     const userInfo = await db.doc(`users/${email}`).get();

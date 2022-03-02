@@ -54,7 +54,13 @@
               <NuxtLink :to="`/${user.email}`">{{ user.name }}</NuxtLink>
             </td>
             <template v-for="date in datesInRange">
-              <user-log :key="date.code" :date="date" :email="user.email" :userLog="user.log" :logs="logs"></user-log>
+              <user-log
+                :key="date.code"
+                :date="date"
+                :email="user.email"
+                :userLog="user.log"
+                :logs="logs"
+              ></user-log>
             </template>
           </tr>
         </tbody>
@@ -97,9 +103,24 @@ import { getDatesInRange } from '~/server-middleware/utilities/date';
 
 export default {
   name: 'Work-Update',
-  middleware({ redirect, $auth }) {
-    if (!$auth.user.isAdmin) {
-      return redirect(`/${$auth.user.email}`);
+  middleware({ redirect, $auth, $axios }) {
+    if ($auth.loggedIn) {
+      $axios
+        .get(`/api/user`, {
+          params: {
+            email: $auth.user.email,
+          }
+        })
+        .then((res) => {
+          if (!res.data.admin) {
+            console.log(res.data, redirect);
+            return redirect(`/${res.data.email}`);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          return redirect(`/${$auth.user.email}`);
+        });
     }
   },
   data() {

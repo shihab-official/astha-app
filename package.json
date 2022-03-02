@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "nodemon server.js -w nuxt.config.js -w server-middleware/ -V",
+    "dev": "nodemon --trace-warnings server.js -w nuxt.config.js -w server-middleware/ -V",
     "build": "nuxt build",
     "start": "NODE_ENV=production node server.js",
     "generate": "nuxt generate",
