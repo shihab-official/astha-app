@@ -47,13 +47,8 @@ export default {
       this.$axios
         .post(`/api/post-log`, {
           email: this.$auth.user.email,
-          log: {
-            [this.date?.format('YYYYMMDD')]: {
-              work: {
-                content: this.log,
-              },
-            },
-          },
+          date: this.date?.format('YYYYMMDD'),
+          log: this.log
         })
         .then((res) => {
           if (res.status == 200) {

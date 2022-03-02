@@ -25,8 +25,8 @@ const db = getFirestore();
 
 module.exports = {
   initStorage: async (user) => {
-    await db.doc(`logs/${user.email}`).set({});
-    await db.doc(`users/${user.email}`).set(user);
+    await db.doc(`logs/${user.email}`).set({}, {merge: true});
+    await db.doc(`users/${user.email}`).set(user, {merge: true});
   },
 
   getDataStore: () => {},
@@ -38,7 +38,7 @@ module.exports = {
     const keys = Object.keys(logData);
     keys.sort();
     keys.reverse();
-    
+
     const logs = [];
     keys.forEach((key, i) => {
       logs.push({
@@ -48,7 +48,7 @@ module.exports = {
     });
     return {
       user: userInfo.data(),
-      logs: logs
+      logs: logs,
     };
   },
 
@@ -83,11 +83,45 @@ module.exports = {
   },
 
   setLog: async (logData) => {
-    const result = await db.doc(`logs/${logData.email}`).set(logData.log);
-    if (result._writeTime) {
+    try {
+      await db
+        .doc(`logs/${logData.email}`)
+        .set(
+          {
+            [logData.date]: {
+              work: {
+                content: logData.log
+              }
+            }
+          },
+          { merge: true }
+        );
       return 'Log entry successful.';
+    } catch (error) {
+      console.error(error);
+      return error;
     }
   },
 
-  leaveApplication: (leaveData) => {},
+  leaveApplication: (leaveData) => {
+    console.log(leaveData); 
+    // try {
+    //   await db
+    //     .doc(`logs/${logData.email}`)
+    //     .set(
+    //       {
+    //         [logData.date]: {
+    //           work: {
+    //             content: logData.log
+    //           }
+    //         }
+    //       },
+    //       { merge: true }
+    //     );
+    //   return 'Log entry successful.';
+    // } catch (error) {
+    //   console.error(error);
+    //   return error;
+    // }
+  },
 };
