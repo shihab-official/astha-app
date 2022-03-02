@@ -41,13 +41,10 @@ td.weekend:before {
   padding: 8px;
 }
 td pre {
-  font-size: 0.8rem;
+  font-size: 90%;
   white-space: break-spaces;
   padding: 4px 8px;
   margin: 2px;
-}
-td pre:nth-child(2) {
-    /* border-top: dashed 1px rgba(0, 0, 0, 0.2); */
 }
 td pre.leave {
   margin: 0;
