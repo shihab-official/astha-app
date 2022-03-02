@@ -9,20 +9,20 @@ app.post('/api/init-storage', (req, res) => {
   res.json(initStorage(req.body));
 });
 
-app.get('/api/user-logs', (req, res) => {
-  res.json(getLogsByDate(req.query.range));
+app.get('/api/user-logs', async (req, res) => {
+  res.json(await getLogsByDate(req.query.range));
 });
 
-app.get('/api/user-log', (req, res) => {
-  res.json(getUserLogs(req.query.email));
+app.get('/api/user-log', async (req, res) => {
+  res.json(await getUserLogs(req.query.email));
 });
 
-app.post('/api/post-log', (req, res) => {
-  res.json(setLog(req.body));
+app.post('/api/post-log', async (req, res) => {
+  res.json(await setLog(req.body));
 });
 
-app.post('/api/leave-application', (req, res) => {
-  res.json(leaveApplication(req.body));
+app.post('/api/leave-application', async (req, res) => {
+  res.json(await leaveApplication(req.body));
 });
 
 module.exports = app;

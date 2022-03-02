@@ -2,27 +2,40 @@
   <div>
     <h1>Personal Leave form</h1>
     <hr />
-    <a-form>
+    <a-form :layout="formLayout" :form="form" @submit="submit">
       <a-form-item label="Date">
         <a-range-picker
           class="range-picker"
-          :disabled-date="disabledDate"
-          :value="dateRange"
           :format="dateFormat"
           @change="onChange"
+          v-decorator="[
+            'dateRange',
+            { rules: [{ required: true, message: 'Please select dates.' }] },
+          ]"
         />
-        <a-radio-group v-if="sameDay" v-model="option" @change="onOptionChange">
+        <a-radio-group v-if="sameDay" :defaultValue="leave.option" v-decorator="['leave.option']">
           <a-radio
-            v-for="option of options"
-            :key="option.value"
-            :value="option.value"
+            v-for="opt of options"
+            :key="opt.value"
+            :value="opt.value"
           >
-            {{ option.label }}
+            {{ opt.label }}
           </a-radio>
         </a-radio-group>
       </a-form-item>
       <a-form-item label="Reason">
-        <a-textarea placeholder="Reason" v-model="reason" :auto-size="{ minRows: 4 }" />
+        <a-textarea
+          placeholder="Reason"
+          v-decorator="[
+            'leave.reason',
+            {
+              rules: [
+                { required: true, message: 'Please provide the reason.' },
+              ],
+            },
+          ]"
+          :auto-size="{ minRows: 4 }"
+        />
       </a-form-item>
       <a-form-item>
         <a-button type="primary" @click="submit"> Submit </a-button>
@@ -44,24 +57,28 @@ export default {
   name: 'PersonalLeave',
   data() {
     return {
+      formLayout: 'vertical',
+      form: this.$form.createForm(this),
       dateRange: [],
-      option: 3,
-      reason: '',
+      leave: {
+        option: 2,
+        reason: '',
+      },
     };
   },
   computed: {
     options: function () {
       return [
         {
-          value: 3,
+          value: 2,
           label: 'Full day',
         },
         {
-          value: 1,
+          value: 0,
           label: '1st half',
         },
         {
-          value: 2,
+          value: 1,
           label: '2nd half',
         },
       ];
@@ -76,46 +93,49 @@ export default {
       return false;
     },
     datesInRange: function () {
-      return getDatesInRange(this.dateRange[0], this.dateRange[1], this.dateFormat);
+      if (this.dateRange.length > 0) {
+        return getDatesInRange(
+          this.dateRange[0],
+          this.dateRange[1],
+          this.dateFormat
+        );
+      }
+      return [];
     },
   },
   mounted: () => {
     document.title = 'Personal Leave';
   },
   methods: {
-    disabledDate: function (current) {
-      return current && current.day() > 4;
-    },
-    onChange: function (range) {
+    onChange(range) {
       this.dateRange = range;
     },
-    onOptionChange: function (option) {
-      this.option = option.target.value;
-    },
-    submit: function () {
-      this.$axios
-        .post(`/api/leave-application`, {
-          email: this.$auth.user.email,
-          dates: this.datesInRange.map(function (date) {
-            return {
-              code: date.code,
-              weekend: date.weekend,
-            };
-          }),
-          option: this.options.filter((opt) => {
-            return opt.value === this.option;
-          })[0].label,
-          count: this.dateRange[1].diff(this.dateRange[0], 'days') + 1,
-          reason: this.reason,
-        })
-        .then((res) => {
-          if (res.status == 200) {
-            this.$router.push('/');
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+    submit(e) {
+      e.preventDefault();
+      this.form.validateFields((err, values) => {
+        if (!err) {
+          this.$axios
+            .post(`/api/leave-application`, {
+              email: this.$auth.user.email,
+              dates: this.datesInRange.map(function (date) {
+                return {
+                  code: date.code,
+                  weekend: date.weekend,
+                };
+              }),
+              option: values.leave.option ?? this.leave.option,
+              reason: values.leave.reason,
+            })
+            .then((res) => {
+              if (res.status == 200) {
+                this.$router.push('/');
+              }
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+        }
+      });
     },
   },
 };

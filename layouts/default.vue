@@ -1,7 +1,7 @@
 <template>
   <a-layout id="components-layout-top" class="layout h-screen">
     <a-layout-header class="flex justify-between">
-      <NuxtLink class="logo" to="/">
+      <NuxtLink class="logo" to="/" style="height: 35px;">
         <NuxtLogo style="width: 50px" />
       </NuxtLink>
       <div v-if="$auth.loggedIn">
@@ -11,7 +11,7 @@
             <img class="w-10 h-10 rounded-full ml-1" :src="user.picture" :alt="user.name">
           </a>
           <a-menu slot="overlay">
-            <a-menu-item key="1">
+            <a-menu-item v-if="$auth.user.isAdmin" key="1">
               <span @click="showModal()">Create User</span>
               <a-modal v-model="modalVisible" title="Prepare user storage" :width="350" footer>
                 <a-form :layout="formLayout" :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 19 }" @submit="submit">
@@ -50,13 +50,6 @@
     </a-layout-footer>
   </a-layout>
 </template>
-<style>
-#components-layout-top .logo {
-  height: 31px;
-  margin: 16px 24px 16px 0;
-  float: left;
-}
-</style>
 
 <script>
 export default {

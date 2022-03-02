@@ -6,7 +6,7 @@ const axiosHelper = function (context) {
     }
   });
   context.$axios.onError((error) => {
-    console.error('$axios.onError', error);
+    console.error('$axios.onError', error.response.data);
   });
 }
 
