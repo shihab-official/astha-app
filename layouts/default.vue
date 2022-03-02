@@ -1,12 +1,12 @@
 <template>
   <a-layout id="components-layout-top" class="layout h-screen">
     <a-layout-header class="flex justify-between">
-      <NuxtLink class="logo" to="/" style="height: 35px;">
-        <NuxtLogo style="width: 50px" />
+      <NuxtLink class="logo flex items-center" to="/">
+        <NuxtLogo style="height: 35px;" />
       </NuxtLink>
       <div v-if="$auth.loggedIn">
         <a-dropdown :trigger="['click']">
-          <a class="ant-dropdown-link text-white hover:text-orange-400" @click="(e) => e.preventDefault()">
+          <a class="block ant-dropdown-link text-white hover:text-orange-400" @click="(e) => e.preventDefault()">
             {{user.given_name}}
             <img class="w-10 h-10 rounded-full ml-1" :src="user.picture" :alt="user.name">
           </a>

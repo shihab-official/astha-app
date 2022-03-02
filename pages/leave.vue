@@ -128,7 +128,7 @@ export default {
             })
             .then((res) => {
               if (res.status == 200) {
-                this.$router.push('/');
+                this.$router.push(`/${this.$auth.user.email}`);
               }
             })
             .catch((error) => {

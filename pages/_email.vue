@@ -20,7 +20,7 @@
         :key="logData.date"
         class="font-mono p-1"
       >
-        <summary class="text-slate-700 hover:opacity-75 cursor-pointer pb-1">
+        <summary class="font-semibold text-slate-700 hover:opacity-75 cursor-pointer pb-1">
           {{ logData.date }}
         </summary>
         <div>
@@ -40,9 +40,6 @@
 </template>
 
 <style scoped>
-summary {
-  font-weight: 600;
-}
 summary::marker {
   font-size: 80%;
 }
@@ -83,7 +80,7 @@ export default {
       heading:
         params.email === $auth.user.email
           ? 'My Board'
-          : `Board of ${content.user.name}`,
+          : content.user.name,
       logs: logs,
     };
   },
