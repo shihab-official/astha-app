@@ -1,6 +1,6 @@
 <template>
   <td
-    class="log-content"
+    class="log-content relative"
     :class="`${date.formatted}
             ${
               date.weekend
@@ -12,7 +12,7 @@
       <template v-for="(logData, i) in logs[email][date.code]">
         <pre
           :key="i"
-          :class="`${logData.reason ? 'leave text-red-600' : ''}`"
+          :class="`${logData.reason ? 'leave text-red-600' : ''} ${logs[email][date.code].length === 2 ? 'relative' : ''}`"
           >{{ logData.content || logData.reason }}</pre
         >
       </template>

@@ -17,7 +17,7 @@
         <thead>
           <tr>
             <th
-              class="text-center position-sticky left-0 bg-orange-100 p-0 cursor-pointer"
+              class="text-center sticky left-0 bg-orange-100 p-0 cursor-pointer"
               @click="showLogs()"
             >
               <span
@@ -50,7 +50,7 @@
         </thead>
         <tbody>
           <tr v-for="user in users" :key="user.email">
-            <td class="position-sticky left-0 bg-orange-50">
+            <td class="sticky left-0 bg-orange-50">
               <NuxtLink :to="`/${user.email}`">{{ user.name }}</NuxtLink>
             </td>
             <template v-for="date in datesInRange">
@@ -86,12 +86,12 @@ td {
   min-height: 34px;
   padding: 0;
 }
-th.position-sticky {
+th.sticky {
   box-shadow: 0 -25px 8px #ddd, 0 10px 8px #ddd;
 }
-td.position-sticky {
-  width: 135px;
-  min-width: 135px;
+td.sticky {
+  width: 150px;
+  min-width: 150px;
   padding: 6px 10px;
   box-shadow: 0 10px 8px #ddd;
 }
@@ -170,7 +170,7 @@ export default {
   },
   updated: function () {
     if (this.$refs?.today?.length > 0) {
-      this.$refs.tableWrapper.scrollTo(this.$refs.today[0].offsetLeft - 200, 0);
+      this.$refs.tableWrapper.scrollTo(this.$refs.today[0].offsetLeft - 135, 0);
     }
   },
   methods: {

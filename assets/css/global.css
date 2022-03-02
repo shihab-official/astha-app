@@ -75,9 +75,9 @@ table td {
   width: 245px;
 }
 
-.position-sticky {
-  position: sticky;
-  z-index: 1;
+.sticky {
+  /* position: sticky; */
+  /* z-index: 1; */
 }
 
 pre {
