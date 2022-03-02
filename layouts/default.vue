@@ -1,5 +1,5 @@
 <template>
-  <a-layout id="components-layout-top" class="layout h-screen">
+  <a-layout id="components-layout-top" class="layout" style="min-height: 100vh;">
     <a-layout-header class="flex justify-between">
       <NuxtLink class="logo flex items-center" to="/">
         <NuxtLogo style="height: 35px;" />

@@ -170,7 +170,7 @@ export default {
   },
   updated: function () {
     if (this.$refs?.today?.length > 0) {
-      this.$refs.tableWrapper.scrollTo(this.$refs.today[0].offsetLeft - 135, 0);
+      this.$refs.tableWrapper.scrollTo(this.$refs.today[0].offsetLeft - 150, 0);
     }
   },
   methods: {

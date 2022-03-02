@@ -47,7 +47,19 @@ td pre {
   margin: 2px;
 }
 td pre:nth-child(2) {
-    border-top: dashed 1px rgba(0, 0, 0, 0.2);
+    /* border-top: dashed 1px rgba(0, 0, 0, 0.2); */
+}
+td pre.leave {
+  margin: 0;
+}
+td pre.leave:before {
+  content: '';
+  background-color: rgb(255 0 0 / 10%);
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  bottom: 2px;
+  left: 2px;
 }
 </style>
 

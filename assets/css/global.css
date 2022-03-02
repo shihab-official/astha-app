@@ -52,7 +52,6 @@ a:hover {
   width: 100%;
   white-space: nowrap;
   overflow: auto;
-  max-height: 800px;
   border: 1px solid var(--table-border-color);
 }
 
