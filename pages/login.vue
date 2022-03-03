@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>Welcome to APP-DIRECTORY.</h3>
+    <h3>Welcome to Astha IT Ventures.</h3>
     <h4 class="font-normal mb-5">Please sign in to continue.</h4>
     <button v-if="$auth.loggedIn" @click="$auth.logout('google')">
       Logout
