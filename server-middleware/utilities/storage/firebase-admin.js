@@ -26,7 +26,9 @@ const db = getFirestore();
 module.exports = {
   initStorage: async (user) => {
     const docRef = await db.doc(`users/${user.email}`).get();
-    if (!docRef.exists) {
+    if (docRef.exists) {
+      return docRef.data();
+    } else {
       await db.doc(`logs/${user.email}`).set({}, { merge: true });
       await db.doc(`users/${user.email}`).set(user, { merge: true });
     }

@@ -5,7 +5,7 @@
       <NuxtLink
         to="/log"
         class="text-sm h-fit py-2 px-4 mr-3 bg-sky-500 text-white hover:bg-sky-600 hover:text-white rounded"
-        >Log work update</NuxtLink
+        >Log work</NuxtLink
       >
       <NuxtLink
         to="/leave"

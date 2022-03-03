@@ -102,26 +102,22 @@ import moment from 'moment';
 import { getDatesInRange } from '~/server-middleware/utilities/date';
 
 export default {
-  name: 'Work-Update',
-  middleware({ redirect, $auth, $axios }) {
-    if ($auth.loggedIn) {
-      $axios
-        .get(`/api/user`, {
-          params: {
-            email: $auth.user.email,
-          }
-        })
-        .then((res) => {
-          if (!res.data.admin) {
-            console.log(res.data, redirect);
-            return redirect(`/${res.data.email}`);
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          return redirect(`/${$auth.user.email}`);
-        });
-    }
+  name: 'Home',
+  async asyncData({ params, redirect, $auth, $axios }) {
+    await $axios
+      .get(`/api/user`, {
+        params: {
+          email: $auth.user.email,
+        },
+      })
+      .then((res) => {
+        if (!res.data.admin) {
+          return redirect(`/${$auth.user.email}`)
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   },
   data() {
     return {
@@ -164,6 +160,12 @@ export default {
       return emails;
     },
   },
+  beforeMount: function () {
+    console.log('beforeMount', this.$auth.user.admin);
+    if (!this.$auth.user.admin) {
+      return this.$router.push(`/${this.$auth.user.email}`);
+    }
+  },
   mounted: function () {
     document.title = 'Work Update';
     this.showLogs();
@@ -183,27 +185,29 @@ export default {
       this.showLogs();
     },
     showLogs: function () {
-      this.loading = true;
-      this.$axios
-        .get(`/api/user-logs`, {
-          params: {
-            range: this.datesInRange.map(function (date) {
-              return date.code;
-            }),
-          },
-        })
-        .then((res) => {
-          this.users = res.data.filter((user) => {
-            if (!user.admin) {
-              return user;
-            }
+      if (this.$auth.user.admin) {
+        this.loading = true;
+        this.$axios
+          .get(`/api/user-logs`, {
+            params: {
+              range: this.datesInRange.map(function (date) {
+                return date.code;
+              }),
+            },
+          })
+          .then((res) => {
+            this.users = res.data.filter((user) => {
+              if (!user.admin) {
+                return user;
+              }
+            });
+            this.loading = false;
+          })
+          .catch((error) => {
+            console.error(error);
+            this.loading = false;
           });
-          this.loading = false;
-        })
-        .catch((error) => {
-          console.error(error);
-          this.loading = false;
-        });
+      }
     },
   },
 };

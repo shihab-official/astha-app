@@ -5,8 +5,8 @@ app.get('/storage', (req, res) => {
   res.send(getDataStore());
 });
 
-app.post('/api/init-storage', (req, res) => {
-  res.json(initStorage(req.body));
+app.post('/api/init-storage', async (req, res) => {
+  res.json(await initStorage(req.body));
 });
 
 app.get('/api/user', async (req, res) => {
