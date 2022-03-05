@@ -59,6 +59,7 @@ export default {
     return {
       formLayout: 'vertical',
       form: this.$form.createForm(this),
+      dateFormat: 'DD-MMM-YYYY',
       dateRange: [],
       leave: {
         option: 2,
@@ -82,9 +83,6 @@ export default {
           label: '2nd half',
         },
       ];
-    },
-    dateFormat: function () {
-      return 'DD-MMM-YYYY';
     },
     sameDay: function () {
       if (this.dateRange.length > 0) {

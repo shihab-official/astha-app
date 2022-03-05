@@ -13,7 +13,7 @@
           :disabled-date="disabledDate"
           v-decorator="[
             'log.date',
-            { rules: [{ required: true, message: 'Please select date.' }] },
+            { initialValue: log.date, rules: [{ required: true, message: 'Please select date.' }] },
           ]"
         />
       </a-form-item>
@@ -47,6 +47,7 @@ export default {
     return {
       formLayout: 'vertical',
       form: this.$form.createForm(this),
+      dateFormat: 'DD-MMM-YYYY',
       log: {
         date: moment(new Date()),
         content: '',
@@ -55,11 +56,6 @@ export default {
       // log: '',
     };
   },
-  computed: {
-    dateFormat: function () {
-      return 'DD-MMM-YYYY';
-    },
-  },
   mounted: () => {
     document.title = 'Log Work Update';
   },
@@ -67,9 +63,6 @@ export default {
     disabledDate(current) {
       return current > moment().endOf('day');
     },
-    // onChange: function (m) {
-    //   this.date = m;
-    // },
     submit(e) {
       e.preventDefault();
       this.form.validateFields((err, values) => {

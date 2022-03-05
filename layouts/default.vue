@@ -11,6 +11,11 @@
             <img class="w-10 h-10 rounded-full ml-1" :src="user.picture" :alt="user.name">
           </a>
           <a-menu slot="overlay">
+            <!-- <a-menu-item key="p">
+              <NuxtLink to="/profile">
+                Profile
+              </NuxtLink>
+            </a-menu-item> -->
             <a-menu-item v-if="$auth.user.isAdmin" key="1">
               <span @click="showModal()">Create User</span>
               <a-modal v-model="modalVisible" title="Prepare user storage" :width="350" footer>
