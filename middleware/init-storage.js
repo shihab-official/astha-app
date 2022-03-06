@@ -9,9 +9,10 @@ export default function ({ $auth, $axios }) {
         short_name: $auth.user.given_name,
         email: $auth.user.email,
         admin: ADMIN_EMAILS.includes($auth.user.email),
+        manager: false,
       })
       .then((res) => {
-        $auth.setUser({...$auth.user, admin: res.data.admin});
+        $auth.setUser({...$auth.user, admin: res.data.admin, manager: res.data.manager});
       })
       .catch((error) => {
         // console.error(error);

@@ -41,7 +41,7 @@ summary::marker {
 <script>
 export default {
   middleware({ params, $auth, redirect }) {
-    if (!$auth.user.admin && params.email != $auth.user.email) {
+    if (!$auth.user.admin && !$auth.user.manager && params.email != $auth.user.email) {
       return redirect(`/${$auth.user.email}`);
     }
   },

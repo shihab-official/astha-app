@@ -197,7 +197,7 @@ export default {
           })
           .then((res) => {
             this.users = res.data.filter((user) => {
-              if (!user.admin) {
+              if (user.show_log) {
                 return user;
               }
             });
