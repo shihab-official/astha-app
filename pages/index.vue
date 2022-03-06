@@ -51,7 +51,7 @@
         <tbody>
           <tr v-for="user in users" :key="user.email">
             <td class="sticky left-0 bg-orange-50">
-              <NuxtLink :to="`/${user.email}`">{{ user.name }}</NuxtLink>
+              <NuxtLink :to="`/${user.email}`">{{ user.short_name || user.name }}</NuxtLink>
             </td>
             <template v-for="date in datesInRange">
               <user-log
@@ -90,8 +90,8 @@ th.sticky {
   box-shadow: 0 -25px 8px #ddd, 0 10px 8px #ddd;
 }
 td.sticky {
-  width: 150px;
-  min-width: 150px;
+  width: 120px;
+  min-width: 120px;
   padding: 6px 10px;
   box-shadow: 0 10px 8px #ddd;
 }
@@ -111,7 +111,7 @@ export default {
         },
       })
       .then((res) => {
-        if (!res.data.admin) {
+        if (!res.data.admin && !res.data.management) {
           return redirect(`/${$auth.user.email}`)
         }
       })
@@ -172,7 +172,7 @@ export default {
   },
   updated: function () {
     if (this.$refs?.today?.length > 0) {
-      this.$refs.tableWrapper.scrollTo(this.$refs.today[0].offsetLeft - 150, 0);
+      this.$refs.tableWrapper.scrollTo(this.$refs.today[0].offsetLeft - 120, 0);
     }
   },
   methods: {

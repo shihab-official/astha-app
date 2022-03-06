@@ -1,12 +1,12 @@
 @-webkit-keyframes rotate {
   100% {
-      -webkit-transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
   }
 }
 
 @keyframes rotate {
   100% {
-      transform: rotate(360deg);
+    transform: rotate(360deg);
   }
 }
 
@@ -72,6 +72,30 @@ table td {
 
 .range-picker {
   width: 245px;
+}
+
+.ant-switch, .ant-form-item .ant-switch {
+  width: 58px;
+  height: 25px;
+  margin: 0;
+}
+
+.ant-switch {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.ant-switch-checked {
+  background-color: #27c584;
+}
+
+.ant-switch-inner {
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+
+.ant-switch::after {
+  width: 21px;
+  height: 21px;
 }
 
 .sticky {

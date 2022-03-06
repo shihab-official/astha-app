@@ -2,16 +2,6 @@
   <div>
     <div class="header flex">
       <h1 class="m-0 mr-auto">{{ heading }}</h1>
-      <NuxtLink
-        to="/log"
-        class="text-sm h-fit py-2 px-4 mr-3 bg-sky-500 text-white hover:bg-sky-600 hover:text-white rounded"
-        >Log work</NuxtLink
-      >
-      <NuxtLink
-        to="/leave"
-        class="text-sm h-fit py-2 px-4 bg-slate-600 text-white hover:bg-slate-700 hover:text-white rounded"
-        >Apply for leave</NuxtLink
-      >
     </div>
     <hr />
     <div class="logs" v-if="logs.length > 0">

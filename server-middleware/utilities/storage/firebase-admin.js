@@ -41,6 +41,19 @@ module.exports = {
     return userInfo.data();
   },
 
+  setUser: async (user) => {
+    try {
+      await db.doc(`users/${user.email}`).set(user, { merge: true });
+      return {
+        type: 'success',
+        message: 'Profile updated.'
+      };
+    } catch (error) {
+      console.error(error);
+      return error;
+    }
+  },
+
   getUserLogs: async (email) => {
     const userInfo = await db.doc(`users/${email}`).get();
     const userLogs = await db.doc(`logs/${email}`).get();

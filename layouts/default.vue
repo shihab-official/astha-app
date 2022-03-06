@@ -1,32 +1,75 @@
 <template>
-  <a-layout id="components-layout-top" class="layout" style="min-height: 100vh;">
+  <a-layout id="components-layout-top" class="layout" style="min-height: 100vh">
     <a-layout-header class="flex justify-between">
       <NuxtLink class="logo flex items-center" to="/">
-        <NuxtLogo style="height: 35px;" />
+        <NuxtLogo style="height: 35px" />
       </NuxtLink>
-      <div v-if="$auth.loggedIn">
+      <div v-if="$auth.loggedIn" class="flex">
+        <NuxtLink to="/log" class="block text-white hover:text-orange-400">Log</NuxtLink>
+        <NuxtLink to="/leave" class="block mx-6 text-white hover:text-orange-400">Leave</NuxtLink>
         <a-dropdown :trigger="['click']">
-          <a class="block ant-dropdown-link text-white hover:text-orange-400" @click="(e) => e.preventDefault()">
-            {{user.given_name}}
-            <img class="w-10 h-10 rounded-full ml-1" :src="user.picture" :alt="user.name">
+          <a
+            class="block ant-dropdown-link text-white hover:text-orange-400"
+            @click="(e) => e.preventDefault()"
+          >
+            {{ user.given_name }}
+            <img
+              class="w-10 h-10 rounded-full ml-1"
+              :src="user.picture"
+              :alt="user.name"
+            />
           </a>
           <a-menu slot="overlay">
-            <!-- <a-menu-item key="p">
-              <NuxtLink to="/profile">
-                Profile
-              </NuxtLink>
-            </a-menu-item> -->
-            <a-menu-item v-if="$auth.user.isAdmin" key="1">
+            <a-menu-item key="p">
+              <NuxtLink to="/profile"> Profile </NuxtLink>
+            </a-menu-item>
+            <a-menu-item v-if="$auth.user.admin" key="1">
               <span @click="showModal()">Create User</span>
-              <a-modal v-model="modalVisible" title="Prepare user storage" :width="350" footer>
-                <a-form :layout="formLayout" :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 19 }" @submit="submit">
+              <a-modal
+                v-model="modalVisible"
+                title="Prepare user storage"
+                :width="350"
+                footer
+              >
+                <a-form
+                  :layout="formLayout"
+                  :form="form"
+                  :label-col="{ span: 5 }"
+                  :wrapper-col="{ span: 19 }"
+                  @submit="submit"
+                >
                   <a-form-item label="Name">
-                    <a-input v-decorator="['newUser.name', { rules: [{ required: true, message: 'Please provide name.' }] }]" />
+                    <a-input
+                      v-decorator="[
+                        'newUser.name',
+                        {
+                          rules: [
+                            { required: true, message: 'Please provide name.' },
+                          ],
+                        },
+                      ]"
+                    />
                   </a-form-item>
                   <a-form-item label="Email">
-                    <a-input v-decorator="['newUser.email', { rules: [{ required: true, message: 'Please provide email.' }] }]" addon-after="@asthait.com" />
+                    <a-input
+                      v-decorator="[
+                        'newUser.email',
+                        {
+                          rules: [
+                            {
+                              required: true,
+                              message: 'Please provide email.',
+                            },
+                          ],
+                        },
+                      ]"
+                      addon-after="@asthait.com"
+                    />
                   </a-form-item>
-                  <a-form-item :wrapper-col="{ span: 19, offset: 5 }" style="margin-bottom:0;">
+                  <a-form-item
+                    :wrapper-col="{ span: 19, offset: 5 }"
+                    style="margin-bottom: 0"
+                  >
                     <a-button type="primary" html-type="submit">
                       Submit
                     </a-button>
@@ -34,7 +77,9 @@
                 </a-form>
               </a-modal>
             </a-menu-item>
-            <a-menu-item key="x"><span @click="logout()">Logout</span></a-menu-item>
+            <a-menu-item key="x"
+              ><span @click="logout()">Logout</span></a-menu-item
+            >
           </a-menu>
         </a-dropdown>
       </div>
@@ -56,6 +101,12 @@
   </a-layout>
 </template>
 
+<style scoped>
+.ant-dropdown-menu-item a {
+  color: rgba(0, 0, 0, 0.65);
+}
+</style>
+
 <script>
 export default {
   data() {
@@ -64,16 +115,16 @@ export default {
       form: this.$form.createForm(this),
       newUser: {
         name: '',
-        email: ''
+        email: '',
       },
-      modalVisible: false
-    }
+      modalVisible: false,
+    };
   },
   computed: {
-    user: function() {
+    user: function () {
       return this.$auth.user;
     },
-    copyrightYear: function() {
+    copyrightYear: function () {
       return new Date().getFullYear();
     },
   },
@@ -85,21 +136,24 @@ export default {
       e.preventDefault();
       this.form.validateFields((err, values) => {
         if (!err) {
-          this.$axios.post(`/api/init-storage`, {
-            name: values.newUser.name,
-            email: `${values.newUser.email}@asthait.com`,
-            admin: false,
-          }).then((res) => {
-            this.modalVisible = false;
-            this.form.resetFields();
-            if (this.$route.path === '/') {
-              this.$router.go();
-            } else {
-              this.$router.push('/');
-            }
-          }).catch((error) => {
-            console.error(error);
-          });
+          this.$axios
+            .post(`/api/init-storage`, {
+              name: values.newUser.name,
+              email: `${values.newUser.email}@asthait.com`,
+              admin: false,
+            })
+            .then((res) => {
+              this.modalVisible = false;
+              this.form.resetFields();
+              if (this.$route.path === '/') {
+                this.$router.go();
+              } else {
+                this.$router.push('/');
+              }
+            })
+            .catch((error) => {
+              console.error(error);
+            });
         }
       });
     },

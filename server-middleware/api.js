@@ -1,5 +1,5 @@
 const app = require('./express');
-const { initStorage, getLogsByDate, getUser, getUserLogs, setLog, leaveApplication, getDataStore } = require('./utilities/storage');
+const { initStorage, getLogsByDate, getUser, setUser, getUserLogs, setLog, leaveApplication, getDataStore } = require('./utilities/storage');
 
 app.get('/storage', (req, res) => {
   res.send(getDataStore());
@@ -11,6 +11,10 @@ app.post('/api/init-storage', async (req, res) => {
 
 app.get('/api/user', async (req, res) => {
   res.json(await getUser(req.query.email));
+});
+
+app.post('/api/user', async (req, res) => {
+  res.json(await setUser(req.body));
 });
 
 app.get('/api/user-logs', async (req, res) => {
