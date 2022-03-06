@@ -1,8 +1,6 @@
 <template>
   <div>
-    <div class="header flex">
-      <h1 class="m-0 mr-auto">{{ heading }}</h1>
-    </div>
+    <h1 class="m-0">{{ heading }}</h1>
     <hr />
     <div class="logs" v-if="logs.length > 0">
       <details

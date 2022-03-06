@@ -36,6 +36,12 @@ module.exports = {
 
   getDataStore: () => {},
 
+  getUsers: async () => {
+    const usersCollection = await db.collection('users').get();
+    const users = usersCollection.docs.map(user => user.data());
+    return users;
+  },
+
   getUser: async (email) => {
     const userInfo = await db.doc(`users/${email}`).get();
     return userInfo.data();

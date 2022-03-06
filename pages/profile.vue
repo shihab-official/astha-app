@@ -1,11 +1,13 @@
 <template>
   <div>
-    <h2>Profile</h2>
+    <h2 v-if="currentUser">My Profile</h2>
+    <h2 v-else>Profile of {{ user.short_name }}</h2>
     <hr />
     <a-form :layout="formLayout" :form="form" @submit="submit">
       <div class="flex flex-wrap -mx-3">
         <a-form-item label="Name">
           <a-input
+            :disabled="!currentUser && !$auth.user.admin"
             v-decorator="[
               'user.name',
               {
@@ -17,6 +19,7 @@
         </a-form-item>
         <a-form-item label="Short Name">
           <a-input
+            :disabled="!currentUser && !$auth.user.admin"
             v-decorator="['user.short_name', { initialValue: user.short_name }]"
           />
         </a-form-item>
@@ -25,11 +28,13 @@
         </a-form-item>
         <a-form-item label="Mobile">
           <a-input
+            :disabled="!currentUser && !$auth.user.admin"
             v-decorator="['user.mobile', { initialValue: user.mobile }]"
           />
         </a-form-item>
         <a-form-item label="Date of Birth">
           <a-date-picker
+            :disabled="!currentUser && !$auth.user.admin"
             :format="dateFormat"
             :disabled-date="disabledDate"
             :allow-clear="false"
@@ -44,25 +49,20 @@
             ]"
           />
         </a-form-item>
-        <div class="flex">
-          <a-form-item
-            v-if="user.admin"
-            label="Admin"
-            style="width: 100px; margin: 0"
-          >
+        <div class="flex" v-if="$auth.user.admin">
+          <a-form-item label="Admin" style="width: 100px; margin: 0">
             <a-switch
               :default-checked="user.admin"
-              :disabled="user.email !== $auth.user.email"
+              :disabled="user.admin && !currentUser"
               v-decorator="['user.admin']"
               checked-children=" Yes "
               un-checked-children=" No "
             />
           </a-form-item>
-          <template v-if="user.manager || user.admin">
+          <template>
             <a-form-item label="Manager" style="width: 100px; margin: 0">
               <a-switch
                 :default-checked="user.manager"
-                :disabled="user.email !== $auth.user.email"
                 v-decorator="['user.manager']"
                 checked-children=" Yes "
                 un-checked-children=" No "
@@ -71,7 +71,6 @@
             <a-form-item label="Show log" style="width: 100px; margin: 0">
               <a-switch
                 :default-checked="user.show_log"
-                :disabled="user.email !== $auth.user.email"
                 v-decorator="['user.show_log']"
                 checked-children=" Yes "
                 un-checked-children=" No "
@@ -80,7 +79,7 @@
           </template>
         </div>
       </div>
-      <a-form-item style="padding:0;">
+      <a-form-item v-if="currentUser || $auth.user.admin" style="padding: 0">
         <a-button type="primary" html-type="submit"> Save </a-button>
       </a-form-item>
     </a-form>
@@ -103,7 +102,7 @@ export default {
     const user = await $axios
       .get('/api/user', {
         params: {
-          email: query.email || $auth.user.email,
+          email: query.email || $auth.user.email
         },
       })
       .then((res) => res.data)
@@ -123,6 +122,14 @@ export default {
       formLayout: 'vertical',
       dateFormat: 'DD-MMM-YYYY',
     };
+  },
+  computed: {
+    currentUser() {
+      return !(
+        this.$route.query.email &&
+        this.$route.query.email !== this.$auth.user.email
+      );
+    },
   },
   methods: {
     disabledDate(current) {
