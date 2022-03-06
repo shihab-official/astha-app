@@ -1,6 +1,11 @@
 <template>
   <div>
-    <h1>Personal Leave form</h1>
+    <div class="flex items-baseline">
+      <h3 class="m-0">Apply for Leave</h3>
+      <NuxtLink to="/" class="ml-5 text-gray-400 text-sm">
+        <a-icon type="double-left" class="text-xs" /> Back to Logs
+      </NuxtLink>
+    </div>
     <hr />
     <a-form :layout="formLayout" :form="form" @submit="submit">
       <a-form-item label="Date">
@@ -13,12 +18,12 @@
             { rules: [{ required: true, message: 'Please select dates.' }] },
           ]"
         />
-        <a-radio-group v-if="sameDay" :defaultValue="leave.option" v-decorator="['leave.option']">
-          <a-radio
-            v-for="opt of options"
-            :key="opt.value"
-            :value="opt.value"
-          >
+        <a-radio-group
+          v-if="sameDay"
+          :defaultValue="leave.option"
+          v-decorator="['leave.option']"
+        >
+          <a-radio v-for="opt of options" :key="opt.value" :value="opt.value">
             {{ opt.label }}
           </a-radio>
         </a-radio-group>

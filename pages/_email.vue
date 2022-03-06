@@ -1,6 +1,15 @@
 <template>
   <div>
-    <h1 class="m-0">{{ heading }}</h1>
+    <div class="flex items-baseline">
+      <h3 class="m-0">{{ heading }}</h3>
+      <NuxtLink
+        v-if="$auth.user.admin"
+        to="/"
+        class="ml-5 text-gray-400 text-sm"
+      >
+        <a-icon type="double-left" class="text-xs" /> Back to Logs
+      </NuxtLink>
+    </div>
     <hr />
     <div class="logs" v-if="logs.length > 0">
       <details
@@ -8,10 +17,12 @@
         :key="logData.date"
         class="font-mono p-1"
       >
-        <summary class="font-semibold text-slate-700 hover:opacity-75 cursor-pointer pb-1">
+        <summary
+          class="font-semibold text-slate-700 hover:opacity-75 cursor-pointer pb-1"
+        >
           {{ logData.date }}
           <a-tag v-if="logData.leave" color="red">
-            {{logData.leave}}
+            {{ logData.leave }}
           </a-tag>
         </summary>
         <div>
@@ -19,7 +30,9 @@
             <pre
               :key="i"
               class="rounded px-3.5 py-2.5 ml-3 mb-2 drop-shadow-md"
-              :class="`${data.reason ? 'bg-red-50' : 'bg-sky-50'} ${i === 1 ? 'mt-3' : ''}`"
+              :class="`${data.reason ? 'bg-red-50' : 'bg-sky-50'} ${
+                i === 1 ? 'mt-3' : ''
+              }`"
               >{{ data.content || data.reason }}</pre
             >
           </template>
@@ -39,7 +52,11 @@ summary::marker {
 <script>
 export default {
   middleware({ params, $auth, redirect }) {
-    if (!$auth.user.admin && !$auth.user.manager && params.email != $auth.user.email) {
+    if (
+      !$auth.user.admin &&
+      !$auth.user.manager &&
+      params.email != $auth.user.email
+    ) {
       return redirect(`/${$auth.user.email}`);
     }
   },
@@ -66,16 +83,19 @@ export default {
         newLog.splice(userLog.log.leave.option, 0, userLog.log.leave);
       }
       if (userLog.log.leave) {
-        leave = userLog.log.leave.option === 0 ? '1st Half' : (userLog.log.leave.option === 1 ? '2nd Half' : 'Full day');
+        leave =
+          userLog.log.leave.option === 0
+            ? '1st Half'
+            : userLog.log.leave.option === 1
+            ? '2nd Half'
+            : 'Full day';
       }
       return { ...userLog, log: newLog, leave };
     });
 
     return {
       heading:
-        params.email === $auth.user.email
-          ? 'My Board'
-          : content.user.name,
+        params.email === $auth.user.email ? 'My Board' : content.user.name,
       logs: logs,
     };
   },

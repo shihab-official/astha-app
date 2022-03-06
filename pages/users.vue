@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="flex items-center">
-      <h1 class="m-0 mr-auto">Users</h1>
+    <div class="flex justify-between items-center">
+      <h3 class="m-0">Users</h3>
       <template v-if="$auth.user.admin">
         <span
           @click="showModal()"

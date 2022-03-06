@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="header flex justify-between">
-      <h1 class="m-0">Summary</h1>
+    <div class="flex justify-between items-center">
+      <h3 class="m-0">Summary</h3>
       <a-range-picker
         class="range-picker"
         :disabled-date="disabledDate"

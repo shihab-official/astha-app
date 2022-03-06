@@ -1,7 +1,11 @@
 <template>
   <div>
-    <h2 v-if="currentUser">My Profile</h2>
-    <h2 v-else>Profile of {{ user.short_name }}</h2>
+    <div class="flex items-baseline">
+      <h3 class="m-0">
+        <template v-if="currentUser">My Profile</template>
+        <template v-else>Profile of {{ user.short_name }}</template>
+      </h3>
+    </div>
     <hr />
     <a-form :layout="formLayout" :form="form" @submit="submit">
       <div class="flex flex-wrap -mx-3">

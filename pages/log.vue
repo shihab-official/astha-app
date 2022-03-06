@@ -1,6 +1,11 @@
 <template>
   <div>
-    <h1>Log update</h1>
+    <div class="flex items-baseline">
+      <h3 class="m-0">Log Update</h3>
+      <NuxtLink to="/" class="ml-5 text-gray-400 text-sm">
+        <a-icon type="double-left" class="text-xs" /> Back to Logs
+      </NuxtLink>
+    </div>
     <hr />
     <a-form
       :layout="formLayout"

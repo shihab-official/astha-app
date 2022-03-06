@@ -4,7 +4,7 @@
       <NuxtLink class="logo flex items-center" to="/">
         <NuxtLogo style="height: 35px" />
       </NuxtLink>
-      <div v-if="$auth.loggedIn" class="flex">
+      <div v-if="$auth.loggedIn" class="flex" style="font-size: 90%;">
         <NuxtLink to="/log" class="block text-white hover:text-orange-400">Log</NuxtLink>
         <NuxtLink to="/leave" class="block mx-6 text-white hover:text-orange-400">Leave</NuxtLink>
         <a-dropdown :trigger="['click']">
