@@ -1,5 +1,5 @@
 const app = require('./express');
-const { initStorage, getLogsByDate, getUsers, getUser, setUser, getUserLogs, setLog, leaveApplication, getDataStore } = require('./utilities/storage');
+const { initStorage, getLogsByDate, getUsers, getUser, setUser, getUserLogs, setLog, leaveApplication, getDataStore } = require('./storage/firebase/firebase-admin');
 
 app.get('/storage', (req, res) => {
   res.send(getDataStore());
