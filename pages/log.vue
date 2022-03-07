@@ -74,13 +74,13 @@ export default {
         if (!err) {
           this.$axios
             .post(`/api/post-log`, {
-              email: this.$auth.user.email,
+              id: this.$auth.user.id,
               date: values.log.date.format('YYYYMMDD'),
               log: values.log.content,
             })
             .then((res) => {
               if (res.status == 200) {
-                this.$router.push(`/${this.$auth.user.email}`);
+                this.$router.push(`/${this.$auth.user.id}`);
               }
             })
             .catch((error) => {

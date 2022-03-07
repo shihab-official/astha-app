@@ -1,9 +1,5 @@
 const app = require('./express');
-const { initStorage, getLogsByDate, getUsers, getUser, setUser, getUserLogs, setLog, leaveApplication, getDataStore } = require('./storage/firebase/firebase-admin');
-
-app.get('/storage', (req, res) => {
-  res.send(getDataStore());
-});
+const { initStorage, getLogsByDate, getUsers, getUser, setUser, getUserLogs, setLog, leaveApplication } = require('./storage/firebase/firebase-admin');
 
 app.post('/api/init-storage', async (req, res) => {
   res.json(await initStorage(req.body));
@@ -14,7 +10,7 @@ app.get('/api/users', async (req, res) => {
 });
 
 app.get('/api/user', async (req, res) => {
-  res.json(await getUser(req.query.email));
+  res.json(await getUser(req.query.id));
 });
 
 app.post('/api/user', async (req, res) => {
@@ -26,7 +22,7 @@ app.get('/api/user-logs', async (req, res) => {
 });
 
 app.get('/api/user-log', async (req, res) => {
-  res.json(await getUserLogs(req.query.email));
+  res.json(await getUserLogs(req.query.id));
 });
 
 app.post('/api/post-log', async (req, res) => {

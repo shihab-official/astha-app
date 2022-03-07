@@ -81,7 +81,7 @@
             <td class="sticky left-0 bg-orange-50">
               <NuxtLink
                 v-if="$auth.user.admin"
-                :to="`/profile?email=${user.email}`"
+                :to="`/profile/${user.id}`"
                 >{{ user.short_name }}</NuxtLink
               >
               <template v-else>{{ user.short_name }}</template>
@@ -145,7 +145,7 @@ export default {
   async asyncData({ $axios, $auth }) {
     const users = await $axios
       .get('/api/users')
-      .then((res) => res.data.filter((user) => user.email !== $auth.user.email))
+      .then((res) => res.data.filter((user) => user.id !== $auth.user.id))
       .catch((error) => console.error(error));
 
     return { loading: false, users };
@@ -172,8 +172,12 @@ export default {
           this.$axios
             .post(`/api/init-storage`, {
               name: values.newUser.name,
-              email: `${values.newUser.email}@asthait.com`,
+              short_name: values.newUser.name,
+              email: values.newUser.email,
+              id: values.newUser.email.replace('@asthait.com', ''),
               admin: false,
+              manager: false,
+              show_log: true,
             })
             .then((res) => {
               this.modalVisible = false;

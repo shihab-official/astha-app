@@ -9,10 +9,10 @@
             }`"
   >
     <template v-if="userLog[date.code]">
-      <template v-for="(logData, i) in logs[email][date.code]">
+      <template v-for="(logData, i) in logs[id][date.code]">
         <pre
           :key="i"
-          :class="`${logData.reason ? 'leave text-red-600' : ''} ${logs[email][date.code].length === 2 ? 'relative' : ''}`"
+          :class="`${logData.reason ? 'leave text-red-600' : ''} ${logs[id][date.code].length === 2 ? 'relative' : ''}`"
           >{{ logData.content || logData.reason }}</pre
         >
       </template>
@@ -62,6 +62,6 @@ td pre.leave:before {
 
 <script>
 export default {
-  props: ['date', 'email', 'userLog', 'logs'],
+  props: ['date', 'id', 'userLog', 'logs'],
 };
 </script>

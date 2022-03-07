@@ -49,15 +49,15 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="user in users" :key="user.email">
+          <tr v-for="user in users" :key="user.id">
             <td class="sticky left-0 bg-orange-50">
-              <NuxtLink :to="`/${user.email}`">{{ user.short_name || user.name }}</NuxtLink>
+              <NuxtLink :to="`/${user.id}`">{{ user.short_name || user.name }}</NuxtLink>
             </td>
             <template v-for="date in datesInRange">
               <user-log
                 :key="date.code"
                 :date="date"
-                :email="user.email"
+                :id="user.id"
                 :userLog="user.log"
                 :logs="logs"
               ></user-log>
@@ -103,16 +103,16 @@ import { getDatesInRange } from '~/server-middleware/utilities/date';
 
 export default {
   name: 'Home',
-  async asyncData({ params, redirect, $auth, $axios }) {
+  async asyncData({ redirect, $auth, $axios }) {
     await $axios
       .get(`/api/user`, {
         params: {
-          email: $auth.user.email,
+          id: $auth.user.id,
         },
       })
       .then((res) => {
-        if (!res.data.admin && !res.data.management) {
-          return redirect(`/${$auth.user.email}`)
+        if (!res.data.user.admin && !res.data.user.management) {
+          return redirect(`/${$auth.user.id}`)
         }
       })
       .catch((error) => {
@@ -138,7 +138,7 @@ export default {
       );
     },
     logs: function () {
-      const emails = {};
+      const userIDs = {};
       this.users.forEach((user) => {
         const logCodes = Object.keys(user.log);
         const userLogs = {};
@@ -155,9 +155,9 @@ export default {
           }
           userLogs[code] = newLog;
         });
-        emails[user.email] = userLogs;
+        userIDs[user.id] = userLogs;
       });
-      return emails;
+      return userIDs;
     },
   },
   mounted: function () {

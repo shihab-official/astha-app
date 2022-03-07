@@ -55,16 +55,16 @@ export default {
     if (
       !$auth.user.admin &&
       !$auth.user.manager &&
-      params.email != $auth.user.email
+      params.user != $auth.user.id
     ) {
-      return redirect(`/${$auth.user.email}`);
+      return redirect(`/${$auth.user.id}`);
     }
   },
   async asyncData({ params, redirect, $auth, $axios }) {
     const content = await $axios
       .get(`/api/user-log`, {
         params: {
-          email: params.email,
+          id: params.user,
         },
       })
       .then((res) => res.data)
@@ -95,7 +95,7 @@ export default {
 
     return {
       heading:
-        params.email === $auth.user.email ? 'My Board' : content.user.name,
+        params.user === $auth.user.id ? 'My Board' : content.user.name,
       logs: logs,
     };
   },
@@ -114,11 +114,11 @@ export default {
   //     this.$axios
   //       .get(`/api/user-log`, {
   //         params: {
-  //           email: this.$route.params.email
+  //           id: this.$route.params.user
   //         },
   //       })
   //       .then((res) => {
-  //         this.heading = this.$route.params.email === this.$auth.user.email ? 'My Board' : `Board of ${res.data.user.name}`
+  //         this.heading = this.$route.params.user === this.$auth.user.id ? 'My Board' : `Board of ${res.data.user.name}`
   //         this.logData = res.data.logs;
   //       })
   //       .catch((error) => {

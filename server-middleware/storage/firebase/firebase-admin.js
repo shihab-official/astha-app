@@ -4,17 +4,15 @@ const db = require('./firebase-config')
 
 module.exports = {
   initStorage: async (user) => {
-    const docRef = await db.doc(`users/${user.email}`).get();
+    const docRef = await db.doc(`users/${user.id}`).get();
     if (docRef.exists) {
       return docRef.data();
     } else {
-      await db.doc(`logs/${user.email}`).set({}, { merge: true });
-      await db.doc(`users/${user.email}`).set(user, { merge: true });
+      await db.doc(`logs/${user.id}`).set({}, { merge: true });
+      await db.doc(`users/${user.id}`).set(user, { merge: true });
       return user;
     }
   },
-
-  getDataStore: () => {},
 
   getUsers: async () => {
     const usersCollection = await db.collection('users').get();
@@ -22,15 +20,15 @@ module.exports = {
     return users;
   },
 
-  getUser: async (email) => {
+  getUser: async (id) => {
     const adminUsers = await db.collection('users').where('admin', '==', true).get();
-    const userInfo = await db.doc(`users/${email}`).get();
+    const userInfo = await db.doc(`users/${id}`).get();
     return { user: userInfo.data(), adminCount: adminUsers.size };
   },
 
   setUser: async (user) => {
     try {
-      await db.doc(`users/${user.email}`).set(user, { merge: true });
+      await db.doc(`users/${user.id}`).set(user, { merge: true });
       return {
         type: 'success',
         message: 'Profile updated.'
@@ -41,9 +39,9 @@ module.exports = {
     }
   },
 
-  getUserLogs: async (email) => {
-    const userInfo = await db.doc(`users/${email}`).get();
-    const userLogs = await db.doc(`logs/${email}`).get();
+  getUserLogs: async (id) => {
+    const userInfo = await db.doc(`users/${id}`).get();
+    const userLogs = await db.doc(`logs/${id}`).get();
     const logData = userLogs.data();
     const keys = Object.keys(logData);
     keys.sort();
@@ -68,15 +66,15 @@ module.exports = {
 
     let users = userSnapshot.docs.map((user) => user.data());
 
-    let emails = [];
+    let userIDs = [];
     const userLogs = logSnapshot.docs.map((log) => {
-      emails.push(log.id);
+      userIDs.push(log.id);
       const logs = log.data();
       return logs;
     });
 
     users = users.map((user) => {
-      const logs = userLogs[emails.indexOf(user.email)];
+      const logs = userLogs[userIDs.indexOf(user.id)];
       const keys = Object.keys(logs),
         values = Object.values(logs);
       const filteredLogs = {};
@@ -94,7 +92,7 @@ module.exports = {
 
   setLog: async (logData) => {
     try {
-      await db.doc(`logs/${logData.email}`).set(
+      await db.doc(`logs/${logData.id}`).set(
         {
           [logData.date]: {
             work: {
@@ -118,7 +116,7 @@ module.exports = {
 
     try {
       for (let date of dates) {
-        await db.doc(`logs/${leaveData.email}`).set(
+        await db.doc(`logs/${leaveData.id}`).set(
           {
             [date.code]: {
               leave: {

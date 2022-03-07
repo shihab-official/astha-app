@@ -106,7 +106,7 @@ export default {
     const resData = await $axios
       .get('/api/user', {
         params: {
-          email: params.email || $auth.user.email,
+          id: params.user || $auth.user.id,
         },
       })
       .then((res) => res.data)
@@ -130,8 +130,8 @@ export default {
   computed: {
     currentUser() {
       return !(
-        this.$route.params.email &&
-        this.$route.params.email !== this.$auth.user.email
+        this.$route.params.user &&
+        this.$route.params.user !== this.$auth.user.id
       );
     },
     currentUserIsAdmin() {

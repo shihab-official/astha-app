@@ -119,7 +119,7 @@ export default {
         if (!err) {
           this.$axios
             .post(`/api/leave-application`, {
-              email: this.$auth.user.email,
+              id: this.$auth.user.id,
               dates: this.datesInRange.map(function (date) {
                 return {
                   code: date.code,
@@ -131,7 +131,7 @@ export default {
             })
             .then((res) => {
               if (res.status == 200) {
-                this.$router.push(`/${this.$auth.user.email}`);
+                this.$router.push(`/${this.$auth.user.id}`);
               }
             })
             .catch((error) => {
