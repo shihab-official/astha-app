@@ -11,9 +11,9 @@
       <div class="flex flex-wrap -mx-3">
         <a-form-item label="Name">
           <a-input
-            :disabled="!currentUser && !$auth.user.admin"
+            :read-Only="!currentUser && !currentUserIsAdmin"
             v-decorator="[
-              'user.name',
+              'name',
               {
                 initialValue: user.name,
                 rules: [{ required: true, message: 'Please provide name.' }],
@@ -23,27 +23,27 @@
         </a-form-item>
         <a-form-item label="Short Name">
           <a-input
-            :disabled="!currentUser && !$auth.user.admin"
-            v-decorator="['user.short_name', { initialValue: user.short_name }]"
+            :read-Only="!currentUser && !currentUserIsAdmin"
+            v-decorator="['short_name', { initialValue: user.short_name }]"
           />
         </a-form-item>
         <a-form-item label="Email">
-          <a-input :default-value="user.email" disabled />
+          <a-input :default-value="user.email" readOnly />
         </a-form-item>
         <a-form-item label="Mobile">
           <a-input
-            :disabled="!currentUser && !$auth.user.admin"
-            v-decorator="['user.mobile', { initialValue: user.mobile }]"
+            :read-Only="!currentUser && !currentUserIsAdmin"
+            v-decorator="['mobile', { initialValue: user.mobile }]"
           />
         </a-form-item>
         <a-form-item label="Date of Birth">
           <a-date-picker
-            :disabled="!currentUser && !$auth.user.admin"
+            :read-Only="!currentUser && !currentUserIsAdmin"
             :format="dateFormat"
             :disabled-date="disabledDate"
             :allow-clear="false"
             v-decorator="[
-              'user.dob',
+              'dob',
               {
                 initialValue: user.dob,
                 rules: [
@@ -53,12 +53,12 @@
             ]"
           />
         </a-form-item>
-        <div class="flex" v-if="$auth.user.admin">
+        <div class="flex" v-if="currentUserIsAdmin">
           <a-form-item label="Admin" style="width: 100px; margin: 0">
             <a-switch
               :default-checked="user.admin"
-              :disabled="user.admin && !currentUser"
-              v-decorator="['user.admin']"
+              :disabled="(user.admin && !currentUser) || (currentUser && adminCount < 2)"
+              v-decorator="['admin']"
               checked-children=" Yes "
               un-checked-children=" No "
             />
@@ -67,7 +67,7 @@
             <a-form-item label="Manager" style="width: 100px; margin: 0">
               <a-switch
                 :default-checked="user.manager"
-                v-decorator="['user.manager']"
+                v-decorator="['manager']"
                 checked-children=" Yes "
                 un-checked-children=" No "
               />
@@ -75,7 +75,7 @@
             <a-form-item label="Show log" style="width: 100px; margin: 0">
               <a-switch
                 :default-checked="user.show_log"
-                v-decorator="['user.show_log']"
+                v-decorator="['show_log']"
                 checked-children=" Yes "
                 un-checked-children=" No "
               />
@@ -83,7 +83,7 @@
           </template>
         </div>
       </div>
-      <a-form-item v-if="currentUser || $auth.user.admin" style="padding: 0">
+      <a-form-item v-if="currentUser || currentUserIsAdmin" style="padding: 0">
         <a-button type="primary" html-type="submit"> Save </a-button>
       </a-form-item>
     </a-form>
@@ -102,20 +102,20 @@ import moment from 'moment';
 
 export default {
   name: 'profile',
-  async asyncData({ $axios, $auth, query }) {
-    const user = await $axios
+  async asyncData({ $axios, $auth, params }) {
+    const resData = await $axios
       .get('/api/user', {
         params: {
-          email: query.email || $auth.user.email
+          email: params.email || $auth.user.email,
         },
       })
       .then((res) => res.data)
       .catch((error) => console.error(error));
 
-    user.short_name = user.short_name || user.name;
-    user.dob = moment(user.dob || '01-Jan-1980', 'DD-MMM-YYYY');
+    resData.user.short_name = resData.user.short_name || resData.user.name;
+    resData.user.dob = moment(resData.user.dob || '01-Jan-1980', 'DD-MMM-YYYY');
 
-    return { loading: false, user };
+    return { loading: false, ...resData };
   },
   beforeCreate() {
     this.form = this.$form.createForm(this);
@@ -130,9 +130,12 @@ export default {
   computed: {
     currentUser() {
       return !(
-        this.$route.query.email &&
-        this.$route.query.email !== this.$auth.user.email
+        this.$route.params.email &&
+        this.$route.params.email !== this.$auth.user.email
       );
+    },
+    currentUserIsAdmin() {
+      return this.$auth.user.admin;
     },
   },
   methods: {
@@ -142,20 +145,26 @@ export default {
     submit(e) {
       e.preventDefault();
       this.form.validateFields((err, values) => {
-        const user = values.user;
-        const userProps = Object.keys(user);
+        const userData = values;
+        const userProps = Object.keys(userData);
+
         for (let prop of userProps) {
-          if (user[prop] === null || user[prop] === undefined) {
-            delete user[prop];
+          if (userData[prop] === null || userData[prop] === undefined) {
+            delete userData[prop];
           }
         }
-        user.email = this.user.email;
-        user.dob = moment(user.dob).format('DD-MMM-YYYY');
+
+        userData.email = this.user.email;
+        userData.dob = moment(userData.dob).format('DD-MMM-YYYY');
+
         if (!err) {
           this.$axios
-            .post(`/api/user`, user)
+            .post(`/api/user`, userData)
             .then((res) => {
               if (res.status == 200) {
+                if (this.currentUser) {
+                  this.$auth.setUser({ ...this.$auth.user, ...userData });
+                }
                 this.$message[res.data.type](res.data.message);
               }
             })

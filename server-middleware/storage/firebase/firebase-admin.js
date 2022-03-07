@@ -23,8 +23,9 @@ module.exports = {
   },
 
   getUser: async (email) => {
+    const adminUsers = await db.collection('users').where('admin', '==', true).get();
     const userInfo = await db.doc(`users/${email}`).get();
-    return userInfo.data();
+    return { user: userInfo.data(), adminCount: adminUsers.size };
   },
 
   setUser: async (user) => {
