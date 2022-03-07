@@ -160,12 +160,6 @@ export default {
       return emails;
     },
   },
-  beforeMount: function () {
-    console.log('beforeMount', this.$auth.user.admin);
-    if (!this.$auth.user.admin) {
-      return this.$router.push(`/${this.$auth.user.email}`);
-    }
-  },
   mounted: function () {
     document.title = 'Work Update';
     this.showLogs();
