@@ -80,6 +80,15 @@ table td {
   padding: 6px 10px;
 }
 
+table th:last-child,
+table td:last-child {
+  border-right-width: 0;
+}
+
+tr:last-child td {
+  border-bottom-width: 0;
+}
+
 .range-picker {
   width: 245px;
 }
