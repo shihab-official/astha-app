@@ -6,16 +6,22 @@ module.exports = {
   initStorage: async (user) => {
     const docRef = await db.doc(`users/${user.id}`).get();
     if (docRef.exists) {
-      return docRef.data();
+      return {
+        newUser: false,
+        user: docRef.data()
+      };
     } else {
       await db.doc(`logs/${user.id}`).set({}, { merge: true });
       await db.doc(`users/${user.id}`).set(user, { merge: true });
-      return user;
+      return {
+        newUser: true,
+        user
+      };
     }
   },
 
   getUsers: async () => {
-    const usersCollection = await db.collection('users').get();
+    const usersCollection = await db.collection(`users`).get();
     const users = usersCollection.docs.map(user => user.data());
     return users;
   },
@@ -61,8 +67,8 @@ module.exports = {
   },
 
   getLogsByDate: async (dates) => {
-    const userSnapshot = await db.collection('users').get();
-    const logSnapshot = await db.collection('logs').get();
+    const userSnapshot = await db.collection(`users`).get();
+    const logSnapshot = await db.collection(`logs`).get();
 
     let users = userSnapshot.docs.map((user) => user.data());
 

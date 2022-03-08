@@ -1,9 +1,9 @@
 import { ADMIN_EMAILS } from '~/constants';
 
-export default async function ({ $auth, $axios }) {
+export default async function ({ $auth, $axios, redirect }) {
   if ($auth.loggedIn) {
     await $axios
-      .post(`/api/init-storage`, {
+      .post('/api/init-storage', {
         name: $auth.user.name,
         short_name: $auth.user.given_name,
         email: $auth.user.email,
@@ -13,7 +13,10 @@ export default async function ({ $auth, $axios }) {
         show_log: true,
       })
       .then((res) => {
-        $auth.setUser({ ...$auth.user, ...res.data });
+        $auth.setUser({ ...$auth.user, ...res.data.user });
+        if (res.data.newUser) { // need to try using state
+          return redirect(`/profile`);
+        }
       })
       .catch((error) => {
         // console.error(error);
