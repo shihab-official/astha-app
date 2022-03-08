@@ -155,11 +155,12 @@ export default {
         }
 
         userData.email = this.user.email;
+        userData.id = this.user.email.replace('@asthait.com', '');
         userData.dob = moment(userData.dob).format('DD-MMM-YYYY');
 
         if (!err) {
           this.$axios
-            .post(`/api/user`, userData)
+            .post('/api/user', userData)
             .then((res) => {
               if (res.status == 200) {
                 if (this.currentUser) {
