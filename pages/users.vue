@@ -77,7 +77,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="user in users" :key="user.email">
+          <tr v-for="user in users" :key="user.id">
             <td class="sticky left-0 bg-orange-50">
               <NuxtLink
                 v-if="$auth.user.admin"
@@ -170,7 +170,7 @@ export default {
       this.form.validateFields((err, values) => {
         if (!err) {
           this.$axios
-            .post(`/api/init-storage`, {
+            .post('/api/create-user', {
               name: values.newUser.name,
               short_name: values.newUser.name,
               email: values.newUser.email,

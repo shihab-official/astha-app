@@ -5,6 +5,10 @@ app.post('/api/init-storage', async (req, res) => {
   res.json(await initStorage(req.body));
 });
 
+app.post('/api/create-user', async (req, res) => {
+  res.json(await initStorage(req.body));
+});
+
 app.get('/api/users', async (req, res) => {
   res.json(await getUsers());
 });
