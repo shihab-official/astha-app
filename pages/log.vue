@@ -73,7 +73,7 @@ export default {
       this.form.validateFields((err, values) => {
         if (!err) {
           this.$axios
-            .post(`/api/post-log`, {
+            .post('/api/post-log', {
               id: this.$auth.user.id,
               date: values.log.date.format('YYYYMMDD'),
               log: values.log.content,

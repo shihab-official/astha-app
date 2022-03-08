@@ -62,7 +62,7 @@ export default {
   },
   async asyncData({ params, redirect, $auth, $axios }) {
     const content = await $axios
-      .get(`/api/user-log`, {
+      .get('/api/user-log', {
         params: {
           id: params.user,
         },
@@ -112,7 +112,7 @@ export default {
   // methods: {
   //   showLogs: function() {
   //     this.$axios
-  //       .get(`/api/user-log`, {
+  //       .get('/api/user-log', {
   //         params: {
   //           id: this.$route.params.user
   //         },

@@ -182,7 +182,7 @@ export default {
       if (this.$auth.user.admin) {
         this.loading = true;
         this.$axios
-          .get(`/api/user-logs`, {
+          .get('/api/user-logs', {
             params: {
               range: this.datesInRange.map(function (date) {
                 return date.code;

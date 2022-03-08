@@ -118,7 +118,7 @@ export default {
       this.form.validateFields((err, values) => {
         if (!err) {
           this.$axios
-            .post(`/api/leave-application`, {
+            .post('/api/leave-application', {
               id: this.$auth.user.id,
               dates: this.datesInRange.map(function (date) {
                 return {
