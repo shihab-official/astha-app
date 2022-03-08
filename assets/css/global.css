@@ -40,12 +40,22 @@ body {
   line-height: 1.5;
 }
 
+.container {
+  max-width: 1200px;
+}
+
 a {
   color: #7300dc;
 }
 
 a:hover {
   color: #b175e7;
+}
+
+hr {
+  color: #d1d5db;
+  border: 0;
+  border-top: solid 1px;
 }
 
 .table-wrapper {
@@ -74,7 +84,15 @@ table td {
   width: 245px;
 }
 
-.ant-switch, .ant-form-item .ant-switch {
+.ant-layout-header,
+.ant-layout-content,
+.ant-layout-footer {
+  padding-left: 25px;
+  padding-right: 25px;
+}
+
+.ant-switch,
+.ant-form-item .ant-switch {
   width: 58px;
   height: 25px;
   margin: 0;

@@ -22,7 +22,11 @@ module.exports = {
 
   getUsers: async () => {
     const usersCollection = await db.collection(`users`).get();
-    const users = usersCollection.docs.map(user => user.data());
+    const users = usersCollection.docs.map(user => {
+      const data = user.data();
+      return { ...data, dob: data.dob?.slice(0, -5) };
+    });
+
     return users;
   },
 

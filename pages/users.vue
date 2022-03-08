@@ -66,28 +66,28 @@
           <tr>
             <th class="sticky left-0 bg-orange-100">Name</th>
             <th>Full Name</th>
-            <th>Date of Birth</th>
-            <th>Mobile</th>
+            <th class="w-1">Date of Birth</th>
+            <th class="w-1">Mobile</th>
             <th>Email</th>
             <template v-if="$auth.user.admin">
-              <th>Show Log</th>
-              <th>Manager</th>
-              <th>Admin</th>
+              <th class="w-1">Show Log</th>
+              <th class="w-1">Manager</th>
+              <th class="w-1">Admin</th>
             </template>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="user in users" :key="user.id">
+          <tr v-for="user in users" :key="user.id" :class="{relative: true, self: user.id === $auth.user.id}">
             <td class="sticky left-0 bg-orange-50">
               <NuxtLink
                 v-if="$auth.user.admin"
-                :to="`/profile/${user.id}`"
+                :to="`/profile${user.id === $auth.user.id ? '' : `/${user.id}`}`"
                 >{{ user.short_name }}</NuxtLink
               >
               <template v-else>{{ user.short_name }}</template>
             </td>
             <td>{{ user.name }}</td>
-            <td>{{ user.dob }}</td>
+            <td class="text-center">{{ user.dob }}</td>
             <td>{{ user.mobile }}</td>
             <td>{{ user.email }}</td>
             <template v-if="$auth.user.admin">
@@ -137,6 +137,18 @@ td.sticky {
   padding: 6px 10px;
   box-shadow: 0 10px 8px #ddd;
 }
+tr.self:after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgb(0 220 130 / 10%);
+    z-index: 1;
+    pointer-events: none;
+}
 </style>
 
 <script>
@@ -145,7 +157,7 @@ export default {
   async asyncData({ $axios, $auth }) {
     const users = await $axios
       .get('/api/users')
-      .then((res) => res.data.filter((user) => user.id !== $auth.user.id))
+      .then((res) => res.data)
       .catch((error) => console.error(error));
 
     return { loading: false, users };
