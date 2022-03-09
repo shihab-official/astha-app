@@ -152,6 +152,8 @@ tr.self:after {
 </style>
 
 <script>
+import { mapState, mapActions } from 'vuex';
+
 export default {
   name: 'user-list',
   async asyncData({ $axios, $auth }) {
@@ -173,7 +175,12 @@ export default {
       modalVisible: false,
     };
   },
+  created() {
+    this.setUsers(this.users);
+    // console.log(this.users);
+  },
   methods: {
+    ...mapActions('user', ['setUsers']),
     showModal() {
       this.modalVisible = true;
     },
