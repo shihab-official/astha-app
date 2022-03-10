@@ -94,37 +94,60 @@ export default {
     });
 
     return {
-      heading:
-        params.user === $auth.user.id ? 'My Board' : content.user.name,
+      heading: params.user === $auth.user.id ? 'My Board' : content.user.name,
       logs: logs,
     };
   },
   // data() {
   //   return {
   //     heading: '',
-  //     logData: []
-  //   }
+  //     logs: [],
+  //   };
   // },
   mounted: function () {
     document.title = 'Work Update';
     // this.showLogs();
   },
   // methods: {
-  //   showLogs: function() {
+  //   showLogs: function () {
   //     this.$axios
   //       .get('/api/user-log', {
   //         params: {
-  //           id: this.$route.params.user
+  //           id: this.$route.params.user,
   //         },
   //       })
   //       .then((res) => {
-  //         this.heading = this.$route.params.user === this.$auth.user.id ? 'My Board' : `Board of ${res.data.user.name}`
-  //         this.logData = res.data.logs;
+  //         const logs = res.data.logs.map((userLog) => {
+  //           const newLog = [];
+  //           let leave = '';
+  //           const keys = Object.keys(userLog.log);
+  //           if (keys.length === 1) {
+  //             newLog.push(userLog.log[keys[0]]);
+  //           } else if (keys.length === 2) {
+  //             newLog.push(userLog.log.work);
+  //             newLog.splice(userLog.log.leave.option, 0, userLog.log.leave);
+  //           }
+  //           if (userLog.log.leave) {
+  //             leave =
+  //               userLog.log.leave.option === 0
+  //                 ? '1st Half'
+  //                 : userLog.log.leave.option === 1
+  //                 ? '2nd Half'
+  //                 : 'Full day';
+  //           }
+  //           return { ...userLog, log: newLog, leave };
+  //         });
+
+  //         this.heading =
+  //           this.$route.params.user === this.$auth.user.id
+  //             ? 'My Board'
+  //             : `Board of ${res.data.user.name}`;
+  //         this.logs = logs;
   //       })
   //       .catch((error) => {
   //         console.error(error);
   //       });
-  //   }
-  // }
+  //   },
+  // },
 };
 </script>

@@ -11,7 +11,7 @@ export const getters = {
     const userIDs = {};
     _users.forEach((user) => {
       if (user.show_log) {
-        const logCodes = Object.keys(user.log);
+        const logCodes = Object.keys(user.log || {});
         const userLogs = {};
 
         logCodes.forEach((code) => {
@@ -73,6 +73,26 @@ export const actions = {
           return;
         });
     }
+  },
+  getUsers({ commit }) {
+    commit('LOADING', true);
+    this.$axios
+      .get('/api/users')
+      .then((res) => {
+        const users = res.data.sort(function (a, b) {
+          const nameA = a.short_name.toLowerCase(),
+            nameB = b.short_name.toLowerCase();
+          return nameA > nameB ? 1 : nameA < nameB ? -1 : 0;
+        });
+
+        commit('SET_USERS', users);
+        commit('LOADING');
+      })
+      .catch((error) => {
+        console.error(error);
+        commit('LOADING');
+        return;
+      });
   },
   getUser({ commit }, key) {
     commit('GET_USER', key);

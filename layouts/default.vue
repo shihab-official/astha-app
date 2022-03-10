@@ -104,11 +104,15 @@ export default {
     );
 
     if (this.$auth.loggedIn) {
-      this.getUsersWithLogs(datesInRange);
+      if (this.$auth.user.admin) {
+        this.getUsersWithLogs(datesInRange);
+      } else {
+        this.getUsers();
+      }
     }
   },
   methods: {
-    ...mapActions('user', ['getUsersWithLogs']),
+    ...mapActions('user', ['getUsersWithLogs', 'getUsers']),
     logout() {
       this.$auth.logout('google').then(() => {
         this.$router.push('/login');
