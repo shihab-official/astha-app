@@ -38,19 +38,10 @@ export const mutations = {
     (state._updatingState = loadingState || false),
   SET_USERS: (state, users) => (state._users = users || state._users),
   GET_USER: (state, key) => {
-    const filtered = !key
-      ? null
-      : state._users.filter((_user) => {
-          const userInfo = `${_user.name}\n${_user.short_name}\n${
-            _user.email
-          }\n${_user.mobile || ''}\n${_user.dob || ''}`.toLowerCase();
-          if (userInfo.indexOf(key) !== -1) {
-            console.clear();
-            console.log(userInfo);
-          }
-          return userInfo.indexOf(key) !== -1;
-        });
-    state._filteredUsers = filtered;
+    state._filteredUsers = !key ? null : state._users.filter((_user) => {
+      const userInfo = `${_user.name}\n${_user.short_name}\n${_user.email}\n${_user.mobile || ''}\n${_user.dob || ''}`.toLowerCase();
+      return userInfo.indexOf(key) !== -1;
+    });
   },
 };
 
