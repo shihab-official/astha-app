@@ -31,8 +31,10 @@ export default {
     // }
   },
   methods: {
-    login() {
-      this.$auth.loginWith('google');
+    async login() {
+      console.time('signing in');
+      await this.$auth.loginWith('google');
+      console.timeEnd('signing in');
     },
   },
 };

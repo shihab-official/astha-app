@@ -50,17 +50,19 @@
         </thead>
         <tbody>
           <tr v-for="user in users" :key="user.id">
-            <td class="sticky left-0 bg-orange-50">
-              <NuxtLink :to="`/${user.id}`">{{ user.short_name || user.name }}</NuxtLink>
-            </td>
-            <template v-for="date in datesInRange">
-              <user-log
-                :key="date.code"
-                :date="date"
-                :id="user.id"
-                :userLog="user.log"
-                :logs="logs"
-              ></user-log>
+            <template v-if="user.show_log">
+              <td class="sticky left-0 bg-orange-50">
+                <NuxtLink :to="`/${user.id}`">{{ user.short_name || user.name }}</NuxtLink>
+              </td>
+              <template v-for="date in datesInRange">
+                <user-log
+                  :key="date.code"
+                  :date="date"
+                  :id="user.id"
+                  :userLog="user.log"
+                  :logs="logs"
+                ></user-log>
+              </template>
             </template>
           </tr>
         </tbody>
@@ -100,6 +102,7 @@ td.sticky {
 <script>
 import moment from 'moment';
 import { getDatesInRange } from '~/server-middleware/utilities/date';
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: 'Home',
@@ -121,12 +124,11 @@ export default {
   },
   data() {
     return {
-      loading: false,
-      users: [],
       dateRange: [moment().startOf('week'), moment().endOf('week')],
     };
   },
   computed: {
+    ...mapGetters('user', ['loading', 'users', 'logs']),
     dateFormat: function () {
       return 'DD-MMM-YYYY';
     },
@@ -137,32 +139,9 @@ export default {
         this.dateFormat
       );
     },
-    logs: function () {
-      const userIDs = {};
-      this.users.forEach((user) => {
-        const logCodes = Object.keys(user.log);
-        const userLogs = {};
-
-        logCodes.forEach((code) => {
-          const userLog = user.log[code];
-          const newLog = [];
-          const keys = Object.keys(userLog);
-          if (keys.length === 1) {
-            newLog.push(userLog[keys[0]]);
-          } else if (keys.length === 2) {
-            newLog.push(userLog.work);
-            newLog.splice(userLog.leave.option, 0, userLog.leave);
-          }
-          userLogs[code] = newLog;
-        });
-        userIDs[user.id] = userLogs;
-      });
-      return userIDs;
-    },
   },
   mounted: function () {
     document.title = 'Work Update';
-    this.showLogs();
   },
   updated: function () {
     if (this.$refs?.today?.length > 0) {
@@ -171,6 +150,7 @@ export default {
   },
   methods: {
     moment,
+    ...mapActions('user', ['getUsersWithLogs']),
     disabledDate: function (current) {
       return current && current.day() > 4;
     },
@@ -179,29 +159,7 @@ export default {
       this.showLogs();
     },
     showLogs: function () {
-      if (this.$auth.user.admin) {
-        this.loading = true;
-        this.$axios
-          .get('/api/user-logs', {
-            params: {
-              range: this.datesInRange.map(function (date) {
-                return date.code;
-              }),
-            },
-          })
-          .then((res) => {
-            this.users = res.data.filter((user) => {
-              if (user.show_log) {
-                return user;
-              }
-            });
-            this.loading = false;
-          })
-          .catch((error) => {
-            console.error(error);
-            this.loading = false;
-          });
-      }
+      this.getUsersWithLogs(this.datesInRange);
     },
   },
 };
