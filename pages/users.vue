@@ -91,7 +91,7 @@
             </td>
             <td>{{ user.name }}</td>
             <td class="text-center">{{ user.dob }}</td>
-            <td>{{ user.mobile }}</td>
+            <td style="width: 110px;">{{ user.mobile }}</td>
             <td>{{ user.email }}</td>
             <template v-if="$auth.user.admin">
               <td
@@ -133,6 +133,9 @@ th {
 }
 th.sticky {
   box-shadow: 0 -25px 8px #ddd, 0 10px 8px #ddd;
+}
+td {
+  white-space: normal;
 }
 td.sticky {
   width: 120px;
