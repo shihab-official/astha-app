@@ -5,6 +5,9 @@
         <template v-if="currentUser">My Profile</template>
         <template v-else>Profile of {{ user.short_name }}</template>
       </h3>
+      <NuxtLink to="/users" class="ml-5 text-gray-400 text-sm">
+        <a-icon type="double-left" class="text-xs" /> Back to Users
+      </NuxtLink>
     </div>
     <hr />
     <a-form :layout="formLayout" :form="form" @submit="submit">
@@ -57,7 +60,9 @@
           <a-form-item label="Admin" style="width: 100px; margin: 0">
             <a-switch
               :default-checked="user.admin"
-              :disabled="(user.admin && !currentUser) || (currentUser && adminCount < 2)"
+              :disabled="
+                (user.admin && !currentUser) || (currentUser && adminCount < 2)
+              "
               v-decorator="['admin']"
               checked-children=" Yes "
               un-checked-children=" No "
@@ -99,6 +104,7 @@
 
 <script>
 import moment from 'moment';
+import { mapActions } from "vuex";
 
 export default {
   name: 'profile',
@@ -139,6 +145,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions('user', ['setUser']),
     disabledDate(current) {
       return current > moment().startOf('day');
     },
@@ -166,6 +173,7 @@ export default {
                 if (this.currentUser) {
                   this.$auth.setUser({ ...this.$auth.user, ...userData });
                 }
+                this.setUser(userData);
                 this.$message[res.data.type](res.data.message);
               }
             })

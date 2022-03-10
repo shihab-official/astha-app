@@ -70,8 +70,8 @@
             <th class="sticky left-0 bg-orange-100">Name</th>
             <th>Full Name</th>
             <th class="w-1">Date of Birth</th>
-            <th class="w-1">Mobile</th>
-            <th>Email</th>
+            <th class="w-28">Mobile</th>
+            <th class="w-72">Email</th>
             <template v-if="$auth.user.admin">
               <th class="w-1">Show Log</th>
               <th class="w-1">Manager</th>
@@ -91,7 +91,7 @@
             </td>
             <td>{{ user.name }}</td>
             <td class="text-center">{{ user.dob }}</td>
-            <td style="width: 110px;">{{ user.mobile }}</td>
+            <td>{{ user.mobile }}</td>
             <td>{{ user.email }}</td>
             <template v-if="$auth.user.admin">
               <td

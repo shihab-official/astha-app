@@ -6,7 +6,9 @@ export const state = () => ({
 
 export const getters = {
   loading: ({ _updatingState }) => _updatingState,
+
   users: ({ _users, _filteredUsers }) => _filteredUsers ?? _users,
+
   logs({ _users }) {
     const userIDs = {};
     _users.forEach((user) => {
@@ -36,6 +38,7 @@ export const getters = {
 export const mutations = {
   LOADING: (state, loadingState) =>
     (state._updatingState = loadingState || false),
+
   SET_USERS: (state, users) => {
     state._users = users.map(user => {
       if (user.dob) {
@@ -44,11 +47,30 @@ export const mutations = {
       return user;
     }) || state._users
   },
+
   GET_USER: (state, key) => {
     state._filteredUsers = !key ? null : state._users.filter((_user) => {
       const userInfo = `${_user.name}\n${_user.short_name}\n${_user.email}\n${_user.mobile || ''}\n${_user.dob || ''}`.toLowerCase();
       return userInfo.indexOf(key) !== -1;
     });
+  },
+
+  SET_USER: (state, userInfo) => {
+    let index = -1;
+    let user = state._users.find((u, i) => {
+      if (u.id === userInfo.id) {
+        index = i;
+        return true;
+      } else {
+        return false;
+      }
+    });
+
+    if (user) {
+      user = {...user, ...userInfo, dob: userInfo.dob.slice(0, -5)};
+    }
+
+    state._users.splice(index, 1, user);
   },
 };
 
@@ -81,6 +103,7 @@ export const actions = {
         });
     }
   },
+
   getUsers({ commit }) {
     commit('LOADING', true);
     this.$axios
@@ -101,7 +124,12 @@ export const actions = {
         return;
       });
   },
+
   getUser({ commit }, key) {
     commit('GET_USER', key);
+  },
+
+  setUser({ commit }, user) {
+    commit('SET_USER', user);
   },
 };
