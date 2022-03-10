@@ -11,65 +11,96 @@
     </div>
     <hr />
     <a-form :layout="formLayout" :form="form" @submit="submit">
-      <div class="flex flex-wrap -mx-3">
-        <a-form-item label="Name">
-          <a-input
-            :read-Only="!currentUser && !currentUserIsAdmin"
-            v-decorator="[
-              'name',
-              {
-                initialValue: user.name,
-                rules: [{ required: true, message: 'Please provide name.' }],
-              },
-            ]"
-          />
-        </a-form-item>
-        <a-form-item label="Short Name">
-          <a-input
-            :read-Only="!currentUser && !currentUserIsAdmin"
-            v-decorator="['short_name', { initialValue: user.short_name }]"
-          />
-        </a-form-item>
-        <a-form-item label="Email">
-          <a-input :default-value="user.email" readOnly />
-        </a-form-item>
-        <a-form-item label="Mobile">
-          <a-input
-            :read-Only="!currentUser && !currentUserIsAdmin"
-            v-decorator="['mobile', { initialValue: user.mobile }]"
-          />
-        </a-form-item>
-        <a-form-item label="Date of Birth">
-          <a-date-picker
-            :read-Only="!currentUser && !currentUserIsAdmin"
-            :format="dateFormat"
-            :disabled-date="disabledDate"
-            :allow-clear="false"
-            v-decorator="[
-              'dob',
-              {
-                initialValue: user.dob,
-                rules: [
-                  { required: true, message: 'Please select date of birth.' },
-                ],
-              },
-            ]"
-          />
-        </a-form-item>
-        <div class="flex" v-if="currentUserIsAdmin">
-          <a-form-item label="Admin" style="width: 100px; margin: 0">
-            <a-switch
-              :default-checked="user.admin"
-              :disabled="
-                (user.admin && !currentUser) || (currentUser && adminCount < 2)
-              "
-              v-decorator="['admin']"
-              checked-children=" Yes "
-              un-checked-children=" No "
+      <fieldset>
+        <legend> Personal</legend>
+        <div class="flex flex-wrap -mx-3">
+          <a-form-item label="Name">
+            <a-input
+              :read-only="!currentUser && !currentUserIsAdminOrManager"
+              v-decorator="[
+                'name',
+                {
+                  initialValue: user.name,
+                  rules: [{ required: true, message: 'Please provide name.' }],
+                },
+              ]"
             />
           </a-form-item>
-          <template>
-            <a-form-item label="Manager" style="width: 100px; margin: 0">
+          <a-form-item label="Short Name">
+            <a-input
+              :read-only="!currentUser && !currentUserIsAdminOrManager"
+              v-decorator="['short_name', { initialValue: user.short_name }]"
+            />
+          </a-form-item>
+          <a-form-item label="Email">
+            <a-input :default-value="user.email" readOnly />
+          </a-form-item>
+          <a-form-item label="Mobile">
+            <a-input
+              :read-only="!currentUser && !currentUserIsAdminOrManager"
+              v-decorator="['mobile', { initialValue: user.mobile }]"
+            />
+          </a-form-item>
+          <a-form-item label="Date of Birth">
+            <a-date-picker
+              class="input-field-sm"
+              :read-only="!currentUser && !currentUserIsAdminOrManager"
+              :format="dateFormat"
+              :disabled-date="disabledDate"
+              :allow-clear="false"
+              v-decorator="[
+                'dob',
+                {
+                  initialValue: user.dob,
+                  rules: [
+                    { required: true, message: 'Please select date of birth.' },
+                  ],
+                },
+              ]"
+            />
+          </a-form-item>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend> Official </legend>
+        <div class="flex flex-wrap -mx-3">
+          <a-form-item label="Joining Date">
+            <a-month-picker
+              class="input-field-sm"
+              :read-only="!currentUser && !currentUserIsAdminOrManager"
+              format="MMMM, YYYY"
+              :allow-clear="false"
+              v-decorator="[
+                'joining_date',
+                {
+                  initialValue: user.joining_date,
+                  rules: [
+                    { required: true, message: 'Please select joining date.' },
+                  ],
+                },
+              ]"
+            />
+          </a-form-item>
+          <a-form-item label="Leave Offset">
+            <a-input
+              class="input-field-sm"
+              :read-only="!currentUserIsAdminOrManager"
+              v-decorator="['leave_offset', { initialValue: user.leave_offset }]"
+            />
+          </a-form-item>
+          <div class="flex" v-if="currentUserIsAdmin">
+            <a-form-item label="Admin" style="width: 100px;">
+              <a-switch
+                :default-checked="user.admin"
+                :disabled="
+                  (user.admin && !currentUser) || (currentUser && adminCount < 2)
+                "
+                v-decorator="['admin']"
+                checked-children=" Yes "
+                un-checked-children=" No "
+              />
+            </a-form-item>
+            <a-form-item label="Manager" style="width: 100px;">
               <a-switch
                 :default-checked="user.manager"
                 v-decorator="['manager']"
@@ -77,7 +108,7 @@
                 un-checked-children=" No "
               />
             </a-form-item>
-            <a-form-item label="Show log" style="width: 100px; margin: 0">
+            <a-form-item label="Show log" style="width: 100px;">
               <a-switch
                 :default-checked="user.show_log"
                 v-decorator="['show_log']"
@@ -85,9 +116,9 @@
                 un-checked-children=" No "
               />
             </a-form-item>
-          </template>
+          </div>
         </div>
-      </div>
+      </fieldset>
       <a-form-item v-if="currentUser || currentUserIsAdmin" style="padding: 0">
         <a-button type="primary" html-type="submit"> Save </a-button>
       </a-form-item>
@@ -97,8 +128,26 @@
 
 <style scoped>
 .ant-form-item {
-  width: 50%;
+  width: calc(100% / 3);
   padding: 0 0.75rem;
+}
+.input-field-sm {
+  width: 200px;
+}
+fieldset, fieldset legend {
+  all: revert;
+}
+fieldset {
+  border: solid 1px #dfe2e7;
+  padding: 15px 20px 0;
+  margin: 20px 0;
+}
+fieldset legend {
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 1px;
+  padding: 0 6px;
+  opacity: 0.6;
 }
 </style>
 
@@ -143,6 +192,12 @@ export default {
     currentUserIsAdmin() {
       return this.$auth.user.admin;
     },
+    currentUserIsManager() {
+      return this.$auth.user.manager;
+    },
+    currentUserIsAdminOrManager() {
+      return this.$auth.user.admin || this.$auth.user.manager;
+    },
   },
   methods: {
     ...mapActions('user', ['setUser']),
@@ -164,6 +219,10 @@ export default {
         userData.email = this.user.email;
         userData.id = this.user.email.replace('@asthait.com', '');
         userData.dob = moment(userData.dob).format('DD-MMM-YYYY');
+
+        if (userData.joining_date) {
+          userData.joining_date = moment(userData.joining_date).format('MMMM, YYYY');
+        }
 
         if (!err) {
           this.$axios
