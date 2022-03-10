@@ -102,6 +102,8 @@ module.exports = {
 
   setLog: async (logData) => {
     try {
+      const leaveData = await db.doc(`logs/${logData.id}`).get();
+
       await db.doc(`logs/${logData.id}`).set(
         {
           [logData.date]: {
@@ -110,7 +112,7 @@ module.exports = {
             },
           },
         },
-        { merge: true }
+        { merge: leaveData.data()[logData.date]?.leave?.option !== 2 }
       );
       return 'Log entry successful.';
     } catch (error) {
@@ -135,7 +137,7 @@ module.exports = {
               },
             },
           },
-          { merge: true }
+          { merge: (leaveData.option !== 2) }
         );
       }
 

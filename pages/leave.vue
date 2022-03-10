@@ -12,6 +12,7 @@
         <a-range-picker
           class="range-picker"
           :format="dateFormat"
+          :disabled-date="disabledDate"
           @change="onChange"
           v-decorator="[
             'dateRange',
@@ -110,6 +111,9 @@ export default {
     document.title = 'Personal Leave';
   },
   methods: {
+    disabledDate(current) {
+      return current.day() > 4;
+    },
     onChange(range) {
       this.dateRange = range;
     },
