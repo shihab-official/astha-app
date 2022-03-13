@@ -26,7 +26,7 @@
           </a-tag>
         </summary>
         <div>
-          <template v-for="(data, i) in logData.log">
+          <template v-for="(data, i) of logData.log">
             <pre
               :key="i"
               class="rounded px-3.5 py-2.5 ml-3 mb-2 drop-shadow-md"

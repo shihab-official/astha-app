@@ -9,7 +9,7 @@
             }`"
   >
     <template v-if="userLog[date.code]">
-      <template v-for="(logData, i) in logs[id][date.code]">
+      <template v-for="(logData, i) of logs[id][date.code]">
         <pre
           :key="i"
           :class="`${logData.reason ? 'leave text-red-600' : ''} ${logs[id][date.code].length === 2 ? 'relative' : ''}`"
