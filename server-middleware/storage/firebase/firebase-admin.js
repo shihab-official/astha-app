@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-const db = require('./firebase-config')
+const db = require('./firebase-config');
 
 module.exports = {
   initStorage: async (user) => {
@@ -8,21 +8,21 @@ module.exports = {
     if (docRef.exists) {
       return {
         newUser: false,
-        user: docRef.data()
+        user: docRef.data(),
       };
     } else {
       await db.doc(`logs/${user.id}`).set({}, { merge: true });
       await db.doc(`users/${user.id}`).set(user, { merge: true });
       return {
         newUser: true,
-        user
+        user,
       };
     }
   },
 
   getUsers: async () => {
     const usersCollection = await db.collection(`users`).get();
-    const users = usersCollection.docs.map(user => {
+    const users = usersCollection.docs.map((user) => {
       const data = user.data();
       return { ...data, dob: data.dob?.slice(0, -5) };
     });
@@ -31,7 +31,10 @@ module.exports = {
   },
 
   getUser: async (id) => {
-    const adminUsers = await db.collection('users').where('admin', '==', true).get();
+    const adminUsers = await db
+      .collection('users')
+      .where('admin', '==', true)
+      .get();
     const userInfo = await db.doc(`users/${id}`).get();
     return { user: userInfo.data(), adminCount: adminUsers.size };
   },
@@ -41,7 +44,7 @@ module.exports = {
       await db.doc(`users/${user.id}`).set(user, { merge: true });
       return {
         type: 'success',
-        message: 'Profile updated.'
+        message: 'Profile updated.',
       };
     } catch (error) {
       console.error(error);
@@ -137,11 +140,38 @@ module.exports = {
               },
             },
           },
-          { merge: (leaveData.option !== 2) }
+          { merge: leaveData.option !== 2 }
         );
       }
 
       return 'Leave applied.';
+    } catch (error) {
+      console.error(error);
+      return error;
+    }
+  },
+
+  getHolidays: async () => {
+    const holidaySnapshot = (await db.doc(`calendar/holidays`).get()).data();
+
+    const holidays = Object.entries(holidaySnapshot).sort(
+      (a, b) => a[0] - b[0]
+    );
+
+    return holidays.map((h) => ({ ...h[1], id: h[0] }));
+  },
+
+  setHolidays: async (holidayArr) => {
+    const holidays = {};
+    holidayArr.forEach(holiday => {
+      const id = holiday.id;
+      delete holiday.id;
+      holidays[id] = holiday;
+    });
+
+    try {
+      await db.doc(`calendar/holidays`).set(holidays);
+      return 'Holiday list updated.';
     } catch (error) {
       console.error(error);
       return error;

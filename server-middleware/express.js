@@ -32,8 +32,9 @@ app.use('/api/*', async (req, res, next) => {
     next();
   } catch (error) {
     res.status(error?.response?.status || 400);
-    res.send(error?.response?.statusText || 'Invalid request.');
+    res.redirect('/login');
     console.error(error);
+    return;
   }
 });
 

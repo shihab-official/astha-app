@@ -26,7 +26,7 @@
                 >&#11118;</span
               >
             </th>
-            <template v-for="date in datesInRange">
+            <template v-for="date of datesInRange">
               <th
                 :key="date.code"
                 :ref="date.today ? 'today' : null"
@@ -49,12 +49,12 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="user in users" :key="user.id">
+          <tr v-for="user of users" :key="user.id">
             <template v-if="user.show_log">
               <td class="sticky left-0 bg-orange-50">
                 <NuxtLink :to="`/${user.id}`">{{ user.short_name || user.name }}</NuxtLink>
               </td>
-              <template v-for="date in datesInRange">
+              <template v-for="date of datesInRange">
                 <user-log
                   :key="date.code"
                   :date="date"
@@ -77,25 +77,14 @@
   opacity: 0.6;
   background-color: #f5f5f5;
 }
-table {
-  font-size: 0.9rem;
-}
-th {
-  font-size: 84%;
-}
 td {
   white-space: normal;
   min-height: 34px;
   padding: 0;
 }
-th.sticky {
-  box-shadow: 0 -25px 8px #ddd, 0 10px 8px #ddd;
-}
 td.sticky {
   width: 120px;
   min-width: 120px;
-  padding: 6px 10px;
-  box-shadow: 0 10px 8px #ddd;
 }
 </style>
 

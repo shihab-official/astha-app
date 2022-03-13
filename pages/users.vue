@@ -63,7 +63,7 @@
       </div>
     </div>
     <hr />
-    <div class="table-wrapper" ref="tableWrapper" v-if="users.length > 0">
+    <div class="table-wrapper" v-if="users && users.length > 0">
       <table>
         <thead>
           <tr>
@@ -80,7 +80,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="user in users" :key="user.id" :class="{relative: true, self: user.id === $auth.user.id}">
+          <tr v-for="user of users" :key="user.id" :class="{relative: true, self: user.id === $auth.user.id}">
             <td class="sticky left-0 bg-orange-50">
               <NuxtLink
                 v-if="$auth.user.admin"
@@ -125,35 +125,15 @@
 </template>
 
 <style scoped>
-table {
-  font-size: 0.9rem;
-}
-th {
-  font-size: 84%;
-}
-th.sticky {
-  box-shadow: 0 -25px 8px #ddd, 0 10px 8px #ddd;
-}
 td {
   white-space: normal;
 }
 td.sticky {
   width: 120px;
   min-width: 120px;
-  padding: 6px 10px;
-  box-shadow: 0 10px 8px #ddd;
 }
 tr.self:after {
-    content: '';
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgb(0 220 130 / 10%);
-    z-index: 1;
-    pointer-events: none;
+    background-color: rgb(0 220 130 / 6%);
 }
 </style>
 

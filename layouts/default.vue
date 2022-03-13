@@ -37,6 +37,9 @@
               <a-menu-item key="u">
                 <NuxtLink to="/users"> Users </NuxtLink>
               </a-menu-item>
+              <a-menu-item key="h" v-if="user.admin || user.manager">
+                <NuxtLink to="/holidays"> Holidays </NuxtLink>
+              </a-menu-item>
               <a-menu-item style="padding: 0"
                 ><a-divider style="margin: 3px 0px 1px"
               /></a-menu-item>
@@ -103,7 +106,9 @@ export default {
       this.dateFormat
     );
 
+
     if (this.$auth.loggedIn) {
+      this.getHolidays();
       if (this.$auth.user.admin) {
         this.getUsersWithLogs(datesInRange);
       } else {
@@ -112,6 +117,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions('holiday', ['getHolidays']),
     ...mapActions('user', ['getUsersWithLogs', 'getUsers']),
     logout() {
       this.$auth.logout('google').then(() => {

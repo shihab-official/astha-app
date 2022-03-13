@@ -66,6 +66,7 @@ hr {
 }
 
 table {
+  font-size: 0.9rem;
   border-spacing: 0px;
   border-collapse: separate;
   min-width: 100%;
@@ -80,6 +81,10 @@ table td {
   padding: 6px 10px;
 }
 
+table th {
+  font-size: 84%;
+}
+
 table th:last-child,
 table td:last-child {
   border-right-width: 0;
@@ -87,6 +92,35 @@ table td:last-child {
 
 tr:last-child td {
   border-bottom-width: 0;
+}
+
+tr {
+  position: relative;
+}
+
+tbody tr:after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+tbody tr:hover:after {
+  background-color: rgb(0 160 220 / 6%);
+}
+
+th.sticky {
+  box-shadow: 0 -25px 8px #ddd, 0 10px 8px #ddd;
+}
+
+td.sticky {
+  padding: 6px 10px !important;
+  box-shadow: 0 10px 8px #ddd;
 }
 
 .range-picker {

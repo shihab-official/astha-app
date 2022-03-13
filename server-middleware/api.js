@@ -1,40 +1,48 @@
 const app = require('./express');
-const { initStorage, getLogsByDate, getUsers, getUser, setUser, getUserLogs, setLog, leaveApplication } = require('./storage/firebase/firebase-admin');
+const firebase = require('./storage/firebase/firebase-admin');
 
 app.post('/api/init-storage', async (req, res) => {
-  res.json(await initStorage(req.body));
+  res.json(await firebase.initStorage(req.body));
 });
 
 app.post('/api/create-user', async (req, res) => {
-  res.json(await initStorage(req.body));
+  res.json(await firebase.initStorage(req.body));
 });
 
 app.get('/api/users', async (req, res) => {
-  res.json(await getUsers());
+  res.json(await firebase.getUsers());
 });
 
 app.get('/api/user', async (req, res) => {
-  res.json(await getUser(req.query.id));
+  res.json(await firebase.getUser(req.query.id));
 });
 
 app.post('/api/user', async (req, res) => {
-  res.json(await setUser(req.body));
+  res.json(await firebase.setUser(req.body));
 });
 
 app.get('/api/user-logs', async (req, res) => {
-  res.json(await getLogsByDate(req.query.range));
+  res.json(await firebase.getLogsByDate(req.query.range));
 });
 
 app.get('/api/user-log', async (req, res) => {
-  res.json(await getUserLogs(req.query.id));
+  res.json(await firebase.getUserLogs(req.query.id));
 });
 
 app.post('/api/post-log', async (req, res) => {
-  res.json(await setLog(req.body));
+  res.json(await firebase.setLog(req.body));
 });
 
 app.post('/api/leave-application', async (req, res) => {
-  res.json(await leaveApplication(req.body));
+  res.json(await firebase.leaveApplication(req.body));
+});
+
+app.get('/api/holidays', async (req, res) => {
+  res.json(await firebase.getHolidays());
+});
+
+app.post('/api/holidays', async (req, res) => {
+  res.json(await firebase.setHolidays(req.body));
 });
 
 module.exports = app;
