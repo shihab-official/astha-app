@@ -10,11 +10,11 @@
       :valid-range="validRange"
       :disabled-date="disabledDate"
     >
-      <ul slot="dateCellRender" slot-scope="value" class="events">
-        <li v-for="item of getData(value)" :key="item.label" class="my-1">
+      <div slot="dateCellRender" slot-scope="value" class="events">
+        <div v-for="item of getData(value)" :key="item.label" class="mb-0.5">
           <div
             v-if="item.type === 'holiday'"
-            class="leave text-right text-red-600"
+            class="leave text-right text-green-600"
           >
             {{ item.label }}
           </div>
@@ -32,7 +32,7 @@
               }${item.reason}`"
             >
               <a-tag
-                color="blue"
+                color="red"
                 :class="`pointer-events-none w-full relative option-${item.option}`"
                 style="margin-right: 0"
               >
@@ -41,15 +41,15 @@
             </NuxtLink>
             <a-tag
               v-else
-              color="blue"
+              color="red"
               :class="`pointer-events-none w-full relative option-${item.option}`"
               style="margin-right: 0"
             >
               <span class="relative">{{ item.label }}</span>
             </a-tag>
           </template>
-        </li>
-      </ul>
+        </div>
+      </div>
     </a-calendar>
   </div>
 </template>
@@ -98,7 +98,7 @@
 }
 .ant-fullcalendar-today .ant-fullcalendar-value {
   font-weight: 500;
-  color: #79c91c !important;
+  color: #1890ff !important;
   display: flex;
   justify-content: space-between;
   text-shadow: 0 0 5px rgb(0 0 0 / 10%);
@@ -118,26 +118,32 @@
   right: 0;
   bottom: 0;
   left: 0;
-  background-color: rgb(255 0 0 / 5%);
+  background-color: rgb(0 255 0 / 5%);
   z-index: 0;
 }
 .ant-fullcalendar-fullscreen .ant-tag:before,
 .ant-fullcalendar-fullscreen .ant-tag:after {
   content: '';
   position: absolute;
-  top: 1px;
-  bottom: 1px;
+  top: 0;
+  bottom: 0;
   width: 50%;
   background-color: #fff;
   opacity: 0;
 }
 
 .ant-fullcalendar-fullscreen .ant-tag:before {
-  left: 1px;
+  border-right: solid 1px #ffd4d4;
+  left: 0;
+  border-top-left-radius: inherit;
+  border-bottom-left-radius: inherit;
 }
 
 .ant-fullcalendar-fullscreen .ant-tag:after {
-  right: 1px;
+  border-left: solid 1px #ffd4d4;
+  right: 0;
+  border-top-right-radius: inherit;
+  border-bottom-right-radius: inherit;
 }
 
 .ant-fullcalendar-fullscreen .ant-tag.option-1:before {

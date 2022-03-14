@@ -58,6 +58,7 @@
 
 <script>
 import { getDatesInRange } from '~/server-middleware/utilities/date';
+import { mapActions } from "vuex";
 
 export default {
   name: 'PersonalLeave',
@@ -111,6 +112,7 @@ export default {
     document.title = 'Personal Leave';
   },
   methods: {
+    ...mapActions('calendar', ['addLeaveInfo']),
     disabledDate(current) {
       return current.day() > 4;
     },
@@ -121,9 +123,9 @@ export default {
       e.preventDefault();
       this.form.validateFields((err, values) => {
         if (!err) {
-          this.$axios
-            .post('/api/leave-application', {
+          this.addLeaveInfo({
               id: this.$auth.user.id,
+              name: this.$auth.user.short_name,
               dates: this.datesInRange.map(function (date) {
                 return {
                   code: date.code,
@@ -132,14 +134,6 @@ export default {
               }),
               option: values.leave.option ?? this.leave.option,
               reason: values.leave.reason,
-            })
-            .then((res) => {
-              if (res.status == 200) {
-                this.$router.push(`/`);
-              }
-            })
-            .catch((error) => {
-              console.error(error);
             });
         }
       });

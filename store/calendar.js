@@ -3,7 +3,7 @@ import moment from 'moment';
 export const state = () => ({
   _updatingState: false,
   _holidays: [],
-  _leaves: []
+  _leaves: [],
 });
 
 export const getters = {
@@ -27,11 +27,25 @@ export const mutations = {
   SET_HOLIDAYS: (state, holidays) => (state._holidays = holidays),
 
   SET_HOLIDAY: (state, holiday) => {
-    const index = state._holidays.findIndex(h => h.id == holiday.id);
+    const index = state._holidays.findIndex((h) => h.id == holiday.id);
     state._holidays.splice(index, 1, holiday);
   },
 
-  SET_LEAVE_INFO: (state, leaves) => state._leaves = leaves
+  SET_LEAVE_INFO: (state, leaves) => (state._leaves = leaves),
+
+  ADD_LEAVE_INFO: (state, leave) => {
+    const date = moment(leave.date, 'YYYYMMDD').format('DD-MMM-YYYY');
+    const obj = state._leaves[date];
+    if (!obj) {
+      state._leaves[date] = [];
+    }
+    const idx = state._leaves[date].findIndex(user => user.id === leave.data.id);
+    if (idx === -1) {
+      state._leaves[date].push(leave.data);
+    } else {
+      state._leaves[date].splice(idx, 1, leave.data);
+    }
+  },
 };
 
 export const actions = {
@@ -50,11 +64,11 @@ export const actions = {
       });
   },
 
-  setHoliday({commit}, holiday) {
+  setHoliday({ commit }, holiday) {
     commit('SET_HOLIDAY', holiday);
   },
 
-  setHolidays({commit, state}) {
+  setHolidays({ commit, state }) {
     this.$axios
       .post('api/holidays', state._holidays)
       .then((res) => {
@@ -67,7 +81,7 @@ export const actions = {
       });
   },
 
-  getLeaveInfo({commit}) {
+  getLeaveInfo({ commit }) {
     this.$axios
       .get('api/leave-info')
       .then((res) => {
@@ -79,5 +93,33 @@ export const actions = {
         commit('LOADING');
         return;
       });
-  }
+  },
+
+  addLeaveInfo({ commit }, leave) {
+    commit('LOADING', true);
+    this.$axios
+      .post('/api/leave-application', leave)
+      .then((res) => {
+        if (res.status == 200) {
+          commit('LOADING');
+          leave.dates.forEach((date) => {
+            commit('ADD_LEAVE_INFO', {
+              date: date.code,
+              data: {
+                type: 'leave',
+                id: leave.id,
+                label: leave.name,
+                option: leave.option,
+                reason: leave.reason,
+              },
+            });
+          });
+          this.$router.push(`/`);
+        }
+      })
+      .catch((error) => {
+        commit('LOADING');
+        console.error(error);
+      });
+  },
 };
