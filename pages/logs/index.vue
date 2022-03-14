@@ -52,7 +52,7 @@
           <tr v-for="user of users" :key="user.id">
             <template v-if="user.show_log">
               <td class="sticky left-0 bg-orange-50">
-                <NuxtLink :to="`/${user.id}`">{{ user.short_name || user.name }}</NuxtLink>
+                <NuxtLink :to="`/logs/${user.id}`">{{ user.short_name || user.name }}</NuxtLink>
               </td>
               <template v-for="date of datesInRange">
                 <user-log

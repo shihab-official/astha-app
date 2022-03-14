@@ -4,7 +4,7 @@
       <h3 class="m-0">{{ heading }}</h3>
       <NuxtLink
         v-if="$auth.user.admin"
-        to="/"
+        to="/logs/"
         class="ml-5 text-gray-400 text-sm"
       >
         <a-icon type="double-left" class="text-xs" /> Back to Logs
