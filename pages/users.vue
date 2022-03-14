@@ -3,7 +3,7 @@
     <div class="flex justify-between items-center">
       <h3 class="m-0">Users</h3>
       <div class="flex">
-        <a-input @change="search" @keyup="search" :allowClear="true" />
+        <a-input @change="search" @keyup="search" placeholder="Search" :allowClear="true" />
         <template v-if="$auth.user.admin">
           <span
             @click="showModal()"

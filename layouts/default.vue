@@ -34,6 +34,9 @@
               <a-menu-item key="p">
                 <NuxtLink to="/profile"> Profile </NuxtLink>
               </a-menu-item>
+              <a-menu-item key="l">
+                <NuxtLink to="/logs"> Logs </NuxtLink>
+              </a-menu-item>
               <a-menu-item key="u">
                 <NuxtLink to="/users"> Users </NuxtLink>
               </a-menu-item>

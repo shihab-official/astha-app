@@ -60,8 +60,12 @@
 }
 .ant-fullcalendar-fullscreen tr:hover:after,
 .ant-fullcalendar-fullscreen .ant-fullcalendar-date:hover,
-.ant-fullcalendar-fullscreen .ant-fullcalendar-today .ant-fullcalendar-date {
+.ant-fullcalendar-fullscreen .ant-fullcalendar-today .ant-fullcalendar-date,
+.ant-fullcalendar-fullscreen .ant-fullcalendar-selected-day .ant-fullcalendar-date {
   background: unset;
+}
+.ant-fullcalendar-fullscreen .ant-fullcalendar-selected-day .ant-fullcalendar-value {
+  color: unset;
 }
 .ant-fullcalendar-value {
   width: 100% !important;

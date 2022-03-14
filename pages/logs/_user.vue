@@ -18,10 +18,10 @@
         class="font-mono p-1"
       >
         <summary
-          class="font-semibold text-slate-700 hover:opacity-75 cursor-pointer pb-1"
+          class="font-semibold text-slate-700 w-fit hover:opacity-75 cursor-pointer pb-1"
         >
           {{ logData.date }}
-          <a-tag v-if="logData.leave" color="red">
+          <a-tag v-if="logData.leave" color="red" class="pointer-events-none">
             {{ logData.leave }}
           </a-tag>
         </summary>
