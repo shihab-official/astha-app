@@ -106,17 +106,19 @@ module.exports = {
   setLog: async (logData) => {
     try {
       const leaveData = await db.doc(`logs/${logData.id}`).get();
-
-      await db.doc(`logs/${logData.id}`).set(
-        {
-          [logData.date]: {
-            work: {
-              content: logData.log,
-            },
+      const data = {
+        [logData.date]: {
+          work: {
+            content: logData.log,
           },
         },
-        { merge: leaveData.data()[logData.date]?.leave?.option !== 2 }
-      );
+      };
+
+      if (leaveData.data()[logData.date]?.leave?.option === 2) {
+        await db.doc(`logs/${logData.id}`).update(data);
+      } else {
+        await db.doc(`logs/${logData.id}`).set(data, { merge: true });
+      }
       return 'Log entry successful.';
     } catch (error) {
       console.error(error);
@@ -131,17 +133,20 @@ module.exports = {
 
     try {
       for (let date of dates) {
-        await db.doc(`logs/${leaveData.id}`).set(
-          {
-            [date.code]: {
-              leave: {
-                option: leaveData.option,
-                reason: leaveData.reason,
-              },
+        const data = {
+          [date.code]: {
+            leave: {
+              option: leaveData.option,
+              reason: leaveData.reason,
             },
           },
-          { merge: leaveData.option !== 2 }
-        );
+        };
+
+        if (leaveData.option === 2) {
+          await db.doc(`logs/${leaveData.id}`).update(data);
+        } else {
+          await db.doc(`logs/${leaveData.id}`).set(data, { merge: true });
+        }
       }
 
       return 'Leave applied.';
@@ -159,7 +164,9 @@ module.exports = {
       start: moment().startOf('year').format('YYYYMMDD'),
       end: moment().endOf('year').format('YYYYMMDD'),
     };
-    let leaveData = {}, userInfo, day;
+    let leaveData = {},
+      userInfo,
+      day;
 
     leaveSnapshot.docs.forEach((user) => {
       userInfo = usersCollection.docs.find((u) => u.id == user.id).data();
