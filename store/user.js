@@ -40,12 +40,7 @@ export const mutations = {
     (state._updatingState = loadingState || false),
 
   SET_USERS: (state, users) => {
-    state._users = users.map(user => {
-      if (user.dob) {
-        user.dob = user.dob.slice(0, -5);
-      }
-      return user;
-    }) || state._users
+    state._users = users || state._users
   },
 
   GET_USER: (state, key) => {
