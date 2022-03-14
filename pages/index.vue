@@ -18,15 +18,36 @@
           >
             {{ item.label }}
           </div>
-          <NuxtLink v-else :to="`/logs/${item.id}`" class="block" :title="`${item.option === 0 ? '1st half - ' : (item.option === 1 ? '2nd half - ' : '')}${item.reason}`">
+          <template v-else>
+            <NuxtLink
+              v-if="$auth.user.admin || $auth.user.manager"
+              :to="`/logs/${item.id}`"
+              class="block"
+              :title="`${
+                item.option === 0
+                  ? '1st half - '
+                  : item.option === 1
+                  ? '2nd half - '
+                  : ''
+              }${item.reason}`"
+            >
+              <a-tag
+                color="blue"
+                :class="`pointer-events-none w-full relative option-${item.option}`"
+                style="margin-right: 0"
+              >
+                <span class="relative">{{ item.label }}</span>
+              </a-tag>
+            </NuxtLink>
             <a-tag
+              v-else
               color="blue"
               :class="`pointer-events-none w-full relative option-${item.option}`"
               style="margin-right: 0"
             >
               <span class="relative">{{ item.label }}</span>
             </a-tag>
-          </NuxtLink>
+          </template>
         </li>
       </ul>
     </a-calendar>
@@ -61,10 +82,14 @@
 .ant-fullcalendar-fullscreen tr:hover:after,
 .ant-fullcalendar-fullscreen .ant-fullcalendar-date:hover,
 .ant-fullcalendar-fullscreen .ant-fullcalendar-today .ant-fullcalendar-date,
-.ant-fullcalendar-fullscreen .ant-fullcalendar-selected-day .ant-fullcalendar-date {
+.ant-fullcalendar-fullscreen
+  .ant-fullcalendar-selected-day
+  .ant-fullcalendar-date {
   background: unset;
 }
-.ant-fullcalendar-fullscreen .ant-fullcalendar-selected-day .ant-fullcalendar-value {
+.ant-fullcalendar-fullscreen
+  .ant-fullcalendar-selected-day
+  .ant-fullcalendar-value {
   color: unset;
 }
 .ant-fullcalendar-value {
@@ -96,22 +121,23 @@
   background-color: rgb(255 0 0 / 5%);
   z-index: 0;
 }
-.ant-fullcalendar-fullscreen .ant-tag:before, .ant-fullcalendar-fullscreen .ant-tag:after {
+.ant-fullcalendar-fullscreen .ant-tag:before,
+.ant-fullcalendar-fullscreen .ant-tag:after {
   content: '';
-    position: absolute;
-    top: 1px;
-    bottom: 1px;
-    width: 50%;
-    background-color: #fff;
-    opacity: 0;
+  position: absolute;
+  top: 1px;
+  bottom: 1px;
+  width: 50%;
+  background-color: #fff;
+  opacity: 0;
 }
 
 .ant-fullcalendar-fullscreen .ant-tag:before {
-    left: 1px;
+  left: 1px;
 }
 
 .ant-fullcalendar-fullscreen .ant-tag:after {
-    right: 1px;
+  right: 1px;
 }
 
 .ant-fullcalendar-fullscreen .ant-tag.option-1:before {
