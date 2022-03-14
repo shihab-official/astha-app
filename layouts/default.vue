@@ -37,9 +37,6 @@
               <a-menu-item key="u">
                 <NuxtLink to="/users"> Users </NuxtLink>
               </a-menu-item>
-              <a-menu-item key="c">
-                <NuxtLink to="/calendar"> Calendar </NuxtLink>
-              </a-menu-item>
               <a-menu-item key="h" v-if="user.admin || user.manager">
                 <NuxtLink to="/holidays"> Holidays </NuxtLink>
               </a-menu-item>

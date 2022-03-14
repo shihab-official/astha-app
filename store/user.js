@@ -67,7 +67,7 @@ export const mutations = {
     });
 
     if (user) {
-      user = {...user, ...userInfo, dob: userInfo.dob.slice(0, -5)};
+      user = {...user, ...userInfo};
     }
 
     state._users.splice(index, 1, user);
