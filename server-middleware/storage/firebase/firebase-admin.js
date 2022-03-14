@@ -159,27 +159,27 @@ module.exports = {
       start: moment().startOf('year').format('YYYYMMDD'),
       end: moment().endOf('year').format('YYYYMMDD'),
     };
-    let filteredLogs = [];
+    let leaveData = {}, userInfo, day;
 
     leaveSnapshot.docs.forEach((user) => {
-      const dates = [],
-        info = [],
-        userInfo = usersCollection.docs.find((u) => u.id == user.id).data();
-
+      userInfo = usersCollection.docs.find((u) => u.id == user.id).data();
       Object.entries(user.data()).forEach((log) => {
         if (+log[0] >= year.start && +log[0] <= year.end && log[1].leave) {
-          dates.push(+log[0]);
-          info.push({
+          day = moment(log[0]).format('DD-MMM-YYYY');
+          if (!leaveData[day]) {
+            leaveData[day] = [];
+          }
+
+          leaveData[day].push({
+            type: 'leave',
             ...log[1].leave,
             id: userInfo.id,
-            name: userInfo.short_name,
+            label: userInfo.short_name,
           });
         }
       });
-
-      filteredLogs.push([dates, info]);
     });
-    return filteredLogs.filter((log) => log[1].length > 0);
+    return leaveData;
   },
 
   getHolidays: async () => {

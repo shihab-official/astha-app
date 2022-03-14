@@ -57,8 +57,6 @@ export default {
         date: moment(new Date()),
         content: '',
       },
-      // date: moment(new Date()),
-      // log: '',
     };
   },
   mounted: () => {
@@ -80,7 +78,7 @@ export default {
             })
             .then((res) => {
               if (res.status == 200) {
-                this.$router.push(`/${this.$auth.user.id}`);
+                this.$router.push(`/logs/${this.$auth.user.id}`);
               }
             })
             .catch((error) => {

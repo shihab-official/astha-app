@@ -57,7 +57,7 @@ export default {
       !$auth.user.manager &&
       params.user != $auth.user.id
     ) {
-      return redirect(`/${$auth.user.id}`);
+      return redirect(`/logs/${$auth.user.id}`);
     }
   },
   async asyncData({ params, redirect, $auth, $axios }) {
