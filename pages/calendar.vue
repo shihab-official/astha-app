@@ -10,11 +10,13 @@
       :valid-range="validRange"
     >
       <ul slot="dateCellRender" slot-scope="value" class="events">
-        <li
-          v-for="item of getData(value)"
-          :key="item.content"
-        >
-          <div class="text-right" :class="{'text-red-500': item.type === 'holiday'}">{{ item.content }}</div>
+        <li v-for="item of getData(value)" :key="item.content">
+          <div
+            class="text-right"
+            :class="{ 'text-red-500': item.type === 'holiday' }"
+          >
+            {{ item.content }}
+          </div>
         </li>
       </ul>
     </a-calendar>
@@ -51,10 +53,10 @@
   padding: 0 4px;
 }
 .ant-fullcalendar-today .ant-fullcalendar-value:before {
-    content: 'Today';
-    font-size: 92%;
-    color: #1890ff;
-    margin-right: 10px;
+  content: 'Today';
+  font-size: 92%;
+  color: #1890ff;
+  margin-right: 10px;
 }
 .ant-fullcalendar-content {
   height: unset !important;
@@ -87,7 +89,7 @@
 
 <script>
 import moment from 'moment';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'calendar',
@@ -98,9 +100,22 @@ export default {
   },
   computed: {
     ...mapGetters('user', ['logs']),
-    ...mapGetters('holiday', ['holidays']),
+    ...mapGetters('calendar', ['holidays', 'leaves']),
     validRange: function () {
       return [moment().startOf('year'), moment().endOf('year')];
+    },
+    userLeaves() {
+      const leaves = {};
+      this.leaves.forEach((leave) => {
+        leave[0].forEach((date, idx) => {
+          if (!leaves[date]) {
+            leaves[date] = [];
+          }
+
+          leaves[date].push({ ...leaves[date], ...leave[1][idx] });
+        });
+      });
+      return leaves;
     },
   },
   watch: {
@@ -109,10 +124,13 @@ export default {
     },
   },
   methods: {
+    ...mapActions('user', ['getUserById']),
     getData: function (value) {
       const items = [];
       const date = value.format('DD-MMM-YYYY');
-      const holiday = this.holidays.find((holiday) => holiday.approved && holiday.date === date);
+      const holiday = this.holidays.find(
+        (holiday) => holiday.approved && holiday.date === date
+      );
 
       if (holiday) {
         items.push({ type: 'holiday', content: holiday.title });

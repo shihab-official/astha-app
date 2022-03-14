@@ -151,6 +151,37 @@ module.exports = {
     }
   },
 
+  getLeaveInfo: async () => {
+    const usersCollection = await db.collection(`users`).get();
+    const leaveSnapshot = await db.collection(`logs`).get();
+
+    const year = {
+      start: moment().startOf('year').format('YYYYMMDD'),
+      end: moment().endOf('year').format('YYYYMMDD'),
+    };
+    let filteredLogs = [];
+
+    leaveSnapshot.docs.forEach((user) => {
+      const dates = [],
+        info = [],
+        userInfo = usersCollection.docs.find((u) => u.id == user.id).data();
+
+      Object.entries(user.data()).forEach((log) => {
+        if (+log[0] >= year.start && +log[0] <= year.end && log[1].leave) {
+          dates.push(+log[0]);
+          info.push({
+            ...log[1].leave,
+            id: userInfo.id,
+            name: userInfo.short_name,
+          });
+        }
+      });
+
+      filteredLogs.push([dates, info]);
+    });
+    return filteredLogs.filter((log) => log[1].length > 0);
+  },
+
   getHolidays: async () => {
     const holidaySnapshot = (await db.doc(`calendar/holidays`).get()).data();
 
@@ -163,7 +194,7 @@ module.exports = {
 
   setHolidays: async (holidayArr) => {
     const holidays = {};
-    holidayArr.forEach(holiday => {
+    holidayArr.forEach((holiday) => {
       const id = holiday.id;
       delete holiday.id;
       holidays[id] = holiday;

@@ -54,7 +54,11 @@ export const mutations = {
       return userInfo.indexOf(key) !== -1;
     });
   },
-
+  
+  GET_USER_BY_ID: (state, userID) => {
+    return state._users.find(user => user.id === userID);
+  },
+  
   SET_USER: (state, userInfo) => {
     let index = -1;
     let user = state._users.find((u, i) => {
@@ -127,6 +131,10 @@ export const actions = {
 
   getUser({ commit }, key) {
     commit('GET_USER', key);
+  },
+
+  getUser({ commit }, userID) {
+    commit('GET_USER_BY_ID', userID);
   },
 
   setUser({ commit }, user) {

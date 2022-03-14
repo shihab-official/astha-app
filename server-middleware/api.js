@@ -37,6 +37,10 @@ app.post('/api/leave-application', async (req, res) => {
   res.json(await firebase.leaveApplication(req.body));
 });
 
+app.get('/api/leave-info', async (req, res) => {
+  res.json(await firebase.getLeaveInfo());
+});
+
 app.get('/api/holidays', async (req, res) => {
   res.json(await firebase.getHolidays());
 });

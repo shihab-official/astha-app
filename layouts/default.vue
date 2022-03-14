@@ -112,6 +112,7 @@ export default {
 
     if (this.$auth.loggedIn) {
       this.getHolidays();
+      this.getLeaveInfo();
       if (this.$auth.user.admin) {
         this.getUsersWithLogs(datesInRange);
       } else {
@@ -120,7 +121,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('holiday', ['getHolidays']),
+    ...mapActions('calendar', ['getHolidays', 'getLeaveInfo']),
     ...mapActions('user', ['getUsersWithLogs', 'getUsers']),
     logout() {
       this.$auth.logout('google').then(() => {

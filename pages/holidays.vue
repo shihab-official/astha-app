@@ -91,13 +91,13 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('holiday', ['holidays']),
+    ...mapGetters('calendar', ['holidays']),
   },
   mounted() {
     this.getHolidays();
   },
   methods: {
-    ...mapActions('holiday', ['getHolidays', 'setHoliday', 'setHolidays']),
+    ...mapActions('calendar', ['getHolidays', 'setHoliday', 'setHolidays']),
     onDateChange(holiday, moment) {
       delete holiday.moment;
       holiday.date = moment.format(this.dateFormat);

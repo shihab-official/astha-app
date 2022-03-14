@@ -2,7 +2,8 @@ import moment from 'moment';
 
 export const state = () => ({
   _updatingState: false,
-  _holidays: []
+  _holidays: [],
+  _leaves: []
 });
 
 export const getters = {
@@ -13,6 +14,9 @@ export const getters = {
       ...holiday,
       moment: moment(holiday.date, 'DD-MMM-YYYY'),
     }));
+  },
+  leaves: ({ _leaves }) => {
+    return _leaves;
   },
 };
 
@@ -26,6 +30,8 @@ export const mutations = {
     const index = state._holidays.findIndex(h => h.id == holiday.id);
     state._holidays.splice(index, 1, holiday);
   },
+
+  SET_LEAVE_INFO: (state, leaves) => state._leaves = leaves
 };
 
 export const actions = {
@@ -52,6 +58,20 @@ export const actions = {
     this.$axios
       .post('api/holidays', state._holidays)
       .then((res) => {
+        commit('LOADING');
+      })
+      .catch((error) => {
+        console.error(error);
+        commit('LOADING');
+        return;
+      });
+  },
+
+  getLeaveInfo({commit}) {
+    this.$axios
+      .get('api/leave-info')
+      .then((res) => {
+        commit('SET_LEAVE_INFO', res.data);
         commit('LOADING');
       })
       .catch((error) => {
