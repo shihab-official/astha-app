@@ -182,7 +182,7 @@ import moment from 'moment';
 import { mapGetters } from 'vuex';
 
 export default {
-  name: 'calendar',
+  name: 'Home',
   data() {
     return {
       calendarKey: 0,

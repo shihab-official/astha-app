@@ -51,6 +51,7 @@ summary::marker {
 
 <script>
 export default {
+  name: 'UserLogs',
   middleware({ params, $auth, redirect }) {
     if (
       !$auth.user.admin &&

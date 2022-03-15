@@ -68,7 +68,7 @@
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
-  name: 'holidays',
+  name: 'Holidays',
   async asyncData({ redirect, $auth, $axios }) {
     await $axios
       .get(`/api/user`, {

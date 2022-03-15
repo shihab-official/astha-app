@@ -24,6 +24,7 @@
 
 <script>
 export default {
+  name: 'Login',
   mounted() {
     document.title = 'Login';
     // if (this.$auth.loggedIn) {

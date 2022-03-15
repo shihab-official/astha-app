@@ -156,7 +156,7 @@ import moment from 'moment';
 import { mapActions } from "vuex";
 
 export default {
-  name: 'profile',
+  name: 'Profile',
   async asyncData({ $axios, $auth, params }) {
     const resData = await $axios
       .get('/api/user', {

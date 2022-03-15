@@ -47,7 +47,7 @@
 import moment from 'moment';
 
 export default {
-  name: 'Log-Work-Update',
+  name: 'LogWorkUpdate',
   data() {
     return {
       formLayout: 'vertical',

@@ -94,7 +94,7 @@ import { getDatesInRange } from '~/server-middleware/utilities/date';
 import { mapGetters, mapActions } from "vuex";
 
 export default {
-  name: 'Home',
+  name: 'Logs',
   async asyncData({ redirect, $auth, $axios }) {
     await $axios
       .get(`/api/user`, {

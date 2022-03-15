@@ -141,7 +141,7 @@ tr.self:after {
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
-  name: 'user-list',
+  name: 'UserList',
   data() {
     return {
       formLayout: 'horizontal',
