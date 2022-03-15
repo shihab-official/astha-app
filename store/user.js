@@ -40,16 +40,18 @@ export const mutations = {
     (state._updatingState = loadingState || false),
 
   SET_USERS: (state, users) => {
-    state._users = users || state._users
+    state._users = users || state._users;
   },
 
   GET_USER: (state, key) => {
-    state._filteredUsers = !key ? null : state._users.filter((_user) => {
-      const userInfo = `${_user.name}\n${_user.short_name}\n${_user.email}\n${_user.mobile || ''}\n${_user.dob || ''}`.toLowerCase();
-      return userInfo.indexOf(key) !== -1;
-    });
+    state._filteredUsers = !key
+      ? null
+      : state._users.filter((_user) => {
+          const userInfo = `${_user.name}\n${_user.short_name}\n${_user.email}\n${_user.mobile || ''}\n${_user.dob || ''}`.toLowerCase();
+          return userInfo.indexOf(key) !== -1;
+        });
   },
-  
+
   SET_USER: (state, userInfo) => {
     let index = -1;
     let user = state._users.find((u, i) => {
@@ -62,7 +64,7 @@ export const mutations = {
     });
 
     if (user) {
-      user = {...user, ...userInfo};
+      user = { ...user, ...userInfo };
     }
 
     state._users.splice(index, 1, user);

@@ -24,7 +24,11 @@ module.exports = {
     const usersCollection = await db.collection(`users`).get();
     const users = usersCollection.docs.map((user) => {
       const data = user.data();
-      return { ...data, dob: data.dob?.slice(0, -5) };
+      if (data.dob) {
+        data.dob = data.dob.slice(0, -5);
+      }
+      console.log(data);
+      return data;
     });
 
     return users;
@@ -67,8 +71,12 @@ module.exports = {
         log: logData[key],
       });
     });
+
+    let userData = userInfo.data();
+    userData = {...userData, dob: userData.dob?.slice(0, -5)};
+
     return {
-      user: userInfo.data(),
+      user: userData,
       logs: logs,
     };
   },
@@ -94,6 +102,10 @@ module.exports = {
       for (let idx, i = 0, l = dates.length; i < l; i++) {
         idx = keys.indexOf(dates[i]);
         filteredLogs[dates[i]] = values[idx] || {};
+      }
+
+      if (user.dob) {
+        user.dob = user.dob?.slice(0, -5);
       }
 
       user.log = filteredLogs;

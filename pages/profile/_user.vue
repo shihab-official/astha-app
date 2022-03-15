@@ -81,11 +81,11 @@
               ]"
             />
           </a-form-item>
-          <a-form-item label="Leave Offset">
+          <a-form-item label="Leaves Taken">
             <a-input
               class="input-field-sm"
               :read-only="!currentUserIsAdminOrManager"
-              v-decorator="['leave_offset', { initialValue: user.leave_offset }]"
+              v-decorator="['leaves_taken', { initialValue: user.leaves_taken }]"
             />
           </a-form-item>
           <div class="flex" v-if="currentUserIsAdmin">
