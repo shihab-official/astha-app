@@ -140,7 +140,7 @@ module.exports = {
 
   leaveApplication: async (leaveData) => {
     const dates = leaveData.dates.filter((date) => {
-      return !date.weekend;
+      return !date.offDay;
     });
 
     try {

@@ -122,11 +122,11 @@ export default {
       return 'DD-MMM-YYYY';
     },
     datesInRange: function () {
-      return getDatesInRange(
-        this.dateRange[0],
-        this.dateRange[1],
-        this.dateFormat
-      );
+      return getDatesInRange({
+        start: this.dateRange[0],
+        end: this.dateRange[1],
+        format: this.dateFormat
+      });
     },
   },
   mounted: function () {

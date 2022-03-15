@@ -103,11 +103,11 @@ export default {
     },
   },
   created() {
-    const datesInRange = getDatesInRange(
-      this.dateRange[0],
-      this.dateRange[1],
-      this.dateFormat
-    );
+    const datesInRange = getDatesInRange({
+      start: this.dateRange[0],
+      end: this.dateRange[1],
+      format: this.dateFormat
+    });
 
 
     if (this.$auth.loggedIn) {

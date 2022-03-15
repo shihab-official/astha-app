@@ -15,6 +15,7 @@ export const getters = {
       moment: moment(holiday.date, 'DD-MMM-YYYY'),
     }));
   },
+
   leaves: ({ _leaves }) => {
     return _leaves;
   },
@@ -39,7 +40,9 @@ export const mutations = {
     if (!obj) {
       state._leaves[date] = [];
     }
-    const idx = state._leaves[date].findIndex(user => user.id === leave.data.id);
+    const idx = state._leaves[date].findIndex(
+      (user) => user.id === leave.data.id
+    );
     if (idx === -1) {
       state._leaves[date].push(leave.data);
     } else {
@@ -103,16 +106,18 @@ export const actions = {
         if (res.status == 200) {
           commit('LOADING');
           leave.dates.forEach((date) => {
-            commit('ADD_LEAVE_INFO', {
-              date: date.code,
-              data: {
-                type: 'leave',
-                id: leave.id,
-                label: leave.name,
-                option: leave.option,
-                reason: leave.reason,
-              },
-            });
+            if (!date.offDay) {
+              commit('ADD_LEAVE_INFO', {
+                date: date.code,
+                data: {
+                  type: 'leave',
+                  id: leave.id,
+                  label: leave.name,
+                  option: leave.option,
+                  reason: leave.reason,
+                },
+              });
+            }
           });
           this.$router.push(`/`);
         }
