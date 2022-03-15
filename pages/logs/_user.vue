@@ -38,7 +38,7 @@
                 data.content || data.reason
               }}</pre>
               <a-popconfirm
-                v-if="data.reason"
+                v-if="($auth.user.admin || $auth.user.manager) && data.reason"
                 placement="left"
                 title="Cancel this leave? Are you sure?"
                 ok-text="Yes"
