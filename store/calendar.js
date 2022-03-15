@@ -49,6 +49,13 @@ export const mutations = {
       state._leaves[date].splice(idx, 1, leave.data);
     }
   },
+
+  DELETE_LEAVE_INFO: (state, leave) => {
+    const idx = state._leaves[leave.date].findIndex(
+      (user) => user.id === leave.userID
+    );
+    state._leaves[leave.date].splice(idx, 1);
+  }
 };
 
 export const actions = {
@@ -119,7 +126,6 @@ export const actions = {
               });
             }
           });
-          this.$router.push(`/`);
         }
       })
       .catch((error) => {
@@ -127,4 +133,8 @@ export const actions = {
         console.error(error);
       });
   },
+
+  deleteLeaveInfo({commit}, leave) {
+    commit('DELETE_LEAVE_INFO', leave);
+  }
 };

@@ -1,3 +1,4 @@
+import { FieldValue } from 'firebase-admin/firestore';
 import moment from 'moment';
 
 const db = require('./firebase-config');
@@ -66,14 +67,16 @@ module.exports = {
 
     const logs = [];
     keys.forEach((key, i) => {
-      logs.push({
-        date: moment(key, 'YYYYMMDD').format('DD-MMM-YYYY'),
-        log: logData[key],
-      });
+      if (Object.values(logData[key]).length > 0) {
+        logs.push({
+          date: moment(key, 'YYYYMMDD').format('DD-MMM-YYYY'),
+          log: logData[key],
+        });
+      }
     });
 
     let userData = userInfo.data();
-    userData = {...userData, dob: userData.dob?.slice(0, -5)};
+    userData = { ...userData, dob: userData.dob?.slice(0, -5) };
 
     return {
       user: userData,
@@ -162,6 +165,19 @@ module.exports = {
       }
 
       return 'Leave applied.';
+    } catch (error) {
+      console.error(error);
+      return error;
+    }
+  },
+
+  cancelLeave: async (leave) => {
+    try {
+      await db.doc(`logs/${leave.userID}`).update({
+        [leave.date]: leave.log
+      });
+
+      return 'Leave cancelled.';
     } catch (error) {
       console.error(error);
       return error;

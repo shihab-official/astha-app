@@ -27,14 +27,37 @@
         </summary>
         <div>
           <template v-for="(data, i) of logData.log">
-            <pre
+            <div
               :key="i"
-              class="rounded px-3.5 py-2.5 ml-3 mb-2 drop-shadow-md"
+              class="flex rounded px-3.5 py-2.5 ml-3 mb-2 drop-shadow-md"
               :class="`${data.reason ? 'bg-red-50' : 'bg-sky-50'} ${
                 i === 1 ? 'mt-3' : ''
               }`"
-              >{{ data.content || data.reason }}</pre
             >
+              <pre class="flex-grow mr-3">{{
+                data.content || data.reason
+              }}</pre>
+              <a-popconfirm
+                v-if="data.reason"
+                placement="left"
+                title="Cancel this leave? Are you sure?"
+                ok-text="Yes"
+                cancel-text="No"
+                @confirm="cancelLeave(logData)"
+              >
+                <a-icon
+                  slot="icon"
+                  type="question-circle-o"
+                  style="color: red"
+                />
+                <span
+                  class="-mr-3.5 -my-2.5 p-3 cursor-pointer"
+                  title="Cancel Leave"
+                >
+                  <a-icon type="delete" theme="twoTone" two-tone-color="#f00" />
+                </span>
+              </a-popconfirm>
+            </div>
           </template>
         </div>
       </details>
@@ -50,6 +73,9 @@ summary::marker {
 </style>
 
 <script>
+import moment from 'moment';
+import { mapActions } from 'vuex';
+
 export default {
   name: 'UserLogs',
   middleware({ params, $auth, redirect }) {
@@ -73,82 +99,65 @@ export default {
         console.error(error);
       });
 
-    const logs = content.logs.map((userLog) => {
-      const newLog = [];
-      let leave = '';
-      const keys = Object.keys(userLog.log);
-      if (keys.length === 1) {
-        newLog.push(userLog.log[keys[0]]);
-      } else if (keys.length === 2) {
-        newLog.push(userLog.log.work);
-        newLog.splice(userLog.log.leave.option, 0, userLog.log.leave);
-      }
-      if (userLog.log.leave) {
-        leave =
-          userLog.log.leave.option === 0
-            ? '1st Half'
-            : userLog.log.leave.option === 1
-            ? '2nd Half'
-            : 'Full day';
-      }
-      return { ...userLog, log: newLog, leave };
-    });
-
     return {
+      userID: params.user,
       heading: params.user === $auth.user.id ? 'My Board' : content.user.name,
-      logs: logs,
+      userLogs: content.logs,
     };
   },
-  // data() {
-  //   return {
-  //     heading: '',
-  //     logs: [],
-  //   };
-  // },
   mounted: function () {
     document.title = 'Work Update';
-    // this.showLogs();
   },
-  // methods: {
-  //   showLogs: function () {
-  //     this.$axios
-  //       .get('/api/user-log', {
-  //         params: {
-  //           id: this.$route.params.user,
-  //         },
-  //       })
-  //       .then((res) => {
-  //         const logs = res.data.logs.map((userLog) => {
-  //           const newLog = [];
-  //           let leave = '';
-  //           const keys = Object.keys(userLog.log);
-  //           if (keys.length === 1) {
-  //             newLog.push(userLog.log[keys[0]]);
-  //           } else if (keys.length === 2) {
-  //             newLog.push(userLog.log.work);
-  //             newLog.splice(userLog.log.leave.option, 0, userLog.log.leave);
-  //           }
-  //           if (userLog.log.leave) {
-  //             leave =
-  //               userLog.log.leave.option === 0
-  //                 ? '1st Half'
-  //                 : userLog.log.leave.option === 1
-  //                 ? '2nd Half'
-  //                 : 'Full day';
-  //           }
-  //           return { ...userLog, log: newLog, leave };
-  //         });
+  computed: {
+    logs() {
+      return this.userLogs.map((userLog) => {
+        const newLog = [];
+        let leave = '';
+        const keys = Object.keys(userLog.log);
+        if (keys.length === 1) {
+          newLog.push(userLog.log[keys[0]]);
+        } else if (keys.length === 2) {
+          newLog.push(userLog.log.work);
+          newLog.splice(userLog.log.leave.option, 0, userLog.log.leave);
+        }
+        if (userLog.log.leave) {
+          leave =
+            userLog.log.leave.option === 0
+              ? '1st Half'
+              : userLog.log.leave.option === 1
+              ? '2nd Half'
+              : 'Full day';
+        }
+        return { ...userLog, log: newLog, leave };
+      });
+    },
+  },
+  methods: {
+    ...mapActions('calendar', ['deleteLeaveInfo']),
 
-  //         this.heading =
-  //           this.$route.params.user === this.$auth.user.id
-  //             ? 'My Board'
-  //             : `Board of ${res.data.user.name}`;
-  //         this.logs = logs;
-  //       })
-  //       .catch((error) => {
-  //         console.error(error);
-  //       });
-  //   },
-  // },
+    cancelLeave: function (data) {
+      const log = { work: data.log.find((l) => l.content) };
+      this.$axios
+        .post('/api/cancel-leave', {
+          log,
+          userID: this.userID,
+          date: moment(data.date, 'DD-MMM-YYYY').format('YYYYMMDD'),
+        })
+        .then((res) => {
+          if (res.status == 200) {
+            const index = this.userLogs.findIndex((d) => d.date === data.date);
+            if (data.log.length === 2) {
+              this.userLogs.splice(index, 1, { date: data.date, log });
+            } else {
+              this.userLogs.splice(index, 1);
+            }
+            this.deleteLeaveInfo({ date: data.date, userID: this.userID });
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+  },
 };
 </script>

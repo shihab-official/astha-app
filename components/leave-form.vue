@@ -126,6 +126,8 @@ export default {
             }),
             option: values.leave.option ?? this.leave.option,
             reason: values.leave.reason,
+          }).then(() => {
+            this.$router.push(`/`);
           });
         }
       });
