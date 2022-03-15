@@ -28,7 +28,6 @@ module.exports = {
       if (data.dob) {
         data.dob = data.dob.slice(0, -5);
       }
-      console.log(data);
       return data;
     });
 

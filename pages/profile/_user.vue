@@ -73,10 +73,7 @@
               v-decorator="[
                 'joining_date',
                 {
-                  initialValue: user.joining_date,
-                  rules: [
-                    { required: true, message: 'Please select joining date.' },
-                  ],
+                  initialValue: user.joining_date
                 },
               ]"
             />

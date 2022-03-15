@@ -77,7 +77,7 @@ export default {
         },
       })
       .then((res) => {
-        if (!res.data.user.admin && !res.data.user.management) {
+        if (!res.data.user.admin && !res.data.user.manager) {
           return redirect(`/`);
         }
       })
