@@ -11,6 +11,7 @@ export default async function ({ $auth, $axios, redirect }) {
         admin: ADMIN_EMAILS.includes($auth.user.email),
         manager: false,
         show_log: true,
+        leaves_taken: 0
       })
       .then((res) => {
         $auth.setUser({ ...$auth.user, ...res.data.user });
