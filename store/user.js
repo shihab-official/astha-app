@@ -68,7 +68,7 @@ export const mutations = {
     }
 
     state._users.splice(index, 1, user);
-  },
+  }
 };
 
 export const actions = {
@@ -128,5 +128,5 @@ export const actions = {
 
   setUser({ commit }, user) {
     commit('SET_USER', user);
-  },
+  }
 };

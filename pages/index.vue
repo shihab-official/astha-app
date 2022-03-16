@@ -174,6 +174,10 @@ export default {
     holidays: function () {
       this.calendarKey++;
     },
+    leaves: function () {
+      console.log(this.leaves);
+      this.calendarKey++;
+    },
   },
   methods: {
     disabledDate(current) {

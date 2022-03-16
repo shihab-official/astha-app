@@ -144,6 +144,9 @@ module.exports = {
     const dates = leaveData.dates.filter((date) => {
       return !date.offDay;
     });
+    let leaveCount = dates.length;
+
+    leaveCount = leaveCount === 1 ? (leaveData.option < 2 ? 0.5 : 1) : leaveCount;
 
     try {
       for (let date of dates) {
@@ -163,6 +166,10 @@ module.exports = {
         }
       }
 
+      await db.doc(`users/${leaveData.id}`).update({
+        leaves_taken: FieldValue.increment(leaveCount)
+      });
+
       return 'Leave applied.';
     } catch (error) {
       console.error(error);
@@ -174,6 +181,10 @@ module.exports = {
     try {
       await db.doc(`logs/${leave.userID}`).update({
         [leave.date]: leave.log
+      });
+
+      await db.doc(`users/${leave.userID}`).update({
+        leaves_taken: FieldValue.increment(-leave.duration)
       });
 
       return 'Leave cancelled.';

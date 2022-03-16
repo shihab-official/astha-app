@@ -10,7 +10,7 @@
         <a-icon type="double-left" class="text-xs" /> Back to Logs
       </NuxtLink>
       <span class="leave-stat ml-auto px-2 flex items-center font-medium border border-solid border-red-500 relative rounded overflow-hidden">
-        <span class="progress absolute top-0 left-0 bottom-0 pointer-events-none bg-red-100" :style="{width: `${leaveProgress}px`}"></span>
+        <span class="progress absolute top-0 left-0 bottom-0 pointer-events-none bg-red-100" :style="{width: `${leaveProgress}%`}"></span>
         <small class="mr-2 relative">Leaves remaining</small> {{leavesRemaining}}
       </span>
     </div>
@@ -150,12 +150,15 @@ export default {
   },
   methods: {
     ...mapActions('calendar', ['deleteLeaveInfo']),
+    // ...mapActions('user', ['updateLeaveCount']),
 
     cancelLeave: function (data) {
+      const leaveOption = data.log.find((l) => l.reason).option;
       const log = { work: data.log.find((l) => l.content) };
       this.$axios
         .post('/api/cancel-leave', {
           log,
+          duration: (leaveOption === 2 ? 1 : 0.5),
           userID: this.user.id,
           date: moment(data.date, 'DD-MMM-YYYY').format('YYYYMMDD'),
         })
@@ -168,6 +171,7 @@ export default {
               this.userLogs.splice(index, 1);
             }
             this.deleteLeaveInfo({ date: data.date, userID: this.user.id });
+            this.user.leaves_taken -= (leaveOption === 2 ? 1 : 0.5);
           }
         })
         .catch((error) => {
