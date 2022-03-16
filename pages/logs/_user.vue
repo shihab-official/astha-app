@@ -11,7 +11,8 @@
       </NuxtLink>
       <span class="leave-stat ml-auto px-2 flex items-center font-medium border border-solid border-red-500 relative rounded overflow-hidden">
         <span class="progress absolute top-0 left-0 bottom-0 pointer-events-none bg-red-100" :style="{width: `${leaveProgress}%`}"></span>
-        <small class="mr-2 relative">Leaves remaining</small> {{leavesRemaining}}
+        <small class="mr-2 relative">Leaves remaining</small>
+        <span class="relative">{{leavesRemaining}}</span>
       </span>
     </div>
     <hr />
@@ -78,7 +79,7 @@ summary::marker {
 
 <script>
 import moment from 'moment';
-import { mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'UserLogs',
@@ -113,16 +114,17 @@ export default {
     document.title = 'Work Update';
   },
   computed: {
+    ...mapGetters(['personalLeaves']),
     leavesTaken() {
       return (+this.user.leave_offset || 0) + (+this.user.leaves_taken || 0);
     },
 
     leavesRemaining() {
-      return 14 - this.leavesTaken;
+      return this.personalLeaves - this.leavesTaken;
     },
 
     leaveProgress() {
-      return parseInt(this.leavesTaken / 14 * 100);
+      return parseInt(this.leavesTaken / this.personalLeaves * 100);
     },
     
     logs() {
