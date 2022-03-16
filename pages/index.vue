@@ -78,6 +78,7 @@
   flex-direction: column;
   padding: 0;
   margin: 0;
+  cursor: default;
 }
 .ant-fullcalendar-fullscreen >>> tr:hover:after,
 .ant-fullcalendar-fullscreen >>> .ant-fullcalendar-date:hover,
@@ -91,6 +92,7 @@
 .ant-fullcalendar-fullscreen >>> .ant-fullcalendar-value {
   width: 100%;
   padding: 0 4px;
+  cursor: default;
 }
 .ant-fullcalendar-fullscreen >>> .ant-fullcalendar-today .ant-fullcalendar-value {
   font-weight: 500;
@@ -166,6 +168,9 @@ export default {
   computed: {
     ...mapGetters('user', ['logs']),
     ...mapGetters('calendar', ['holidays', 'leaves']),
+    approvedHolidays: function() {
+      return this.holidays.filter(holiday => holiday.approved).map(holiday => holiday.date);
+    },
     validRange: function () {
       return [moment().startOf('year'), moment().endOf('year')];
     },
@@ -181,7 +186,7 @@ export default {
   },
   methods: {
     disabledDate(current) {
-      return current.day() > 4;
+      return current.day() > 4 || this.approvedHolidays.includes(current.format('DD-MMM-YYYY'));
     },
     getData: function (value) {
       const items = [];
