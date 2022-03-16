@@ -33,19 +33,19 @@
             >
               <a-tag
                 color="red"
-                :class="`pointer-events-none w-full relative option-${item.option}`"
+                :class="`pointer-events-none w-full relative ${item.option === 0 ? 'option-0 text-right' : (item.option === 1 ? 'option-1 text-left' : 'text-center')}`"
                 style="margin-right: 0"
               >
-                <span class="relative">{{ item.label }}</span>
+                <span class="relative z-10">{{ item.label }}</span>
               </a-tag>
             </NuxtLink>
             <a-tag
               v-else
               color="red"
-              :class="`pointer-events-none w-full relative option-${item.option}`"
+              :class="`pointer-events-none w-full relative ${item.option === 0 ? 'option-0 text-right' : (item.option === 1 ? 'option-1 text-left' : 'text-center')}`"
               style="margin-right: 0"
             >
-              <span class="relative">{{ item.label }}</span>
+              <span class="relative z-10">{{ item.label }}</span>
             </a-tag>
           </template>
         </div>
@@ -54,60 +54,56 @@
   </div>
 </template>
 
-<style>
-.ant-fullcalendar-fullscreen .ant-select-selection--single {
+<style scoped>
+.ant-fullcalendar-fullscreen >>> .ant-select-selection--single {
   height: 35px;
 }
-.ant-fullcalendar-calendar-body {
+.ant-fullcalendar-fullscreen >>> .ant-fullcalendar-calendar-body {
   padding: 0;
 }
-.ant-fullcalendar-table tbody {
-  border: solid 1px #e8e8e8 !important;
-  border-width: 0 0 1px 1px !important;
+.ant-fullcalendar-fullscreen >>> .ant-fullcalendar-table tbody {
+  border: solid 1px #e8e8e8;
+  border-width: 0 0 1px 1px;
 }
-.ant-fullcalendar-column-header {
+.ant-fullcalendar-fullscreen >>> .ant-fullcalendar-column-header {
   width: calc(100% / 7);
 }
-.ant-fullcalendar-cell {
+.ant-fullcalendar-fullscreen >>> .ant-fullcalendar-cell {
   padding: 0;
 }
-.ant-fullcalendar-date {
-  border: solid 1px #e8e8e8 !important;
-  border-width: 1px 1px 0 0 !important;
-  display: flex !important;
+.ant-fullcalendar-fullscreen >>> .ant-fullcalendar-date {
+  border: solid 1px #e8e8e8;
+  border-width: 1px 1px 0 0;
+  display: flex;
   flex-direction: column;
-  padding: 0 !important;
-  margin: 0 !important;
+  padding: 0;
+  margin: 0;
 }
-.ant-fullcalendar-fullscreen tr:hover:after,
-.ant-fullcalendar-fullscreen .ant-fullcalendar-date:hover,
-.ant-fullcalendar-fullscreen .ant-fullcalendar-today .ant-fullcalendar-date,
-.ant-fullcalendar-fullscreen
-  .ant-fullcalendar-selected-day
-  .ant-fullcalendar-date {
+.ant-fullcalendar-fullscreen >>> tr:hover:after,
+.ant-fullcalendar-fullscreen >>> .ant-fullcalendar-date:hover,
+.ant-fullcalendar-fullscreen >>> .ant-fullcalendar-today .ant-fullcalendar-date,
+.ant-fullcalendar-fullscreen >>> .ant-fullcalendar-selected-day .ant-fullcalendar-date {
   background: unset;
 }
-.ant-fullcalendar-fullscreen
-  .ant-fullcalendar-selected-day
-  .ant-fullcalendar-value {
+.ant-fullcalendar-fullscreen >>> .ant-fullcalendar-selected-day .ant-fullcalendar-value {
   color: unset;
 }
-.ant-fullcalendar-value {
-  width: 100% !important;
+.ant-fullcalendar-fullscreen >>> .ant-fullcalendar-value {
+  width: 100%;
   padding: 0 4px;
 }
-.ant-fullcalendar-today .ant-fullcalendar-value {
+.ant-fullcalendar-fullscreen >>> .ant-fullcalendar-today .ant-fullcalendar-value {
   font-weight: 500;
-  color: #1890ff !important;
+  color: #1890ff;
   display: flex;
   justify-content: space-between;
   text-shadow: 0 0 5px rgb(0 0 0 / 10%);
 }
-.ant-fullcalendar-today .ant-fullcalendar-value:before {
+.ant-fullcalendar-fullscreen >>> .ant-fullcalendar-today .ant-fullcalendar-value:before {
   content: 'Today';
 }
-.ant-fullcalendar-content {
-  height: unset !important;
+.ant-fullcalendar-fullscreen >>> .ant-fullcalendar-content {
+  flex-grow: 1;
   padding: 4px 6px;
   bottom: 0;
 }
@@ -146,34 +142,13 @@
   border-bottom-right-radius: inherit;
 }
 
-.ant-fullcalendar-fullscreen .ant-tag.option-1:before {
+.ant-fullcalendar-fullscreen .ant-tag.option-0:after, .ant-fullcalendar-fullscreen .ant-tag.option-1:before {
   opacity: 1;
 }
-
-.ant-fullcalendar-fullscreen .ant-tag.option-0:after {
-  opacity: 1;
-}
-</style>
-
-<style scoped>
 .events {
   list-style: none;
   margin: 0;
   padding: 0;
-}
-.events .ant-badge-status {
-  overflow: hidden;
-  white-space: nowrap;
-  width: 100%;
-  text-overflow: ellipsis;
-  font-size: 12px;
-}
-.notes-month {
-  text-align: center;
-  font-size: 28px;
-}
-.notes-month section {
-  font-size: 28px;
 }
 </style>
 

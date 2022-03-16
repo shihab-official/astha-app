@@ -58,6 +58,14 @@ hr {
   border-top: solid 1px;
 }
 
+input[readonly]:not(.ant-calendar-picker-input) {
+  background-color: rgb(0 0 0 / 2%);
+}
+
+input[disabled] {
+  color: rgb(0 0 0 / 40%) !important;
+}
+
 .table-wrapper {
   width: 100%;
   white-space: nowrap;

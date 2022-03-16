@@ -12,7 +12,7 @@
     <hr />
     <a-form :layout="formLayout" :form="form" @submit="submit">
       <fieldset>
-        <legend> Personal</legend>
+        <legend>Personal</legend>
         <div class="flex flex-wrap -mx-3">
           <a-form-item label="Name">
             <a-input
@@ -62,42 +62,49 @@
         </div>
       </fieldset>
       <fieldset>
-        <legend> Official </legend>
+        <legend>Official</legend>
         <div class="flex flex-wrap -mx-3">
-          <a-form-item label="Joining Date">
+          <a-form-item label="Joining Date" class="w-1/3">
             <a-month-picker
               class="input-field-sm"
-              :read-only="!currentUser && !currentUserIsAdminOrManager"
+              :disabled="!currentUser && !currentUserIsAdminOrManager"
               format="MMMM, YYYY"
               :allow-clear="false"
               v-decorator="[
                 'joining_date',
                 {
-                  initialValue: user.joining_date
+                  initialValue: user.joining_date,
                 },
               ]"
             />
           </a-form-item>
-          <a-form-item label="Leaves Taken">
-            <a-input
-              class="input-field-sm"
+          <a-form-item label="Leaves Taken" class="w-1/3">
+            <a-input type="number"
+              class="input-field-sm leave-input"
+              :addon-after="` + ${user.leaves_taken} = ${user.leaves_taken + (user.leave_offset || 0)}`"
               :read-only="!currentUserIsAdminOrManager"
-              v-decorator="['leaves_taken', { initialValue: user.leaves_taken }]"
+              placeholder="Adjustment"
+              min="0" :max="`${14 - user.leaves_taken + (user.leave_offset || 0)}`"
+              v-decorator="[
+                'leave_offset',
+                { initialValue: (user.leave_offset || 0) },
+              ]"
             />
           </a-form-item>
-          <div class="flex" v-if="currentUserIsAdmin">
-            <a-form-item label="Admin" style="width: 100px;">
+          <div class="flex w-1/3" v-if="currentUserIsAdmin">
+            <a-form-item label="Admin" style="width: 100px">
               <a-switch
                 :default-checked="user.admin"
                 :disabled="
-                  (user.admin && !currentUser) || (currentUser && adminCount < 2)
+                  (user.admin && !currentUser) ||
+                  (currentUser && adminCount < 2)
                 "
                 v-decorator="['admin']"
                 checked-children=" Yes "
                 un-checked-children=" No "
               />
             </a-form-item>
-            <a-form-item label="Manager" style="width: 100px;">
+            <a-form-item label="Manager" style="width: 100px">
               <a-switch
                 :default-checked="user.manager"
                 v-decorator="['manager']"
@@ -105,7 +112,7 @@
                 un-checked-children=" No "
               />
             </a-form-item>
-            <a-form-item label="Show log" style="width: 100px;">
+            <a-form-item label="Show log" style="width: 100px">
               <a-switch
                 :default-checked="user.show_log"
                 v-decorator="['show_log']"
@@ -131,7 +138,14 @@
 .input-field-sm {
   width: 200px;
 }
-fieldset, fieldset legend {
+.input-field-xs {
+  width: 100px;
+}
+.leave-input >>> .ant-input-group-addon {
+    word-spacing: 6px;
+}
+fieldset,
+fieldset legend {
   all: revert;
 }
 fieldset {
@@ -150,7 +164,7 @@ fieldset legend {
 
 <script>
 import moment from 'moment';
-import { mapActions } from "vuex";
+import { mapActions } from 'vuex';
 
 export default {
   name: 'Profile',
@@ -218,7 +232,9 @@ export default {
         userData.dob = moment(userData.dob).format('DD-MMM-YYYY');
 
         if (userData.joining_date) {
-          userData.joining_date = moment(userData.joining_date).format('MMMM, YYYY');
+          userData.joining_date = moment(userData.joining_date).format(
+            'MMMM, YYYY'
+          );
         }
 
         if (!err) {

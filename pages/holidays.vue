@@ -1,13 +1,10 @@
 <template>
   <div>
     <div class="flex justify-between items-center">
-      <h3 class="m-0">Holidays</h3>
+      <h3 class="m-0">Holidays of {{currentYear}}</h3>
       <div class="space-x-3">
-        <span
-          @click="setHolidays()"
-          class="text-sm h-fit py-1 px-3 bg-emerald-600 text-white hover:bg-emerald-700 hover:text-white rounded cursor-pointer"
-          > Update </span
-        >
+        <a-button type="primary" @click="setHolidays()" style="height: 28px;"> Update </a-button>
+
         <!-- <span
           class="text-sm h-fit py-1 px-3 bg-sky-600 text-white hover:bg-sky-700 hover:text-white rounded cursor-pointer"
           >Add</span
@@ -38,6 +35,7 @@
               <a-date-picker
                 :value="holiday.moment"
                 :format="dateFormat"
+                :disabled-date="disabledDate"
                 @change="onDateChange(holiday, $event)"
               >
                 <span class="cursor-pointer">{{ holiday.date }}</span>
@@ -65,6 +63,7 @@
 </style>
 
 <script>
+import moment from 'moment';
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
@@ -87,27 +86,38 @@ export default {
   },
   data() {
     return {
-      dateFormat: 'DD-MMM-YYYY'
+      dateFormat: 'DD-MMM-YYYY',
     };
   },
   computed: {
     ...mapGetters('calendar', ['holidays']),
+    currentYear() {
+      return new Date().getFullYear();
+    }
   },
   mounted() {
     this.getHolidays();
   },
   methods: {
     ...mapActions('calendar', ['getHolidays', 'setHoliday', 'setHolidays']),
+
+    disabledDate(current) {
+      return (
+        current < moment().startOf('year') || current > moment().endOf('year')
+      );
+    },
+
     onDateChange(holiday, moment) {
       delete holiday.moment;
       holiday.date = moment.format(this.dateFormat);
       this.setHoliday(holiday);
     },
+
     onApprovalChange(holiday, approved) {
       delete holiday.moment;
       holiday.approved = approved;
       this.setHoliday(holiday);
-    }
+    },
   },
 };
 </script>
