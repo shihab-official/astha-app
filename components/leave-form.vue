@@ -69,6 +69,11 @@ export default {
   },
   computed: {
     ...mapGetters('calendar', ['holidays']),
+    approvedHolidays: function () {
+      return this.holidays
+        .filter((holiday) => holiday.approved)
+        .map((holiday) => holiday.date);
+    },
     options: function () {
       return [
         {
@@ -97,7 +102,7 @@ export default {
           start: this.dateRange[0],
           end: this.dateRange[1],
           format: this.dateFormat,
-          holidays: this.holidays
+          holidays: this.holidays,
         });
       }
       return [];
@@ -106,7 +111,7 @@ export default {
   methods: {
     ...mapActions('calendar', ['addLeaveInfo']),
     disabledDate(current) {
-      return current.day() > 4;
+      return current.day() > 4 || this.approvedHolidays.includes(current.format('DD-MMM-YYYY'));
     },
     onChange(range) {
       this.dateRange = range;
