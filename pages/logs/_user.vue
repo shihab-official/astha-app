@@ -9,6 +9,10 @@
       >
         <a-icon type="double-left" class="text-xs" /> Back to Logs
       </NuxtLink>
+      <span class="leave-stat ml-auto px-2 flex items-center font-medium border border-solid border-red-500 relative rounded overflow-hidden">
+        <span class="progress absolute top-0 left-0 bottom-0 pointer-events-none bg-red-100" :style="{width: `${leaveProgress}px`}"></span>
+        <small class="mr-2 relative">Leaves remaining</small> {{leavesRemaining}}
+      </span>
     </div>
     <hr />
     <div class="logs" v-if="logs.length > 0">
@@ -100,7 +104,7 @@ export default {
       });
 
     return {
-      userID: params.user,
+      user: content.user,
       heading: params.user === $auth.user.id ? 'My Board' : content.user.name,
       userLogs: content.logs,
     };
@@ -109,6 +113,18 @@ export default {
     document.title = 'Work Update';
   },
   computed: {
+    leavesTaken() {
+      return (+this.user.leave_offset || 0) + (+this.user.leaves_taken || 0);
+    },
+
+    leavesRemaining() {
+      return 14 - this.leavesTaken;
+    },
+
+    leaveProgress() {
+      return parseInt(this.leavesTaken / 14 * 100);
+    },
+    
     logs() {
       return this.userLogs.map((userLog) => {
         const newLog = [];
@@ -140,7 +156,7 @@ export default {
       this.$axios
         .post('/api/cancel-leave', {
           log,
-          userID: this.userID,
+          userID: this.user.id,
           date: moment(data.date, 'DD-MMM-YYYY').format('YYYYMMDD'),
         })
         .then((res) => {
@@ -151,7 +167,7 @@ export default {
             } else {
               this.userLogs.splice(index, 1);
             }
-            this.deleteLeaveInfo({ date: data.date, userID: this.userID });
+            this.deleteLeaveInfo({ date: data.date, userID: this.user.id });
           }
         })
         .catch((error) => {

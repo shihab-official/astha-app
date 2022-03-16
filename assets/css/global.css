@@ -58,8 +58,12 @@ hr {
   border-top: solid 1px;
 }
 
-input[readonly]:not(.ant-calendar-picker-input) {
+input[readonly] {
   background-color: rgb(0 0 0 / 2%);
+}
+
+.ant-calendar-picker-input, .ant-calendar-picker-input input {
+  background-color: transparent;
 }
 
 input[disabled] {
