@@ -74,23 +74,38 @@
                 'joining_date',
                 {
                   initialValue: user.joining_date,
+                  rules: [
+                    { required: true, message: 'Please select joining date.' },
+                  ],
                 },
               ]"
             />
           </a-form-item>
-          <a-form-item label="Leaves Taken" class="w-1/3">
-            <a-input type="number"
-              class="input-field-sm leave-input"
-              :addon-after="` + ${user.leaves_taken} = ${user.leaves_taken + (user.leave_offset || 0)}`"
-              :read-only="!currentUserIsAdminOrManager"
-              placeholder="Adjustment"
-              min="0" :max="`${14 - user.leaves_taken + (user.leave_offset || 0)}`"
-              v-decorator="[
-                'leave_offset',
-                { initialValue: (user.leave_offset || 0) },
-              ]"
-            />
-          </a-form-item>
+          <div class="w-1/3 flex">
+            <a-form-item label="Leaves Taken" style="width: fit-content;">
+              <a-input-group compact class="input-field-sm text-center">
+                <a-input-number
+                  class="leave-input" style="width: 45%;"
+                  :disabled="!currentUserIsAdminOrManager"
+                  placeholder="Offset"
+                  @change="leaveOffsetChange" :min="0"
+                  :max="maxLeaveOffset"
+                  v-decorator="[
+                    'leave_offset',
+                    { initialValue: user.leave_offset || 0, type: 'number' },
+                  ]"
+                />
+                <div class="ant-input leave-input disabled" style="width: 55%">
+                  + {{user.leaves_taken}} = <strong class="text-red-500">{{totalLeaves}}</strong>
+                </div>
+              </a-input-group>
+            </a-form-item>
+            <a-form-item label="Remaining" style="width: 90px;">
+              <div class="ant-input leave-input disabled text-center">
+                {{remainingLeaves}}
+              </div>
+            </a-form-item>
+          </div>
           <div class="flex w-1/3" v-if="currentUserIsAdmin">
             <a-form-item label="Admin" style="width: 100px">
               <a-switch
@@ -136,13 +151,13 @@
   padding: 0 0.75rem;
 }
 .input-field-sm {
-  width: 200px;
+  width: 175px;
 }
 .input-field-xs {
   width: 100px;
 }
-.leave-input >>> .ant-input-group-addon {
-    word-spacing: 6px;
+.leave-input {
+  word-spacing: 1px;
 }
 fieldset,
 fieldset legend {
@@ -164,7 +179,7 @@ fieldset legend {
 
 <script>
 import moment from 'moment';
-import { mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'Profile',
@@ -194,6 +209,16 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(['personalLeaves']),
+    maxLeaveOffset() {
+      return this.personalLeaves - this.user.leaves_taken;
+    },
+    totalLeaves() {
+      return this.user.leaves_taken + (this.user.leave_offset || 0);
+    },
+    remainingLeaves() {
+      return this.personalLeaves - this.totalLeaves;
+    },
     currentUser() {
       return !(
         this.$route.params.user &&
@@ -214,6 +239,9 @@ export default {
     ...mapActions('user', ['setUser']),
     disabledDate(current) {
       return current > moment().startOf('day');
+    },
+    leaveOffsetChange(value) {
+      this.user.leave_offset = value;
     },
     submit(e) {
       e.preventDefault();

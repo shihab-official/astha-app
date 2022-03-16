@@ -63,6 +63,10 @@ export const mutations = {
       }
     });
 
+    if (userInfo.dob) {
+      userInfo.dob = userInfo.dob.slice(0, -5);
+    }
+
     if (user) {
       user = { ...user, ...userInfo };
     }

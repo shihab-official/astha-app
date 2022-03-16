@@ -7,9 +7,20 @@ module.exports = {
   initStorage: async (user) => {
     const docRef = await db.doc(`users/${user.id}`).get();
     if (docRef.exists) {
+      const userInfo = docRef.data();
+      const leaveOffsetResetDate = moment(userInfo.leave_offset_reset_date, 'DD-MMM-YYYY');
+
+      if (moment().isSameOrAfter(leaveOffsetResetDate)) {
+        userInfo.leave_offset = 0;
+        userInfo.leaves_taken = 0;
+        userInfo.leave_offset_reset_date = leaveOffsetResetDate.year(moment().year() + 1).format('DD-MMM-YYYY');
+        
+        await db.doc(`users/${user.id}`).set(userInfo, { merge: true });
+      }
+
       return {
         newUser: false,
-        user: docRef.data(),
+        user: userInfo,
       };
     } else {
       await db.doc(`logs/${user.id}`).set({}, { merge: true });
@@ -44,6 +55,14 @@ module.exports = {
   },
 
   setUser: async (user) => {
+    const currentYear = moment().year();
+    let date = moment(user.joining_date, 'MMMM, YYYY').year(currentYear);
+    if (date.isBefore(moment())) {
+      date.year(currentYear + 1);
+    }
+
+    user.leave_offset_reset_date=date.format('DD-MMM-YYYY');
+
     try {
       await db.doc(`users/${user.id}`).set(user, { merge: true });
       return {
