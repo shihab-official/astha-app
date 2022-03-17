@@ -1,19 +1,33 @@
 <template>
   <div>
     <a-form :layout="formLayout" :form="form" @submit="submit">
-      <a-form-item label="Date">
-        <a-range-picker
-          class="range-picker"
-          :format="dateFormat"
-          :disabled-date="disabledDate"
-          @change="onChange"
-          v-decorator="[
-            'dateRange',
-            { rules: [{ required: true, message: 'Please select dates.' }] },
-          ]"
-        />
-      </a-form-item>
-      <a-form-item  v-if="sameDay">
+      <div class="flex justify-between">
+        <a-form-item label="Date">
+          <a-range-picker
+            class="range-picker"
+            :format="dateFormat"
+            :disabled-date="disabledDate"
+            @change="onChange"
+            v-decorator="[
+              'dateRange',
+              { rules: [{ required: true, message: 'Please select dates.' }] },
+            ]"
+          />
+        </a-form-item>
+        <div class="text-center mb-auto">
+          <div
+            class="px-2 py-1 bg-red-100 border border-solid border-red-300 border-b-0 rounded-t-md"
+          >
+            Remaining
+          </div>
+          <h2
+            class="p-1 mb-0 bg-red-100 border border-solid border-red-300 rounded-b-md"
+          >
+            {{ remainingLeaves }}
+          </h2>
+        </div>
+      </div>
+      <a-form-item v-if="sameDay">
         <a-radio-group
           :defaultValue="leave.option"
           v-decorator="['leave.option']"
@@ -63,6 +77,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(['remainingLeaves']),
     ...mapGetters('calendar', ['holidays']),
     approvedHolidays: function () {
       return this.holidays
@@ -106,7 +121,10 @@ export default {
   methods: {
     ...mapActions('calendar', ['addLeaveInfo']),
     disabledDate(current) {
-      return current.day() > 4 || this.approvedHolidays.includes(current.format('DD-MMM-YYYY'));
+      return (
+        current.day() > 4 ||
+        this.approvedHolidays.includes(current.format('DD-MMM-YYYY'))
+      );
     },
     onChange(range) {
       this.dateRange = range;
@@ -126,7 +144,10 @@ export default {
             }),
             option: values.leave.option ?? this.leave.option,
             reason: values.leave.reason,
-          }).then(() => {
+          }).then((leaveCount) => {
+            const user = this.$auth.user;
+            const leaves_taken = user.leaves_taken + (leaveCount || 0);
+            this.$auth.setUser({ ...user, leaves_taken });
             this.$emit('leaveApplied');
             this.$router.push(`/`);
           });

@@ -105,15 +105,17 @@ export const actions = {
       });
   },
 
-  addLeaveInfo({ commit }, leave) {
+  async addLeaveInfo({ commit }, leave) {
     commit('LOADING', true);
-    this.$axios
+    return await this.$axios
       .post('/api/leave-application', leave)
       .then((res) => {
+        let leaveCount = 0;
         if (res.status == 200) {
           commit('LOADING');
           leave.dates.forEach((date) => {
             if (!date.offDay) {
+              leaveCount++;
               commit('ADD_LEAVE_INFO', {
                 date: date.code,
                 data: {
@@ -127,6 +129,7 @@ export const actions = {
             }
           });
         }
+        return leaveCount;
       })
       .catch((error) => {
         commit('LOADING');

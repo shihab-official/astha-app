@@ -5,7 +5,8 @@ export const state = () => {
 };
 
 export const getters = {
-  personalLeaves: ({personal_leaves}) => personal_leaves
+  personalLeaves: ({personal_leaves}) => personal_leaves,
+  remainingLeaves: ({personal_leaves, auth}) => personal_leaves - (auth.user.leaves_taken + (auth.user.leave_offset || 0))
 }
 
 export const mutations = {
