@@ -12,8 +12,9 @@
             { rules: [{ required: true, message: 'Please select dates.' }] },
           ]"
         />
+      </a-form-item>
+      <a-form-item  v-if="sameDay">
         <a-radio-group
-          v-if="sameDay"
           :defaultValue="leave.option"
           v-decorator="['leave.option']"
         >
@@ -36,18 +37,12 @@
           :auto-size="{ minRows: 4 }"
         />
       </a-form-item>
-      <a-form-item>
+      <a-form-item style="margin-bottom: 0">
         <a-button type="primary" @click="submit"> Submit </a-button>
       </a-form-item>
     </a-form>
   </div>
 </template>
-
-<style scoped>
-.ant-radio-group {
-  margin-left: 3rem;
-}
-</style>
 
 <script>
 import { getDatesInRange } from '~/server-middleware/utilities/date';
@@ -132,6 +127,7 @@ export default {
             option: values.leave.option ?? this.leave.option,
             reason: values.leave.reason,
           }).then(() => {
+            this.$emit('leaveApplied');
             this.$router.push(`/`);
           });
         }
