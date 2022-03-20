@@ -8,13 +8,8 @@
         <div v-if="$auth.loggedIn" class="flex" style="font-size: 90%">
           <NuxtLink
             to="/log"
-            class="block font-medium text-white hover:text-emerald-300"
+            class="block font-medium mr-6 text-white hover:text-emerald-300"
             >Log</NuxtLink
-          >
-          <NuxtLink
-            to="/leave"
-            class="block font-medium mx-6 text-white hover:text-emerald-300"
-            >Leave</NuxtLink
           >
           <a-dropdown :trigger="['click']" placement="bottomRight">
             <a

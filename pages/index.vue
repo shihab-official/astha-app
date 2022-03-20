@@ -4,11 +4,20 @@
       <h3 class="m-0">Calendar</h3>
     </div>
     <hr />
+    <a-modal
+      title="Apply for leave"
+      :visible="leaveFormVisible"
+      :footer="false"
+      @cancel="closeLeaveForm"
+    >
+      <leave-form :start="leaveStart" @leaveApplied="leaveApplied"></leave-form>
+    </a-modal>
     <a-calendar
       :key="calendarKey"
       :header-render="headerRender"
       :valid-range="validRange"
       :disabled-date="disabledDate"
+      @select="onDateSelection"
     >
       <div slot="dateCellRender" slot-scope="value" class="events">
         <div v-for="item of getData(value)" :key="item.label" class="mb-0.5">
@@ -19,31 +28,13 @@
             {{ item.label }}
           </div>
           <template v-else>
-            <NuxtLink
-              v-if="$auth.user.admin || $auth.user.manager"
-              :to="`/logs/${item.id}`"
-              class="block"
-              :title="`${
-                item.option === 0
-                  ? '1st half - '
-                  : item.option === 1
-                  ? '2nd half - '
-                  : ''
-              }${item.reason}`"
-            >
-              <a-tag
-                color="red"
-                :class="`pointer-events-none w-full relative ${item.option === 0 ? 'option-0 text-right' : (item.option === 1 ? 'option-1 text-left' : 'text-center')}`"
-                style="margin-right: 0"
-              >
-                <span class="relative z-10">{{ item.label }}</span>
-              </a-tag>
-            </NuxtLink>
             <a-tag
-              v-else
               color="red"
-              :class="`pointer-events-none w-full relative ${item.option === 0 ? 'option-0 text-right' : (item.option === 1 ? 'option-1 text-left' : 'text-center')}`"
               style="margin-right: 0"
+              :style="{cursor: ($auth.user.admin || $auth.user.manager ? 'pointer' : '')}"
+              @click="userLog($event, item.id)"
+              :class="`w-full relative ${item.option === 0 ? 'option-0 text-right' : item.option === 1 ? 'option-1 text-left' : 'text-center'}`"
+              :title="`${item.option === 0 ? '1st half - ' : item.option === 1 ? '2nd half - ' : ''} ${item.reason}`"
             >
               <span class="relative z-10">{{ item.label }}</span>
             </a-tag>
@@ -83,10 +74,14 @@
 .ant-fullcalendar-fullscreen >>> tr:hover:after,
 .ant-fullcalendar-fullscreen >>> .ant-fullcalendar-date:hover,
 .ant-fullcalendar-fullscreen >>> .ant-fullcalendar-today .ant-fullcalendar-date,
-.ant-fullcalendar-fullscreen >>> .ant-fullcalendar-selected-day .ant-fullcalendar-date {
+.ant-fullcalendar-fullscreen
+  >>> .ant-fullcalendar-selected-day
+  .ant-fullcalendar-date {
   background: unset;
 }
-.ant-fullcalendar-fullscreen >>> .ant-fullcalendar-selected-day .ant-fullcalendar-value {
+.ant-fullcalendar-fullscreen
+  >>> .ant-fullcalendar-selected-day
+  .ant-fullcalendar-value {
   color: unset;
 }
 .ant-fullcalendar-fullscreen >>> .ant-fullcalendar-value {
@@ -94,14 +89,18 @@
   padding: 0 4px;
   cursor: default;
 }
-.ant-fullcalendar-fullscreen >>> .ant-fullcalendar-today .ant-fullcalendar-value {
+.ant-fullcalendar-fullscreen
+  >>> .ant-fullcalendar-today
+  .ant-fullcalendar-value {
   font-weight: 500;
   color: #1890ff;
   display: flex;
   justify-content: space-between;
   text-shadow: 0 0 5px rgb(0 0 0 / 10%);
 }
-.ant-fullcalendar-fullscreen >>> .ant-fullcalendar-today .ant-fullcalendar-value:before {
+.ant-fullcalendar-fullscreen
+  >>> .ant-fullcalendar-today
+  .ant-fullcalendar-value:before {
   content: 'Today';
 }
 .ant-fullcalendar-fullscreen >>> .ant-fullcalendar-content {
@@ -144,7 +143,8 @@
   border-bottom-right-radius: inherit;
 }
 
-.ant-fullcalendar-fullscreen .ant-tag.option-0:after, .ant-fullcalendar-fullscreen .ant-tag.option-1:before {
+.ant-fullcalendar-fullscreen .ant-tag.option-0:after,
+.ant-fullcalendar-fullscreen .ant-tag.option-1:before {
   opacity: 1;
 }
 .events {
@@ -162,14 +162,18 @@ export default {
   name: 'Home',
   data() {
     return {
+      leaveStart: null,
+      leaveFormVisible: false,
       calendarKey: 0,
     };
   },
   computed: {
     ...mapGetters('user', ['logs']),
     ...mapGetters('calendar', ['holidays', 'leaves']),
-    approvedHolidays: function() {
-      return this.holidays.filter(holiday => holiday.approved).map(holiday => holiday.date);
+    approvedHolidays: function () {
+      return this.holidays
+        .filter((holiday) => holiday.approved)
+        .map((holiday) => holiday.date);
     },
     validRange: function () {
       return [moment().startOf('year'), moment().endOf('year')];
@@ -179,16 +183,16 @@ export default {
     holidays: function () {
       this.calendarKey++;
     },
-    leaves: function () {
-      console.log(this.leaves);
-      this.calendarKey++;
-    },
   },
   methods: {
     disabledDate(current) {
-      return current.day() > 4 || this.approvedHolidays.includes(current.format('DD-MMM-YYYY'));
+      return (
+        current.day() > 4 ||
+        this.approvedHolidays.includes(current.format('DD-MMM-YYYY'))
+      );
     },
-    getData: function (value) {
+
+    getData(value) {
       const items = [];
       const date = value.format('DD-MMM-YYYY');
       const holiday = this.holidays.find(
@@ -272,6 +276,27 @@ export default {
           </div>
         </div>
       );
+    },
+
+    userLog(event, userID) {
+      event.stopPropagation();
+      if (this.$auth.user.admin || this.$auth.user.manager) {
+        this.$router.push(`/logs/${userID}`);
+      }
+    },
+
+    onDateSelection(date) {
+      this.leaveStart = date;
+      this.leaveFormVisible = true;
+    },
+
+    leaveApplied() {
+      this.calendarKey++;
+      this.leaveFormVisible = false;
+    },
+
+    closeLeaveForm() {
+      this.leaveFormVisible = false;
     },
   },
 };
