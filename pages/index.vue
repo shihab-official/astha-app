@@ -28,43 +28,13 @@
             {{ item.label }}
           </div>
           <template v-else>
-            <NuxtLink
-              v-if="$auth.user.admin || $auth.user.manager"
-              :to="`/logs/${item.id}`"
-              class="block"
-              :title="`${
-                item.option === 0
-                  ? '1st half - '
-                  : item.option === 1
-                  ? '2nd half - '
-                  : ''
-              }${item.reason}`"
-            >
-              <a-tag
-                color="red"
-                :class="`pointer-events-none w-full relative ${
-                  item.option === 0
-                    ? 'option-0 text-right'
-                    : item.option === 1
-                    ? 'option-1 text-left'
-                    : 'text-center'
-                }`"
-                style="margin-right: 0"
-              >
-                <span class="relative z-10">{{ item.label }}</span>
-              </a-tag>
-            </NuxtLink>
             <a-tag
-              v-else
               color="red"
-              :class="`pointer-events-none w-full relative ${
-                item.option === 0
-                  ? 'option-0 text-right'
-                  : item.option === 1
-                  ? 'option-1 text-left'
-                  : 'text-center'
-              }`"
               style="margin-right: 0"
+              :style="{cursor: ($auth.user.admin || $auth.user.manager ? 'pointer' : '')}"
+              @click="userLog($event, item.id)"
+              :class="`w-full relative ${item.option === 0 ? 'option-0 text-right' : item.option === 1 ? 'option-1 text-left' : 'text-center'}`"
+              :title="`${item.option === 0 ? '1st half - ' : item.option === 1 ? '2nd half - ' : ''} ${item.reason}`"
             >
               <span class="relative z-10">{{ item.label }}</span>
             </a-tag>
@@ -306,6 +276,13 @@ export default {
           </div>
         </div>
       );
+    },
+
+    userLog(event, userID) {
+      event.stopPropagation();
+      if (this.$auth.user.admin || this.$auth.user.manager) {
+        this.$router.push(`/logs/${userID}`);
+      }
     },
 
     onDateSelection(date) {
