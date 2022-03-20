@@ -166,8 +166,12 @@ module.exports = {
     let leaveCount = dates.length;
 
     leaveCount = leaveCount === 1 ? (leaveData.option < 2 ? 0.5 : 1) : leaveCount;
+    
+    const leaves = (await db.doc(`logs/${leaveData.id}`).get()).data();
+    console.log(leaves);
 
     try {
+      let adjustment = 0;
       for (let date of dates) {
         const data = {
           [date.code]: {
@@ -177,6 +181,19 @@ module.exports = {
             },
           },
         };
+        const leave = leaves[date.code]?.leave;
+        console.log(leave);
+        if (leave) {
+          adjustment = 0;
+          if (leave.option === leaveData.option) {
+            adjustment = leaveData.option < 2 ? -0.5 : -1;
+          } else if (leave.option < 2 && leaveData.option === 2) {
+            adjustment = 0.5;
+          } else {
+            adjustment = -0.5;
+          }
+          leaveCount += adjustment;
+        }
 
         if (leaveData.option === 2) {
           await db.doc(`logs/${leaveData.id}`).update(data);
@@ -189,7 +206,7 @@ module.exports = {
         leaves_taken: FieldValue.increment(leaveCount)
       });
 
-      return 'Leave applied.';
+      return leaveCount;
     } catch (error) {
       console.error(error);
       return error;
