@@ -29,8 +29,7 @@
       </div>
       <a-form-item v-if="sameDay">
         <a-radio-group
-          :defaultValue="leave.option"
-          v-decorator="['leave.option']"
+          v-decorator="['leave.option', {initialValue: leave.option}]"
         >
           <a-radio v-for="opt of options" :key="opt.value" :value="opt.value">
             {{ opt.label }}
