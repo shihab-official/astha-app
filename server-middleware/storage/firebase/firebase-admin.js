@@ -171,7 +171,7 @@ module.exports = {
     console.log(leaves);
 
     try {
-      let adjustment = 0;
+      //let adjustment = 0;
       for (let date of dates) {
         const data = {
           [date.code]: {
@@ -184,15 +184,7 @@ module.exports = {
         const leave = leaves[date.code]?.leave;
         console.log(leave);
         if (leave) {
-          adjustment = 0;
-          if (leave.option === leaveData.option) {
-            adjustment = leaveData.option < 2 ? -0.5 : -1;
-          } else if (leave.option < 2 && leaveData.option === 2) {
-            adjustment = 0.5;
-          } else {
-            adjustment = -0.5;
-          }
-          leaveCount += adjustment;
+          leaveCount -= leave.option < 2 ? 0.5 : 1;
         }
 
         if (leaveData.option === 2) {
