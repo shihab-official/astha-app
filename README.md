@@ -1,4 +1,4 @@
-# app-dir
+# astha-app
 
 ## Build Setup
 
