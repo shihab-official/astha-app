@@ -4,8 +4,6 @@ module.exports = {
   dev: process.env.NODE_ENV !== 'production',
   telemetry: false,
 
-  buildDir: 'dist',
-
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
   ssr: false,
