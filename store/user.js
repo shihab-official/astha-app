@@ -80,7 +80,7 @@ export const actions = {
     if (this.$auth.user.admin) {
       commit('LOADING', true);
       this.$axios
-        .get('/api/user-logs', {
+        .get('/log/by-dates', {
           params: {
             range: datesInRange.map(function (date) {
               return date.code;
@@ -108,7 +108,7 @@ export const actions = {
   getUsers({ commit }) {
     commit('LOADING', true);
     this.$axios
-      .get('/api/users')
+      .get('/user/all')
       .then((res) => {
         const users = res.data.sort(function (a, b) {
           const nameA = a.short_name.toLowerCase(),

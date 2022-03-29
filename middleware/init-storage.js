@@ -3,7 +3,7 @@ import { ADMIN_EMAILS } from '~/constants';
 export default async function ({ $auth, $axios, redirect }) {
   if ($auth.loggedIn) {
     await $axios
-      .post('/api/init-storage', {
+      .post('/user/init-store', {
         name: $auth.user.name,
         short_name: $auth.user.given_name,
         email: $auth.user.email,

@@ -175,7 +175,7 @@ export default {
       this.form.validateFields((err, values) => {
         if (!err) {
           this.$axios
-            .post('/api/create-user', {
+            .post('/user/create', {
               name: values.newUser.name,
               short_name: values.newUser.name,
               email: values.newUser.email,

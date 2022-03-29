@@ -94,11 +94,7 @@ export default {
   },
   async asyncData({ params, redirect, $auth, $axios }) {
     const content = await $axios
-      .get('/api/user-log', {
-        params: {
-          id: params.user,
-        },
-      })
+      .get(`/log/${params.user}`)
       .then((res) => res.data)
       .catch((error) => {
         console.error(error);
@@ -158,7 +154,7 @@ export default {
       const leaveOption = data.log.find((l) => l.reason).option;
       const log = { work: data.log.find((l) => l.content) };
       this.$axios
-        .post('/api/cancel-leave', {
+        .post('/leave/cancel', {
           log,
           duration: (leaveOption === 2 ? 1 : 0.5),
           userID: this.user.id,
