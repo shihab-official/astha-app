@@ -3,11 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "nodemon --trace-warnings server.js -w nuxt.config.js -w server-middleware/ -V",
+    "dev:node": "nodemon --trace-warnings server.js -w nuxt.config.js -w server-middleware/ -V",
+    "start:node": "NODE_ENV=production node server.js",
+    "analyze": "nuxt build --analyze",
+    "dev": "nuxt",
     "build": "nuxt build",
-    "start": "NODE_ENV=production node server.js",
-    "generate": "nuxt generate",
-    "analyze": "nuxt build --analyze"
+    "start": "nuxt start",
+    "generate": "nuxt generate"
   },
   "dependencies": {
     "@nuxtjs/auth-next": "5.0.0-1641544397.1af946a",
