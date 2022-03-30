@@ -9,7 +9,8 @@
     "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
-    "generate": "nuxt generate"
+    "generate": "nuxt generate",
+    "heroku-postbuild": "nuxt generate"
   },
   "dependencies": {
     "@nuxtjs/auth-next": "5.0.0-1641544397.1af946a",
