@@ -162,6 +162,9 @@ export default {
       this.getUser(newKey);
     }
   },
+  beforeDestroy() {
+    this.getUser();
+  },
   methods: {
     ...mapActions('user', ['getUser']),
     search(e) {
