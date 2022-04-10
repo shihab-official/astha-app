@@ -2,6 +2,9 @@ const { GOOGLE_CLIENT_ID } = require("./constants");
 
 module.exports = {
   dev: process.env.NODE_ENV !== 'production',
+  server: {
+    port: 4002 // default: 3000
+  },
   telemetry: false,
 
   // Target: https://go.nuxtjs.dev/config-target
@@ -66,8 +69,8 @@ module.exports = {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    // baseURL: process.env.NODE_ENV !== 'production' ? 'http://localhost:3000' : 'https://astha-app-service.herokuapp.com',
-    baseURL: 'https://astha-app-service.herokuapp.com',
+    baseURL: process.env.NODE_ENV !== 'production' ? 'http://localhost:3000' : 'https://astha-app-service.herokuapp.com',
+    // baseURL: 'https://astha-app-service.herokuapp.com',
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build

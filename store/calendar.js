@@ -3,6 +3,7 @@ import moment from 'moment';
 export const state = () => ({
   _updatingState: false,
   _holidays: [],
+  _updatedHolidays: [],
   _leaves: [],
 });
 
@@ -12,7 +13,9 @@ export const getters = {
   holidays: ({ _holidays }) => {
     return _holidays.map((holiday) => ({
       ...holiday,
-      moment: moment(holiday.date, 'DD-MMM-YYYY'),
+      utc_date: holiday.date,
+      date: moment(holiday.date).format('DD-MMM-YYYY'),
+      moment: moment(holiday.date)
     }));
   },
 
@@ -28,8 +31,10 @@ export const mutations = {
   SET_HOLIDAYS: (state, holidays) => (state._holidays = holidays),
 
   SET_HOLIDAY: (state, holiday) => {
-    const index = state._holidays.findIndex((h) => h.id == holiday.id);
+    const index = state._holidays.findIndex((h) => h._id == holiday._id);
     state._holidays.splice(index, 1, holiday);
+    const updateIndex = state._updatedHolidays.findIndex((h) => h._id == holiday._id);
+    state._updatedHolidays.splice(updateIndex, 1, holiday);
   },
 
   SET_LEAVE_INFO: (state, leaves) => (state._leaves = leaves),
@@ -80,7 +85,7 @@ export const actions = {
 
   setHolidays({ commit, state }) {
     this.$axios
-      .post('/holiday/update', state._holidays)
+      .put('/holiday/update', state._updatedHolidays)
       .then((res) => {
         commit('LOADING');
       })

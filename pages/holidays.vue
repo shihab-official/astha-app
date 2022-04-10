@@ -25,7 +25,7 @@
         <tbody>
           <tr
             v-for="(holiday, index) of holidays"
-            :key="index"
+            :key="holiday._id"
             class="text-sm"
             :class="{ 'text-red-400': !holiday.approved }"
           >
