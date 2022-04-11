@@ -34,7 +34,15 @@ export const mutations = {
     const index = state._holidays.findIndex((h) => h._id == holiday._id);
     state._holidays.splice(index, 1, holiday);
     const updateIndex = state._updatedHolidays.findIndex((h) => h._id == holiday._id);
-    state._updatedHolidays.splice(updateIndex, 1, holiday);
+    if (updateIndex == -1) {
+      state._updatedHolidays.push(holiday);
+    } else {
+      state._updatedHolidays.splice(updateIndex, 1, holiday);
+    }
+  },
+
+  CLEAR_UPDATED_HOLIDAYS: (state) => {
+    state._updatedHolidays = [];
   },
 
   SET_LEAVE_INFO: (state, leaves) => (state._leaves = leaves),
@@ -87,6 +95,7 @@ export const actions = {
     this.$axios
       .put('/holiday/update', state._updatedHolidays)
       .then((res) => {
+        commit('CLEAR_UPDATED_HOLIDAYS');
         commit('LOADING');
       })
       .catch((error) => {
