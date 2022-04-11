@@ -28,7 +28,7 @@ export const getters = {
           }
           userLogs[code] = newLog;
         });
-        userIDs[user.id] = userLogs;
+        userIDs[user.user_id] = userLogs;
       }
     });
     return userIDs;
@@ -63,9 +63,9 @@ export const mutations = {
       }
     });
 
-    if (userInfo.dob) {
-      userInfo.dob = userInfo.dob.slice(0, -5);
-    }
+    // if (userInfo.dob) {
+    //   userInfo.dob = userInfo.dob.slice(0, -5);
+    // }
 
     if (user) {
       user = { ...user, ...userInfo };

@@ -3,7 +3,7 @@
     <div class="flex justify-between items-center">
       <h3 class="m-0">Holidays of {{currentYear}}</h3>
       <div class="space-x-3">
-        <a-button type="primary" @click="setHolidays()" style="height: 28px;"> Update </a-button>
+        <a-button type="primary" @click="updateHolidays()" style="height: 28px;"> Update </a-button>
 
         <!-- <span
           class="text-sm h-fit py-1 px-3 bg-sky-600 text-white hover:bg-sky-700 hover:text-white rounded cursor-pointer"
@@ -70,7 +70,7 @@ export default {
   name: 'Holidays',
   async asyncData({ redirect, $auth, $axios }) {
     await $axios
-      .get(`user/${$auth.user.id}`)
+      .get(`user/${$auth.user.user_id}`)
       .then((res) => {
         if (!res.data.user.admin && !res.data.user.manager) {
           return redirect(`/`);
@@ -91,11 +91,8 @@ export default {
       return new Date().getFullYear();
     }
   },
-  mounted() {
-    this.getHolidays();
-  },
   methods: {
-    ...mapActions('calendar', ['getHolidays', 'setHoliday', 'setHolidays']),
+    ...mapActions('calendar', ['setHoliday', 'updateHolidays']),
 
     disabledDate(current) {
       return (

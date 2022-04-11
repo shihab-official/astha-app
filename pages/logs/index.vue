@@ -49,16 +49,16 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="user of users" :key="user.id">
+          <tr v-for="user of users" :key="user.user_id">
             <template v-if="user.show_log">
               <td class="sticky left-0 bg-orange-50">
-                <NuxtLink :to="`/logs/${user.id}`">{{ user.short_name || user.name }}</NuxtLink>
+                <NuxtLink :to="`/logs/${user.user_id}`">{{ user.short_name || user.name }}</NuxtLink>
               </td>
               <template v-for="date of datesInRange">
                 <user-log
                   :key="date.code"
                   :date="date"
-                  :id="user.id"
+                  :id="user.user_id"
                   :userLog="user.log"
                   :logs="logs"
                 ></user-log>
@@ -97,10 +97,10 @@ export default {
   name: 'Logs',
   async asyncData({ redirect, $auth, $axios }) {
     await $axios
-      .get(`/user/${$auth.user.id}`)
+      .get(`/user/${$auth.user.user_id}`)
       .then((res) => {
         if (!res.data.user.admin && !res.data.user.management) {
-          return redirect(`/logs/${$auth.user.id}`)
+          return redirect(`/logs/${$auth.user.user_id}`)
         }
       })
       .catch((error) => {

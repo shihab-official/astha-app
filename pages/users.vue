@@ -80,11 +80,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="user of users" :key="user.id" :class="{relative: true, self: user.id === $auth.user.id}">
+          <tr v-for="user of users" :key="user.user_id" :class="{relative: true, self: user.user_id === $auth.user.user_id}">
             <td class="sticky left-0 bg-orange-50">
               <NuxtLink
                 v-if="$auth.user.admin"
-                :to="`/profile${user.id === $auth.user.id ? '' : `/${user.id}`}`"
+                :to="`/profile${user.user_id === $auth.user.user_id ? '' : `/${user.user_id}`}`"
                 >{{ user.short_name }}</NuxtLink
               >
               <template v-else>{{ user.short_name }}</template>

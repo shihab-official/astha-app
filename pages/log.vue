@@ -72,13 +72,13 @@ export default {
         if (!err) {
           this.$axios
             .post('/log/post', {
-              id: this.$auth.user.id,
+              user_id: this.$auth.user.user_id,
               date: values.log.date.format('YYYYMMDD'),
               log: values.log.content,
             })
             .then((res) => {
               if (res.status == 200) {
-                this.$router.push(`/logs/${this.$auth.user.id}`);
+                this.$router.push(`/logs/${this.$auth.user.user_id}`);
               }
             })
             .catch((error) => {

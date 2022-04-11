@@ -133,7 +133,7 @@ export default {
       this.form.validateFields((err, values) => {
         if (!err) {
           this.addLeaveInfo({
-            id: this.$auth.user.id,
+            user_id: this.$auth.user.user_id,
             name: this.$auth.user.short_name,
             dates: this.datesInRange.map((date) => {
               return {

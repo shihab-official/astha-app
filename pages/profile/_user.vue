@@ -45,7 +45,7 @@
             <a-date-picker
               class="input-field-sm"
               :read-only="!currentUser && !currentUserIsAdminOrManager"
-              :format="dateFormat"
+              format="DD-MMM"
               :disabled-date="disabledDate"
               :allow-clear="false"
               v-decorator="[
@@ -185,12 +185,12 @@ export default {
   name: 'Profile',
   async asyncData({ $axios, $auth, params }) {
     const resData = await $axios
-      .get(`/user/${params.user || $auth.user.id}`)
+      .get(`/user/${params.user || $auth.user.user_id}`)
       .then((res) => res.data)
       .catch((error) => console.error(error));
 
     resData.user.short_name = resData.user.short_name || resData.user.name;
-    resData.user.dob = moment(resData.user.dob || '01-Jan-1980', 'DD-MMM-YYYY');
+    resData.user.dob = moment(resData.user.dob || '01-Jan', 'DD-MMM');
 
     return { loading: false, ...resData };
   },
@@ -200,8 +200,7 @@ export default {
   data() {
     return {
       loading: true,
-      formLayout: 'vertical',
-      dateFormat: 'DD-MMM-YYYY',
+      formLayout: 'vertical'
     };
   },
   computed: {
@@ -218,7 +217,7 @@ export default {
     currentUser() {
       return !(
         this.$route.params.user &&
-        this.$route.params.user !== this.$auth.user.id
+        this.$route.params.user !== this.$auth.user.user_id
       );
     },
     currentUserIsAdmin() {
@@ -234,7 +233,7 @@ export default {
   methods: {
     ...mapActions('user', ['setUser']),
     disabledDate(current) {
-      return current > moment().startOf('day');
+      return current < moment().startOf('year') || current > moment().endOf('year');
     },
     leaveOffsetChange(value) {
       this.user.leave_offset = value;
@@ -252,8 +251,8 @@ export default {
         }
 
         userData.email = this.user.email;
-        userData.id = this.user.email.replace('@asthait.com', '');
-        userData.dob = moment(userData.dob).format('DD-MMM-YYYY');
+        userData.user_id = this.user.email.replace('@asthait.com', '');
+        userData.dob = moment(userData.dob).format('DD-MMM');
 
         if (userData.joining_date) {
           userData.joining_date = moment(userData.joining_date).format(
@@ -263,7 +262,7 @@ export default {
 
         if (!err) {
           this.$axios
-            .post('/user/update', userData)
+            .put('/user/update', userData)
             .then((res) => {
               if (res.status == 200) {
                 if (this.currentUser) {

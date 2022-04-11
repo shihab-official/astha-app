@@ -54,7 +54,7 @@ export const mutations = {
       state._leaves[date] = [];
     }
     const idx = state._leaves[date].findIndex(
-      (user) => user.id === leave.data.id
+      (user) => user.user_id === leave.data.id
     );
     if (idx === -1) {
       state._leaves[date].push(leave.data);
@@ -65,7 +65,7 @@ export const mutations = {
 
   DELETE_LEAVE_INFO: (state, leave) => {
     let index = state._leaves[leave.date].findIndex(
-      (user) => user.id === leave.userID
+      (user) => user.user_id === leave.userID
     );
     state._leaves[leave.date].splice(index, 1);
   }
@@ -91,7 +91,7 @@ export const actions = {
     commit('SET_HOLIDAY', holiday);
   },
 
-  setHolidays({ commit, state }) {
+  updateHolidays({ commit, state }) {
     this.$axios
       .put('/holiday/update', state._updatedHolidays)
       .then((res) => {
