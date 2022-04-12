@@ -108,10 +108,9 @@ export default {
     if (this.$auth.loggedIn) {
       this.getHolidays();
       this.getLeaveInfo();
+      this.getUsers();
       if (this.$auth.user.admin) {
         this.getUsersWithLogs(datesInRange);
-      } else {
-        this.getUsers();
       }
     }
   },

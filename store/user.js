@@ -55,7 +55,7 @@ export const mutations = {
   SET_USER: (state, userInfo) => {
     let index = -1;
     let user = state._users.find((u, i) => {
-      if (u.id === userInfo.id) {
+      if (u.user_id === userInfo.user_id) {
         index = i;
         return true;
       } else {
