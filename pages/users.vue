@@ -167,6 +167,13 @@ export default {
   },
   methods: {
     ...mapActions('user', ['getUser']),
+    highlightMatches(el) {
+        const regex = new RegExp(this.key, 'gi');
+        const response = el.innerText.replace(regex, function(str) {
+            return "<span style='background-color: yellow;'>" + str + "</span>"
+        });
+        el.innerHTML = response;
+    },
     search(e) {
       this.key = e.target.value;
     },
@@ -203,5 +210,12 @@ export default {
       });
     },
   },
+  directives: {
+    td: {
+      inserted: function (el) {
+        el.focus()
+      }
+    }
+  }
 };
 </script>

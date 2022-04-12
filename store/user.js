@@ -127,7 +127,7 @@ export const actions = {
   },
 
   getUser({ commit }, key) {
-    commit('GET_USER', key);
+    commit('GET_USER', (key || '').toLowerCase());
   },
 
   setUser({ commit }, user) {
