@@ -3,7 +3,12 @@
     <div class="flex justify-between items-center">
       <h3 class="m-0">Users</h3>
       <div class="flex">
-        <a-input @change="search" @keyup="search" placeholder="Search" :allowClear="true" />
+        <a-input
+          @change="search"
+          @keyup="search"
+          placeholder="Search"
+          :allowClear="true"
+        />
         <template v-if="$auth.user.admin">
           <span
             @click="showModal()"
@@ -80,19 +85,28 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="user of users" :key="user.user_id" :class="{relative: true, self: user.user_id === $auth.user.user_id}">
-            <td class="sticky left-0 bg-orange-50">
+          <tr
+            v-for="user of users"
+            :key="user.user_id"
+            :class="{
+              relative: true,
+              self: user.user_id === $auth.user.user_id,
+            }"
+          >
+            <td v-highlight="key" class="sticky left-0 bg-orange-50">
               <NuxtLink
                 v-if="$auth.user.admin"
-                :to="`/profile${user.user_id === $auth.user.user_id ? '' : `/${user.user_id}`}`"
+                :to="`/profile${
+                  user.user_id === $auth.user.user_id ? '' : `/${user.user_id}`
+                }`"
                 >{{ user.short_name }}</NuxtLink
               >
               <template v-else>{{ user.short_name }}</template>
             </td>
-            <td>{{ user.name }}</td>
-            <td class="text-center">{{ user.dob }}</td>
-            <td>{{ user.mobile }}</td>
-            <td>{{ user.email }}</td>
+            <td v-highlight="key">{{ user.name }}</td>
+            <td v-highlight="key" class="text-center">{{ user.dob }}</td>
+            <td v-highlight="key">{{ user.mobile }}</td>
+            <td v-highlight="key">{{ user.email }}</td>
             <template v-if="$auth.user.admin">
               <td
                 class="text-center"
@@ -133,7 +147,7 @@ td.sticky {
   min-width: 120px;
 }
 tr.self:after {
-    background-color: rgb(0 220 130 / 6%);
+  background-color: rgb(0 220 130 / 6%);
 }
 </style>
 
@@ -151,29 +165,22 @@ export default {
         email: '',
       },
       modalVisible: false,
-      key: ''
+      key: '',
     };
   },
   computed: {
     ...mapGetters('user', ['users']),
   },
   watch: {
-    key: function(newKey, oldKey) {
-      this.getUser(newKey);
-    }
+    key: function (newKey, oldKey) {
+      this.findUsers(newKey);
+    },
   },
   beforeDestroy() {
-    this.getUser();
+    this.findUsers();
   },
   methods: {
-    ...mapActions('user', ['getUser']),
-    highlightMatches(el) {
-        const regex = new RegExp(this.key, 'gi');
-        const response = el.innerText.replace(regex, function(str) {
-            return "<span style='background-color: yellow;'>" + str + "</span>"
-        });
-        el.innerHTML = response;
-    },
+    ...mapActions('user', ['findUsers']),
     search(e) {
       this.key = e.target.value;
     },
@@ -211,11 +218,15 @@ export default {
     },
   },
   directives: {
-    td: {
-      inserted: function (el) {
-        el.focus()
-      }
-    }
-  }
+    highlight: {
+      componentUpdated: (el, { value }) => {
+        const regex = new RegExp(value, 'gi');
+        const response = el.innerText.replace(regex, function (str) {
+          return `<span style="color: #fff; background-color: orange; display: inline-block; padding: 0 3px; border-radius: 4px; filter: drop-shadow(1px 1px 3px rgb(0 0 0 / 30%))">${str}</span>`;
+        });
+        el.innerHTML = response;
+      },
+    },
+  },
 };
 </script>

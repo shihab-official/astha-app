@@ -43,7 +43,7 @@ export const mutations = {
     state._users = users || state._users;
   },
 
-  GET_USER: (state, key) => {
+  FIND_USERS: (state, key) => {
     state._filteredUsers = !key
       ? null
       : state._users.filter((_user) => {
@@ -63,16 +63,12 @@ export const mutations = {
       }
     });
 
-    // if (userInfo.dob) {
-    //   userInfo.dob = userInfo.dob.slice(0, -5);
-    // }
-
     if (user) {
       user = { ...user, ...userInfo };
     }
 
     state._users.splice(index, 1, user);
-  }
+  },
 };
 
 export const actions = {
@@ -126,11 +122,11 @@ export const actions = {
       });
   },
 
-  getUser({ commit }, key) {
-    commit('GET_USER', (key || '').toLowerCase());
+  findUsers({ commit }, key) {
+    commit('FIND_USERS', key);
   },
 
   setUser({ commit }, user) {
     commit('SET_USER', user);
-  }
+  },
 };
