@@ -106,15 +106,19 @@ export default {
       return false;
     },
     datesInRange: function () {
+      let datesInRange = [];
       if (this.dateRange.length > 0) {
-        return getDatesInRange({
-          start: this.dateRange[0],
-          end: this.dateRange[1],
+        datesInRange = getDatesInRange({
+          start: this.dateRange[0].startOf('day'),
+          end: this.dateRange[1].startOf('day'),
           format: this.dateFormat,
           holidays: this.holidays,
         });
+        datesInRange = datesInRange.filter(date => {
+          return !date.weekend && !date.holiday;
+        });
       }
-      return [];
+      return datesInRange;
     },
   },
   methods: {
@@ -136,13 +140,12 @@ export default {
             user_id: this.$auth.user.user_id,
             name: this.$auth.user.short_name,
             dates: this.datesInRange.map((date) => {
-              return {
-                code: date.code,
-                offDay: date.weekend || date.holiday,
-              };
+              return date.moment.toDate();
             }),
-            option: values.leave.option ?? this.leave.option,
-            reason: values.leave.reason,
+            leave: {
+              option: values.leave.option ?? this.leave.option,
+              reason: values.leave.reason,
+            }
           }).then((leaveCount) => {
             const user = this.$auth.user;
             const leaves_taken = user.leaves_taken + (leaveCount || 0);
