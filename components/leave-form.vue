@@ -40,7 +40,7 @@
         <a-textarea
           placeholder="Reason"
           v-decorator="[
-            'leave.reason',
+            'leave.detail',
             {
               rules: [
                 { required: true, message: 'Please provide the reason.' },
@@ -71,7 +71,7 @@ export default {
       dateRange: [],
       leave: {
         option: 2,
-        reason: '',
+        detail: '',
       },
     };
   },
@@ -145,7 +145,7 @@ export default {
             }),
             leave: {
               option: values.leave.option ?? this.leave.option,
-              reason: values.leave.reason,
+              detail: values.leave.detail,
             }
           }).then((leaveCount) => {
             const user = this.$auth.user;
