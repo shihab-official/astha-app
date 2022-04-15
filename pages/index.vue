@@ -20,23 +20,23 @@
       @select="onDateSelection"
     >
       <div slot="dateCellRender" slot-scope="value" class="events">
-        <div v-for="item of getData(value)" :key="item.label" class="mb-0.5">
+        <div v-for="item of getData(value)" :key="(item.title || item.name)" class="mb-0.5">
           <div
             v-if="item.type === 'holiday'"
             class="leave text-right text-green-600"
           >
-            {{ item.label }}
+            {{ item.title }}
           </div>
           <template v-else>
             <a-tag
               color="red"
               style="margin-right: 0"
               :style="{cursor: ($auth.user.admin || $auth.user.manager ? 'pointer' : '')}"
-              @click="userLog($event, item.id)"
+              @click="userLog($event, item.user_name)"
               :class="`w-full relative ${item.option === 0 ? 'option-0 text-right' : item.option === 1 ? 'option-1 text-left' : 'text-center'}`"
               :title="`${item.option === 0 ? '1st half - ' : item.option === 1 ? '2nd half - ' : ''} ${item.detail}`"
             >
-              <span class="relative z-10">{{ item.label }}</span>
+              <span class="relative z-10">{{ item.name }}</span>
             </a-tag>
           </template>
         </div>
@@ -200,7 +200,7 @@ export default {
       );
 
       if (holiday) {
-        items.push({ type: 'holiday', label: holiday.title });
+        items.push({ type: 'holiday', title: holiday.title });
       }
 
       if (this.leaves[date]?.length > 0) {
@@ -278,10 +278,10 @@ export default {
       );
     },
 
-    userLog(event, userID) {
+    userLog(event, user_name) {
       event.stopPropagation();
       if (this.$auth.user.admin || this.$auth.user.manager) {
-        this.$router.push(`/logs/${userID}`);
+        this.$router.push(`/logs/${user_name}`);
       }
     },
 
