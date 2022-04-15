@@ -70,7 +70,7 @@ export default {
   name: 'Holidays',
   async asyncData({ redirect, $auth, $axios }) {
     await $axios
-      .get(`user/${$auth.user.user_id}`)
+      .get(`user/${$auth.user.user_name}`)
       .then((res) => {
         if (!res.data.user.admin && !res.data.user.manager) {
           return redirect(`/`);

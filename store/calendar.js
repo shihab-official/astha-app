@@ -65,7 +65,7 @@ export const mutations = {
 
   DELETE_LEAVE_INFO: (state, leave) => {
     let index = state._leaves[leave.date].findIndex(
-      (user) => user.user_id === leave.userID
+      (user) => user.user_id === leave.user_id
     );
     state._leaves[leave.date].splice(index, 1);
   }

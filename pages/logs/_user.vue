@@ -87,9 +87,9 @@ export default {
     if (
       !$auth.user.admin &&
       !$auth.user.manager &&
-      params.user != $auth.user.user_id
+      params.user != $auth.user.user_name
     ) {
-      return redirect(`/logs/${$auth.user.user_id}`);
+      return redirect(`/logs/${$auth.user.user_name}`);
     }
   },
   async asyncData({ params, redirect, $auth, $axios }) {
@@ -102,7 +102,7 @@ export default {
 
     return {
       user: content.user,
-      heading: params.user === $auth.user.user_id ? 'My Board' : content.user.name,
+      heading: params.user === $auth.user.user_name ? 'My Board' : content.user.name,
       userLogs: content.logs,
     };
   },
@@ -157,7 +157,7 @@ export default {
         .post('/leave/cancel', {
           log,
           duration: (leaveOption === 2 ? 1 : 0.5),
-          userID: this.user.user_id,
+          user_id: this.user.user_id,
           date: moment(data.date, 'DD-MMM-YYYY').format('YYYYMMDD'),
         })
         .then((res) => {
@@ -168,7 +168,7 @@ export default {
             } else {
               this.userLogs.splice(index, 1);
             }
-            this.deleteLeaveInfo({ date: data.date, userID: this.user.user_id });
+            this.deleteLeaveInfo({ date: data.date, user_id: this.user.user_id });
             this.user.leaves_taken -= (leaveOption === 2 ? 1 : 0.5);
           }
         })

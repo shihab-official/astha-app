@@ -87,17 +87,17 @@
         <tbody>
           <tr
             v-for="user of users"
-            :key="user.user_id"
+            :key="user.user_name"
             :class="{
               relative: true,
-              self: user.user_id === $auth.user.user_id,
+              self: user.user_name === $auth.user.user_name,
             }"
           >
             <td v-highlight="key" class="sticky left-0 bg-orange-50">
               <NuxtLink
                 v-if="$auth.user.admin"
                 :to="`/profile${
-                  user.user_id === $auth.user.user_id ? '' : `/${user.user_id}`
+                  user.user_name === $auth.user.user_name ? '' : `/${user.user_name}`
                 }`"
                 >{{ user.short_name }}</NuxtLink
               >
@@ -196,7 +196,7 @@ export default {
               name: values.newUser.name,
               short_name: values.newUser.name,
               email: values.newUser.email,
-              id: values.newUser.email.replace('@asthait.com', ''),
+              user_name: values.newUser.email.replace('@asthait.com', ''),
               admin: false,
               manager: false,
               show_log: true,

@@ -185,7 +185,7 @@ export default {
   name: 'Profile',
   async asyncData({ $axios, $auth, params }) {
     const resData = await $axios
-      .get(`/user/${params.user || $auth.user.user_id}`)
+      .get(`/user/${params.user || $auth.user.user_name}`)
       .then((res) => res.data)
       .catch((error) => console.error(error));
 
@@ -217,7 +217,7 @@ export default {
     currentUser() {
       return !(
         this.$route.params.user &&
-        this.$route.params.user !== this.$auth.user.user_id
+        this.$route.params.user !== this.$auth.user.user_name
       );
     },
     currentUserIsAdmin() {
@@ -251,7 +251,7 @@ export default {
         }
 
         userData.email = this.user.email;
-        userData.user_id = this.user.email.replace('@asthait.com', '');
+        userData.user_name = this.user.email.replace('@asthait.com', '');
         userData.dob = moment(userData.dob).format('DD-MMM');
 
         if (userData.joining_date) {

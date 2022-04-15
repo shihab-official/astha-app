@@ -7,7 +7,7 @@ export default async function ({ $auth, $axios, redirect }) {
         name: $auth.user.name,
         short_name: $auth.user.given_name,
         email: $auth.user.email,
-        user_id: $auth.user.email.replace('@asthait.com', ''),
+        user_name: $auth.user.email.replace('@asthait.com', ''),
         admin: ADMIN_EMAILS.includes($auth.user.email),
         manager: false,
         show_log: true,

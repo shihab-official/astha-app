@@ -7,18 +7,17 @@
       </NuxtLink>
     </div>
     <hr />
-    <a-form
-      :layout="formLayout"
-      :form="form"
-      @submit="submit"
-    >
+    <a-form :layout="formLayout" :form="form" @submit="submit">
       <a-form-item label="Date">
         <a-date-picker
           :format="dateFormat"
           :disabled-date="disabledDate"
           v-decorator="[
             'log.date',
-            { initialValue: log.date, rules: [{ required: true, message: 'Please select date.' }] },
+            {
+              initialValue: log.date,
+              rules: [{ required: true, message: 'Please select date.' }],
+            },
           ]"
         />
       </a-form-item>
@@ -26,7 +25,7 @@
         <a-textarea
           placeholder="Update log"
           v-decorator="[
-            'log.content',
+            'log.detail',
             {
               rules: [
                 { required: true, message: 'Please provide task update.' },
@@ -55,7 +54,7 @@ export default {
       dateFormat: 'DD-MMM-YYYY',
       log: {
         date: moment(new Date()),
-        content: '',
+        detail: '',
       },
     };
   },
@@ -72,13 +71,14 @@ export default {
         if (!err) {
           this.$axios
             .post('/log/post', {
-              user_id: this.$auth.user.user_id,
-              date: values.log.date.format('YYYYMMDD'),
-              log: values.log.content,
+              user_id: this.$auth.user._id,
+              user_name: this.$auth.user.user_name,
+              date: values.log.date.startOf('day'),
+              work: { detail: values.log.detail },
             })
             .then((res) => {
               if (res.status == 200) {
-                this.$router.push(`/logs/${this.$auth.user.user_id}`);
+                this.$router.push(`/logs/${this.$auth.user.user_name}`);
               }
             })
             .catch((error) => {
