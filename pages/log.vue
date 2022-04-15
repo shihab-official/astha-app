@@ -73,6 +73,7 @@ export default {
             .post('/log/post', {
               user_id: this.$auth.user._id,
               user_name: this.$auth.user.user_name,
+              name: this.$auth.user.short_name,
               date: values.log.date.startOf('day'),
               work: { detail: values.log.detail },
             })
