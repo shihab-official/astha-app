@@ -34,7 +34,7 @@
               :style="{cursor: ($auth.user.admin || $auth.user.manager ? 'pointer' : '')}"
               @click="userLog($event, item.id)"
               :class="`w-full relative ${item.option === 0 ? 'option-0 text-right' : item.option === 1 ? 'option-1 text-left' : 'text-center'}`"
-              :title="`${item.option === 0 ? '1st half - ' : item.option === 1 ? '2nd half - ' : ''} ${item.reason}`"
+              :title="`${item.option === 0 ? '1st half - ' : item.option === 1 ? '2nd half - ' : ''} ${item.detail}`"
             >
               <span class="relative z-10">{{ item.label }}</span>
             </a-tag>

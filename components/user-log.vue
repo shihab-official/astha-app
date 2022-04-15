@@ -12,8 +12,8 @@
       <template v-for="(logData, i) of logs[id][date.code]">
         <pre
           :key="i"
-          :class="`${logData.reason ? 'leave text-red-600' : ''} ${logs[id][date.code].length === 2 ? 'relative' : ''}`"
-          >{{ logData.content || logData.reason }}</pre
+          :class="`${logData.option ? 'leave text-red-600' : ''} ${logs[id][date.code].length === 2 ? 'relative' : ''}`"
+          >{{ logData.detail }}</pre
         >
       </template>
     </template>
