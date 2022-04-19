@@ -35,15 +35,15 @@
             <div
               :key="i"
               class="flex rounded px-3.5 py-2.5 ml-3 mb-2 drop-shadow-md"
-              :class="`${data.reason ? 'bg-red-50' : 'bg-sky-50'} ${
+              :class="`${data.hasOwnProperty('option') ? 'bg-red-50' : 'bg-sky-50'} ${
                 i === 1 ? 'mt-3' : ''
               }`"
             >
               <pre class="flex-grow mr-3">{{
-                data.content || data.reason
+                data.detail
               }}</pre>
               <a-popconfirm
-                v-if="($auth.user.admin || $auth.user.manager) && data.reason"
+                v-if="($auth.user.admin || $auth.user.manager) && data.detail"
                 placement="left"
                 title="Cancel this leave? Are you sure?"
                 ok-text="Yes"
@@ -102,7 +102,7 @@ export default {
 
     return {
       user: content.user,
-      heading: params.user === $auth.user.user_name ? 'My Board' : content.user.name,
+      heading: params.user === $auth.user.user_name ? 'My Board' : content.user.short_name,
       userLogs: content.logs,
     };
   },
@@ -127,22 +127,26 @@ export default {
       return this.userLogs.map((userLog) => {
         const newLog = [];
         let leave = '';
-        const keys = Object.keys(userLog.log);
-        if (keys.length === 1) {
-          newLog.push(userLog.log[keys[0]]);
-        } else if (keys.length === 2) {
-          newLog.push(userLog.log.work);
-          newLog.splice(userLog.log.leave.option, 0, userLog.log.leave);
+        userLog.date = moment(userLog.date).format('DD-MMM-YYYY');
+
+        if (userLog.work && userLog.leave) {
+          newLog.push(userLog.work);
+          newLog.splice(userLog.leave.option, 0, userLog.leave);
+        } else if (userLog.work) {
+          newLog.push(userLog.work);
+        } else if (userLog.leave) {
+          newLog.push(userLog.leave);
         }
-        if (userLog.log.leave) {
+
+        if (userLog.leave) {
           leave =
-            userLog.log.leave.option === 0
+            userLog.leave.option === 0
               ? '1st Half'
-              : userLog.log.leave.option === 1
+              : userLog.leave.option === 1
               ? '2nd Half'
               : 'Full day';
         }
-        return { ...userLog, log: newLog, leave };
+        return { _id: userLog._id, date: userLog.date, log: newLog, leave };
       });
     },
   },
@@ -151,8 +155,8 @@ export default {
     // ...mapActions('user', ['updateLeaveCount']),
 
     cancelLeave: function (data) {
-      const leaveOption = data.log.find((l) => l.reason).option;
-      const log = { work: data.log.find((l) => l.content) };
+      const leaveOption = data.log.find((l) => l.detail).option;
+      const log = { work: data.log.find((l) => l.detail) };
       this.$axios
         .post('/leave/cancel', {
           log,
