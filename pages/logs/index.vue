@@ -30,9 +30,9 @@
               <th
                 :key="date.code"
                 :ref="date.today ? 'today' : null"
-                :class="`${date.today ? 'today' : ''} ${
+                :class="`text-center ${date.today ? 'today' : ''} ${
                   date.weekend
-                    ? 'weekend text-center text-gray-400 bg-gray-50'
+                    ? 'weekend text-gray-400 bg-gray-50'
                     : ''
                 }`"
               >
@@ -55,13 +55,9 @@
                 <NuxtLink :to="`/logs/${user.user_name}`">{{ user.short_name || user.name }}</NuxtLink>
               </td>
               <template v-for="date of datesInRange">
-                <user-log
-                  :key="date.code"
-                  :date="date"
-                  :id="user.user_name"
-                  :userLog="user.log"
-                  :logs="logs"
-                ></user-log>
+                <td :key="date.code" :class="`${date.weekend ? 'weekend text-gray-400 bg-gray-50' : '' }`">
+                  <div v-html="logs[`${user.user_name}_${date.code}`]"></div>
+                </td>
               </template>
             </template>
           </tr>
@@ -80,7 +76,6 @@
 td {
   white-space: normal;
   min-height: 34px;
-  padding: 0;
 }
 td.sticky {
   width: 120px;
@@ -135,7 +130,7 @@ export default {
   },
   methods: {
     moment,
-    ...mapActions('user', ['getUsersWithLogs']),
+    ...mapActions('user', ['getLogsByDate']),
     disabledDate: function (current) {
       return current && current.day() > 4;
     },
@@ -144,7 +139,7 @@ export default {
       this.showLogs();
     },
     showLogs: function () {
-      this.getUsersWithLogs(this.datesInRange);
+      this.getLogsByDate(this.dateRange);
     },
   },
 };

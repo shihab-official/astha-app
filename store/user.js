@@ -1,7 +1,10 @@
+import moment from 'moment';
+
 export const state = () => ({
   _updatingState: false,
   _users: [],
   _filteredUsers: null,
+  _logs: [],
 });
 
 export const getters = {
@@ -9,7 +12,16 @@ export const getters = {
 
   users: ({ _users, _filteredUsers }) => _filteredUsers ?? _users,
 
-  logs({ _users }) {
+  logs: ({ _logs }) => {
+    const logs = {};
+    _logs.forEach((log) => {
+      logs[`${log.user_name}_${moment(log.date).format('YYYYMMDD')}`] =
+        log.work.detail;
+    });
+    return logs;
+  },
+
+  logs_FS: ({ _users }) => {
     const userIDs = {};
     _users.forEach((user) => {
       if (user.show_log) {
@@ -36,8 +48,9 @@ export const getters = {
 };
 
 export const mutations = {
-  LOADING: (state, loadingState) =>
-    (state._updatingState = loadingState || false),
+  LOADING: (state, loadingState) => {
+    state._updatingState = loadingState || false;
+  },
 
   SET_USERS: (state, users) => {
     state._users = users || state._users;
@@ -47,7 +60,9 @@ export const mutations = {
     state._filteredUsers = !key
       ? null
       : state._users.filter((_user) => {
-          const userInfo = `${_user.name}\n${_user.short_name}\n${_user.email}\n${_user.mobile || ''}\n${_user.dob || ''}`.toLowerCase();
+          const userInfo = `${_user.name}\n${_user.short_name}\n${
+            _user.email
+          }\n${_user.mobile || ''}\n${_user.dob || ''}`.toLowerCase();
           return userInfo.indexOf(key) !== -1;
         });
   },
@@ -69,28 +84,26 @@ export const mutations = {
 
     state._users.splice(index, 1, user);
   },
+
+  SET_LOGS: (state, logs) => {
+    state._logs = logs;
+  },
 };
 
 export const actions = {
-  getUsersWithLogs({ commit }, datesInRange) {
+  getLogsByDate({ commit }, dateRange) {
     if (this.$auth.user.admin) {
       commit('LOADING', true);
+      dateRange = dateRange.map(m => m.toDate());
       this.$axios
         .get('/log/by-dates', {
           params: {
-            range: datesInRange.map(function (date) {
-              return date.code;
-            }),
+            range: dateRange,
           },
         })
         .then((res) => {
-          const users = res.data.sort(function (a, b) {
-            const nameA = a.short_name.toLowerCase(),
-              nameB = b.short_name.toLowerCase();
-            return nameA > nameB ? 1 : nameA < nameB ? -1 : 0;
-          });
-
-          commit('SET_USERS', users);
+          commit('SET_USERS', res.data.users);
+          commit('SET_LOGS', res.data.logs);
           commit('LOADING');
         })
         .catch((error) => {

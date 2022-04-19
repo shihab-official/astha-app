@@ -110,13 +110,13 @@ export default {
       this.getLeaveInfo();
       this.getUsers();
       if (this.$auth.user.admin) {
-        this.getUsersWithLogs(datesInRange);
+        this.getLogsByDate(this.dateRange);
       }
     }
   },
   methods: {
     ...mapActions('calendar', ['getHolidays', 'getLeaveInfo']),
-    ...mapActions('user', ['getUsersWithLogs', 'getUsers']),
+    ...mapActions('user', ['getLogsByDate', 'getUsers']),
     logout() {
       this.$auth.logout('google').then(() => {
         this.$router.push('/login');
