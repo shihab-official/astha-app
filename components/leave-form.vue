@@ -29,7 +29,7 @@
       </div>
       <a-form-item v-if="sameDay">
         <a-radio-group
-          v-decorator="['leave.option', {initialValue: leave.option}]"
+          v-decorator="['leave.option', { initialValue: leave.option }]"
         >
           <a-radio v-for="opt of options" :key="opt.value" :value="opt.value">
             {{ opt.label }}
@@ -114,7 +114,7 @@ export default {
           format: this.dateFormat,
           holidays: this.holidays,
         });
-        datesInRange = datesInRange.filter(date => {
+        datesInRange = datesInRange.filter((date) => {
           return !date.weekend && !date.holiday;
         });
       }
@@ -136,7 +136,7 @@ export default {
       e.preventDefault();
       this.form.validateFields((err, values) => {
         if (!err) {
-          this.addLeaveInfo({
+          const leaveData = {
             user_id: this.$auth.user._id,
             user_name: this.$auth.user.user_name,
             name: this.$auth.user.short_name,
@@ -146,14 +146,21 @@ export default {
             leave: {
               option: values.leave.option ?? this.leave.option,
               detail: values.leave.detail,
-            }
-          }).then((leaveCount) => {
-            const user = this.$auth.user;
-            const leaves_taken = user.leaves_taken + (leaveCount || 0);
-            this.$auth.setUser({ ...user, leaves_taken });
-            this.$emit('leaveApplied');
-            this.$router.push(`/`);
-          });
+            },
+          };
+          this.$axios
+            .post('/leave/apply', leaveData)
+            .then((leaveCount) => {
+              this.addLeaveInfo(leaveData);
+              const user = this.$auth.user;
+              const leaves_taken = user.leaves_taken + (leaveCount || 0);
+              this.$auth.setUser({ ...user, leaves_taken });
+              this.$emit('leaveApplied');
+              this.$router.push(`/`);
+            })
+            .catch((error) => {
+              console.error(error);
+            });
         }
       });
     },

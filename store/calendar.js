@@ -48,13 +48,13 @@ export const mutations = {
   SET_LEAVE_INFO: (state, leaves) => (state._leaves = leaves),
 
   ADD_LEAVE_INFO: (state, leave) => {
-    const date = moment(leave.date, 'YYYYMMDD').format('DD-MMM-YYYY');
+    const date = moment(leave.date).format('DD-MMM-YYYY');
     const obj = state._leaves[date];
     if (!obj) {
       state._leaves[date] = [];
     }
     const idx = state._leaves[date].findIndex(
-      (user) => user.user_id === leave.data.id
+      (user) => user.user_id === leave.data.user_id
     );
     if (idx === -1) {
       state._leaves[date].push(leave.data);
@@ -119,34 +119,19 @@ export const actions = {
       });
   },
 
-  async addLeaveInfo({ commit }, leave) {
+  addLeaveInfo({ commit }, leaveInfo) {
     commit('LOADING', true);
-    return await this.$axios
-      .post('/leave/apply', leave)
-      .then((res) => {
-        if (res.status == 200) {
-          commit('LOADING');
-          leave.dates.forEach((date) => {
-            if (!date.offDay) {
-              commit('ADD_LEAVE_INFO', {
-                date: date.code,
-                data: {
-                  type: 'leave',
-                  id: leave.id,
-                  label: leave.name,
-                  option: leave.option,
-                  reason: leave.reason,
-                },
-              });
-            }
-          });
-        }
-        return res.data;
-      })
-      .catch((error) => {
-        commit('LOADING');
-        console.error(error);
+    leaveInfo.dates.forEach((date) => {
+      commit('ADD_LEAVE_INFO', {
+        date: date,
+        data: {
+          user_id: leaveInfo.user_id,
+          user_name: leaveInfo.user_name,
+          name: leaveInfo.name,
+          ...leaveInfo.leave,
+        },
       });
+    });
   },
 
   deleteLeaveInfo({commit}, leave) {

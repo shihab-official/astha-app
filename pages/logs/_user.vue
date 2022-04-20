@@ -18,7 +18,7 @@
     <hr />
     <div class="logs" v-if="logs.length > 0">
       <details
-        v-for="logData in logs"
+        v-for="(logData, i) in logs"
         :key="logData.date"
         class="font-mono p-1"
       >
@@ -31,12 +31,12 @@
           </a-tag>
         </summary>
         <div>
-          <template v-for="(data, i) of logData.log">
+          <template v-for="(data, j) of logData.log">
             <div
-              :key="i"
+              :key="j"
               class="flex rounded px-3.5 py-2.5 ml-3 mb-2 drop-shadow-md"
               :class="`${data.hasOwnProperty('option') ? 'bg-red-50' : 'bg-sky-50'} ${
-                i === 1 ? 'mt-3' : ''
+                j === 1 ? 'mt-3' : ''
               }`"
             >
               <pre class="flex-grow mr-3">{{
@@ -48,7 +48,7 @@
                 title="Cancel this leave? Are you sure?"
                 ok-text="Yes"
                 cancel-text="No"
-                @confirm="cancelLeave(logData)"
+                @confirm="cancelLeave(logData, i)"
               >
                 <a-icon
                   slot="icon"
@@ -154,24 +154,24 @@ export default {
     ...mapActions('calendar', ['deleteLeaveInfo']),
     // ...mapActions('user', ['updateLeaveCount']),
 
-    cancelLeave: function (data) {
-      const leaveOption = data.log.find((l) => l.detail).option;
-      const log = { work: data.log.find((l) => l.detail) };
+    cancelLeave: function (data, index) {
       this.$axios
-        .post('/leave/cancel', {
-          log,
-          duration: (leaveOption === 2 ? 1 : 0.5),
-          user_id: this.user.user_id,
-          date: moment(data.date, 'DD-MMM-YYYY').format('YYYYMMDD'),
+        .delete('/leave/cancel', {
+          data: {
+            leave_id: data._id
+          }
         })
         .then((res) => {
           if (res.status == 200) {
-            const index = this.userLogs.findIndex((d) => d.date === data.date);
-            if (data.log.length === 2) {
-              this.userLogs.splice(index, 1, { date: data.date, log });
+            const leaveOption = this.userLogs[index].leave.option;
+            const log = this.userLogs[index];
+            if (log.work) {
+              delete log.leave;
+              this.userLogs.splice(index, 1, log);
             } else {
               this.userLogs.splice(index, 1);
             }
+            console.log(this.userLogs[index]);
             this.deleteLeaveInfo({ date: data.date, user_id: this.user.user_id });
             this.user.leaves_taken -= (leaveOption === 2 ? 1 : 0.5);
           }
