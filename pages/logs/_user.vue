@@ -43,7 +43,7 @@
                 data.detail
               }}</pre>
               <a-popconfirm
-                v-if="($auth.user.admin || $auth.user.manager) && data.detail"
+                v-if="($auth.user.admin || $auth.user.manager) && data.hasOwnProperty('option')"
                 placement="left"
                 title="Cancel this leave? Are you sure?"
                 ok-text="Yes"
