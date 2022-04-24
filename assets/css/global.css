@@ -58,15 +58,18 @@ hr {
   border-top: solid 1px;
 }
 
-input[readonly], .ant-input.readonly {
+input[readonly],
+.ant-input.readonly {
   background-color: rgb(0 0 0 / 2%);
 }
 
-.ant-calendar-picker-input, .ant-calendar-picker-input input {
+.ant-calendar-picker-input,
+.ant-calendar-picker-input input {
   background-color: transparent;
 }
 
-input[disabled], .ant-input.disabled {
+input[disabled],
+.ant-input.disabled {
   color: rgb(0 0 0 / 40%) !important;
   background-color: #f5f5f5;
 }
@@ -147,7 +150,9 @@ td.sticky {
   padding-right: 25px;
 }
 
-.ant-calendar-month-panel-cell, .ant-calendar-year-panel-cell, .ant-calendar-decade-panel-cell {
+.ant-calendar-month-panel-cell,
+.ant-calendar-year-panel-cell,
+.ant-calendar-decade-panel-cell {
   width: calc(100% / 3);
 }
 
@@ -187,4 +192,9 @@ pre {
 
 .spin {
   animation: rotate 1s linear infinite;
+}
+
+.search-highlight {
+  background-color: #fff700;
+  display: inline;
 }

@@ -93,9 +93,10 @@
               self: user.user_name === $auth.user.user_name,
             }"
           >
-            <td v-highlight="key" class="sticky left-0 bg-orange-50">
+            <td class="sticky left-0 bg-orange-50">
               <NuxtLink
                 v-if="$auth.user.admin"
+                v-highlight="key"
                 :to="`/profile${
                   user.user_name === $auth.user.user_name ? '' : `/${user.user_name}`
                 }`"
@@ -222,7 +223,7 @@ export default {
       componentUpdated: (el, { value }) => {
         const regex = new RegExp(value, 'gi');
         const response = el.innerText.replace(regex, function (str) {
-          return `<span style="color: #fff; background-color: orange; display: inline-block; padding: 0 3px; border-radius: 4px; filter: drop-shadow(1px 1px 3px rgb(0 0 0 / 30%))">${str}</span>`;
+          return !str ? str : `<span class="search-highlight">${str}</span>`;
         });
         el.innerHTML = response;
       },
