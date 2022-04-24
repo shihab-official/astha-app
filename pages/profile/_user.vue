@@ -203,6 +203,9 @@ export default {
       formLayout: 'vertical'
     };
   },
+  mounted: function () {
+    document.title = 'Profile';
+  },
   computed: {
     ...mapGetters(['personalLeaves']),
     maxLeaveOffset() {

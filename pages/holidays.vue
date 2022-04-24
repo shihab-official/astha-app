@@ -85,6 +85,9 @@ export default {
       dateFormat: 'DD-MMM-YYYY',
     };
   },
+  mounted: function () {
+    document.title = 'Holidays';
+  },
   computed: {
     ...mapGetters('calendar', ['holidays']),
     currentYear() {

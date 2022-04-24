@@ -169,6 +169,9 @@ export default {
       key: '',
     };
   },
+  mounted: function () {
+    document.title = 'Users';
+  },
   computed: {
     ...mapGetters('user', ['users']),
   },

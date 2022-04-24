@@ -167,6 +167,9 @@ export default {
       calendarKey: 0,
     };
   },
+  mounted: function () {
+    document.title = 'Calendar';
+  },
   computed: {
     ...mapGetters('user', ['logs']),
     ...mapGetters('calendar', ['holidays', 'leaves']),
