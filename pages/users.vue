@@ -199,7 +199,7 @@ export default {
             .post('/user/create', {
               name: values.newUser.name,
               short_name: values.newUser.name,
-              email: values.newUser.email + '@ashtait.com',
+              email: values.newUser.email + '@asthait.com',
               user_name: values.newUser.email,
               admin: false,
               manager: false,
