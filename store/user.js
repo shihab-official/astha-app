@@ -14,36 +14,17 @@ export const getters = {
 
   logs: ({ _logs }) => {
     const logs = {};
-    _logs.forEach((log) => {
-      logs[`${log.user_name}_${moment(log.date).format('YYYYMMDD')}`] =
-        log.work.detail;
+    _logs.forEach((l) => {
+      const log = {};
+      if (l.work) {
+        log.work = l.work;
+      }
+      if (l.leave) {
+        log.leave = l.leave;
+      }
+      logs[`${l.user_name}_${moment(l.date).format('YYYYMMDD')}`] = log;
     });
     return logs;
-  },
-
-  logs_FS: ({ _users }) => {
-    const userIDs = {};
-    _users.forEach((user) => {
-      if (user.show_log) {
-        const logCodes = Object.keys(user.log || {});
-        const userLogs = {};
-
-        logCodes.forEach((code) => {
-          const userLog = user.log[code];
-          const newLog = [];
-          const keys = Object.keys(userLog);
-          if (keys.length === 1) {
-            newLog.push(userLog[keys[0]]);
-          } else if (keys.length === 2) {
-            newLog.push(userLog.work);
-            newLog.splice(userLog.leave.option, 0, userLog.leave);
-          }
-          userLogs[code] = newLog;
-        });
-        userIDs[user.user_id] = userLogs;
-      }
-    });
-    return userIDs;
   },
 };
 
@@ -102,7 +83,7 @@ export const actions = {
           },
         })
         .then((res) => {
-          commit('SET_USERS', res.data.users);
+          // commit('SET_USERS', res.data.users);
           commit('SET_LOGS', res.data.logs);
           commit('LOADING');
         })

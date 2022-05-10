@@ -171,7 +171,6 @@ export default {
     document.title = 'Calendar';
   },
   computed: {
-    ...mapGetters('user', ['logs']),
     ...mapGetters('calendar', ['holidays', 'leaves']),
     approvedHolidays: function () {
       return this.holidays

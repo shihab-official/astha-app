@@ -140,13 +140,13 @@
 </template>
 
 <style scoped>
-td {
+/* td {
   white-space: normal;
-}
-td.sticky {
-  width: 120px;
-  min-width: 120px;
-}
+} */
+/* td.sticky {
+  width: 1%;
+  min-width: 1%;
+} */
 tr.self:after {
   background-color: rgb(0 220 130 / 6%);
 }

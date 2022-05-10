@@ -2,14 +2,22 @@
   <div>
     <div class="flex justify-between items-center">
       <h3 class="m-0">Summary</h3>
-      <a-range-picker
-        class="range-picker"
-        :disabled-date="disabledDate"
-        :allowClear="false"
-        :value="dateRange"
-        :format="dateFormat"
-        @change="onChange"
-      />
+      <div class="week-picker ant-input relative">
+        <div class="flex justify-between">
+          <span>{{dateRange[0].format(dateFormat)}}</span>
+          <strong>&#129042;</strong>
+          <span>{{dateRange[1].format(dateFormat)}}</span>
+        </div>
+        <a-week-picker
+          class="opacity-0"
+          style="position: absolute; left: -1px; top: -1px; right: -1px; bottom: -1px;"
+          :disabled-date="disabledDate"
+          :allowClear="false"
+          :value="date"
+          :format="dateFormat"
+          @change="onChange"
+        />
+      </div>
     </div>
     <hr />
     <div class="table-wrapper" ref="tableWrapper" v-if="users.length > 0">
@@ -55,8 +63,8 @@
                 <NuxtLink :to="`/logs/${user.user_name}`">{{ user.short_name || user.name }}</NuxtLink>
               </td>
               <template v-for="date of datesInRange">
-                <td :key="date.code" :class="`${date.weekend ? 'weekend text-gray-400 bg-gray-50' : '' }`">
-                  <div v-html="logs[`${user.user_name}_${date.code}`]"></div>
+                <td :key="date.code" :class="`relative ${date.weekend ? 'weekend text-gray-400 bg-gray-50' : '' }`">
+                  <user-log :log="logs[`${user.user_name}_${date.code}`]"></user-log>
                 </td>
               </template>
             </template>
@@ -74,13 +82,13 @@
   background-color: #f5f5f5;
 }
 td {
-  white-space: normal;
+  /* white-space: normal; */
   min-height: 34px;
 }
-td.sticky {
-  width: 120px;
-  min-width: 120px;
-}
+/* td.sticky {
+  width: 1%;
+  min-width: 1%;
+} */
 </style>
 
 <script>
@@ -104,13 +112,16 @@ export default {
   },
   data() {
     return {
-      dateRange: [moment().startOf('week'), moment().endOf('week')],
+      date: moment(),
     };
   },
   computed: {
     ...mapGetters('user', ['loading', 'users', 'logs']),
     dateFormat: function () {
       return 'DD-MMM-YYYY';
+    },
+    dateRange: function() {
+      return [this.date.clone().startOf('week'), this.date.clone().endOf('week')];
     },
     datesInRange: function () {
       return getDatesInRange({
@@ -134,8 +145,8 @@ export default {
     disabledDate: function (current) {
       return current && current.day() > 4;
     },
-    onChange: function (range) {
-      this.dateRange = range;
+    onChange: function (date) {
+      this.date = date;
       this.showLogs();
     },
     showLogs: function () {

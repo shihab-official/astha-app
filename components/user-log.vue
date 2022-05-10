@@ -1,67 +1,40 @@
 <template>
-  <td
-    class="log-content relative"
-    :class="`${date.formatted}
-            ${
-              date.weekend
-                ? 'weekend text-center align-middle text-gray-400 bg-gray-50'
-                : ''
-            }`"
-  >
-    <template v-if="userLog[date.code]">
-      <template v-for="(logData, i) of logs[id][date.code]">
-        <pre
-          :key="i"
-          :class="`${logData.option ? 'leave text-red-600' : ''} ${logs[id][date.code].length === 2 ? 'relative' : ''}`"
-          >{{ logData.detail }}</pre
-        >
-      </template>
-    </template>
-  </td>
+  <div v-if="log" class="log relative" :class="leave">
+    <div v-if="log.work">{{log.work.detail}}</div>
+    <div v-if="log.leave" class="bg-red-50 text-red-600">{{log.leave.detail}}</div>
+  </div>
 </template>
 
 <style scoped>
-td {
-  white-space: normal;
-  min-height: 34px;
-  padding: 0;
-}
-.log-content:not(.weekend) {
-  min-width: 350px;
-  max-width: 350px;
-}
-.log-content {
-  vertical-align: top;
-}
-td.weekend:before {
-  content: 'Weekend';
-  font-size: 75%;
-  letter-spacing: 0.5px;
-  display: block;
-  padding: 8px;
-}
-td pre {
-  font-size: 90%;
-  white-space: break-spaces;
-  padding: 4px 8px;
-  margin: 2px;
-}
-td pre.leave {
-  margin: 0;
-}
-td pre.leave:before {
-  content: '';
-  background-color: rgb(255 0 0 / 10%);
-  position: absolute;
-  top: 2px;
-  right: 2px;
-  bottom: 2px;
-  left: 2px;
-}
+  .log {
+    font: 0.8rem/1.5 monospace;
+    margin: -5px -9px;
+    white-space: pre-line;
+  }
+  .log>div {
+    padding: 5px 9px;
+  }
+  .leave {
+    margin: 0;
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    bottom: 1px;
+    left: 1px;
+  }
+  .leave>div {
+    height: 100%;
+  }
 </style>
 
 <script>
 export default {
-  props: ['date', 'id', 'userLog', 'logs'],
+  props: ['date', 'id', 'log', 'logs'],
+  computed: {
+    leave: function() {
+      const leaveOption = this.log.leave && this.log.leave.option;
+      return leaveOption === 0 ? 'flex flex-col-reverse' : (leaveOption === 1 ? 'flex flex-col' : (leaveOption === 2 ? 'leave' : ''));
+    }
+  }
 };
 </script>
