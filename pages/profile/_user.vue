@@ -110,10 +110,7 @@
             <a-form-item label="Admin" style="width: 100px">
               <a-switch
                 :default-checked="user.admin"
-                :disabled="
-                  (user.admin && !currentUser) ||
-                  (currentUser && adminCount < 2)
-                "
+                :disabled="adminCount < 2"
                 v-decorator="['admin']"
                 checked-children=" Yes "
                 un-checked-children=" No "
