@@ -77,18 +77,14 @@
 </template>
 
 <style scoped>
-.ant-calendar-disabled-cell {
-  opacity: 0.6;
-  background-color: #f5f5f5;
-}
 td {
-  /* white-space: normal; */
+  vertical-align: top;
   min-height: 34px;
+  padding: 0;
 }
-/* td.sticky {
-  width: 1%;
-  min-width: 1%;
-} */
+td:not(:first-child, .weekend) {
+  min-width: 400px;
+}
 </style>
 
 <script>

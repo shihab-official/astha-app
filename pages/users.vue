@@ -69,7 +69,7 @@
     </div>
     <hr />
     <div class="table-wrapper" v-if="users && users.length > 0">
-      <table>
+      <table class="hover">
         <thead>
           <tr>
             <th class="sticky left-0 bg-orange-100">Name</th>

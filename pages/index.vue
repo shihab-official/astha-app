@@ -62,6 +62,9 @@
 .ant-fullcalendar-fullscreen >>> .ant-fullcalendar-cell {
   padding: 0;
 }
+.ant-fullcalendar-fullscreen >>> .ant-fullcalendar-disabled-cell {
+  background-color: #fbfbfb;
+}
 .ant-fullcalendar-fullscreen >>> .ant-fullcalendar-date {
   border: solid 1px #e8e8e8;
   border-width: 1px 1px 0 0;

@@ -1,16 +1,20 @@
 <template>
-  <div v-if="log" class="log relative pre" :class="leave">
-    <div v-if="log.work" class="work-log">{{log.work.detail}}</div>
-    <div v-if="log.leave" class="bg-red-50 text-red-600 leave-log">{{log.leave.detail}}</div>
+  <div v-if="log" class="log relative pre" :class="cssClasses[leave]">
+    <template v-if="leave !== 2">
+      <div v-if="log.work" class="work-log">{{log.work.detail}}</div>
+      <div v-else class="work-log">&nbsp;</div>
+    </template>
+    <div v-if="log.leave" class="bg-red-50 text-red-600 leave-log" :title="leaveInfo[leave]">{{log.leave.detail}}</div>
   </div>
 </template>
 
 <style scoped>
   .log {
     font: 0.8rem/1.5 monospace;
-    margin: -5px -9px;
+    margin: 1px;
   }
   .log>div {
+    width: 100%;
     padding: 5px 9px;
   }
   .leave {
@@ -33,10 +37,17 @@
 <script>
 export default {
   props: ['date', 'id', 'log', 'logs'],
+  data() {
+    return {
+      cssClasses: ['flex flex-col-reverse', 'flex flex-col', 'leave'],
+      leaveInfo: ['1st half', '2nd half', 'Full day']
+    }
+  },
   computed: {
     leave: function() {
-      const leaveOption = this.log.leave && this.log.leave.option;
-      return leaveOption === 0 ? 'flex flex-col-reverse' : (leaveOption === 1 ? 'flex flex-col' : (leaveOption === 2 ? 'leave' : ''));
+      return this.log.leave && this.log.leave.option;
+      // const leaveOption = this.log.leave && this.log.leave.option;
+      // return leaveOption === 0 ? 'flex flex-col-reverse' : (leaveOption === 1 ? 'flex flex-col' : (leaveOption === 2 ? 'leave' : ''));
     }
   }
 };
