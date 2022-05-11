@@ -122,7 +122,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('calendar', ['addLeaveInfo']),
+    ...mapActions('calendar', ['getLeaveInfo']),
     disabledDate(current) {
       return (
         current.day() > 4 ||
@@ -151,7 +151,7 @@ export default {
           this.$axios
             .post('/leave/apply', leaveData)
             .then((leaveCount) => {
-              this.addLeaveInfo(leaveData);
+              this.getLeaveInfo(leaveData);
               const user = this.$auth.user;
               const leaves_taken = user.leaves_taken + (leaveCount || 0);
               this.$auth.setUser({ ...user, leaves_taken });
