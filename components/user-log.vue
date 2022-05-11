@@ -1,6 +1,6 @@
 <template>
   <div v-if="log" class="log relative pre" :class="leave">
-    <div v-if="log.work">{{log.work.detail}}</div>
+    <div v-if="log.work" class="work-log">{{log.work.detail}}</div>
     <div v-if="log.leave" class="bg-red-50 text-red-600 leave-log">{{log.leave.detail}}</div>
   </div>
 </template>
@@ -21,10 +21,9 @@
     bottom: 1px;
     left: 1px;
   }
-  .leave>div {
-    height: 100%;
-  }
   .leave .leave-log {
+    width: 100%;
+    height: 100%;
     position: absolute;
     top: 0;
     left: 0;
