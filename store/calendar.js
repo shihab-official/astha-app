@@ -15,12 +15,21 @@ export const getters = {
       ...holiday,
       utc_date: holiday.date,
       date: moment(holiday.date).format('DD-MMM-YYYY'),
-      moment: moment(holiday.date)
+      moment: moment(holiday.date),
     }));
   },
 
   leaves: ({ _leaves }) => {
-    return _leaves;
+    const leaves = {},
+      keys = Object.keys(_leaves).map((k) => ({
+        raw: k,
+        formatted: moment(k).format('DD-MMM-YYYY'),
+      }));
+
+    keys.forEach((k) => {
+      leaves[k.formatted] = _leaves[k.raw];
+    });
+    return leaves;
   },
 };
 
@@ -33,7 +42,9 @@ export const mutations = {
   SET_HOLIDAY: (state, holiday) => {
     const index = state._holidays.findIndex((h) => h._id == holiday._id);
     state._holidays.splice(index, 1, holiday);
-    const updateIndex = state._updatedHolidays.findIndex((h) => h._id == holiday._id);
+    const updateIndex = state._updatedHolidays.findIndex(
+      (h) => h._id == holiday._id
+    );
     if (updateIndex == -1) {
       state._updatedHolidays.push(holiday);
     } else {
@@ -68,7 +79,7 @@ export const mutations = {
       (user) => user.user_id === leave.user_id
     );
     state._leaves[leave.date].splice(index, 1);
-  }
+  },
 };
 
 export const actions = {
@@ -134,7 +145,7 @@ export const actions = {
     });
   },
 
-  deleteLeaveInfo({commit}, leave) {
+  deleteLeaveInfo({ commit }, leave) {
     commit('DELETE_LEAVE_INFO', leave);
-  }
+  },
 };
