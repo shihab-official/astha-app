@@ -78,7 +78,7 @@ export default {
               work: { detail: values.log.detail },
             })
             .then((res) => {
-              if (res.status == 200) {
+              if (res.status == 201) {
                 this.$router.push(`/logs/${this.$auth.user.user_name}`);
               }
             })
