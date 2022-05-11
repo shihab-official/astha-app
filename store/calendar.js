@@ -102,15 +102,17 @@ export const actions = {
     commit('SET_HOLIDAY', holiday);
   },
 
-  updateHolidays({ commit, state }) {
+  updateHolidays({ commit, state }, showSuccess, showError) {
     this.$axios
       .put('/holiday/update', state._updatedHolidays)
       .then((res) => {
+        showSuccess(res.data.message);
         commit('CLEAR_UPDATED_HOLIDAYS');
         commit('LOADING');
       })
       .catch((error) => {
         console.error(error);
+        showError('Holiday list could not be updated. You can try again. For detail about the error, please check log.');
         commit('LOADING');
         return;
       });
