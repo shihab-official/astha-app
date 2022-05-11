@@ -131,23 +131,4 @@ export const actions = {
         return;
       });
   },
-
-  // addLeaveInfo({ commit }, leaveInfo) {
-  //   commit('LOADING', true);
-  //   leaveInfo.dates.forEach((date) => {
-  //     commit('ADD_LEAVE_INFO', {
-  //       date: date,
-  //       data: {
-  //         user_id: leaveInfo.user_id,
-  //         user_name: leaveInfo.user_name,
-  //         name: leaveInfo.name,
-  //         ...leaveInfo.leave,
-  //       },
-  //     });
-  //   });
-  // },
-
-  deleteLeaveInfo({ commit }, leave) {
-    commit('DELETE_LEAVE_INFO', leave);
-  },
 };

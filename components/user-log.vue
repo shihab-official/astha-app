@@ -1,5 +1,5 @@
 <template>
-  <div v-if="log" class="log relative" :class="leave">
+  <div v-if="log" class="log relative pre" :class="leave">
     <div v-if="log.work">{{log.work.detail}}</div>
     <div v-if="log.leave" class="bg-red-50 text-red-600">{{log.leave.detail}}</div>
   </div>
@@ -9,7 +9,6 @@
   .log {
     font: 0.8rem/1.5 monospace;
     margin: -5px -9px;
-    white-space: pre-line;
   }
   .log>div {
     padding: 5px 9px;

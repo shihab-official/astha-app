@@ -39,9 +39,9 @@
                 j === 1 ? 'mt-3' : ''
               }`"
             >
-              <pre class="flex-grow mr-3">{{
+              <div class="flex-grow pre break-words">{{
                 data.detail
-              }}</pre>
+              }}</div>
               <a-popconfirm
                 v-if="($auth.user.admin || $auth.user.manager) && data.hasOwnProperty('option')"
                 placement="left"
@@ -151,7 +151,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('calendar', ['deleteLeaveInfo']),
+    ...mapActions('calendar', ['getLeaveInfo']),
     // ...mapActions('user', ['updateLeaveCount']),
 
     cancelLeave: function (data, index) {
@@ -171,8 +171,7 @@ export default {
             } else {
               this.userLogs.splice(index, 1);
             }
-            console.log(this.userLogs[index]);
-            this.deleteLeaveInfo({ date: data.date, user_id: this.user.user_id });
+            this.getLeaveInfo();
             this.user.leaves_taken -= (leaveOption === 2 ? 1 : 0.5);
           }
         })

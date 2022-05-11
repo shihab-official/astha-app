@@ -204,8 +204,9 @@ td.sticky {
   z-index: 1;
 }
 
-pre {
+pre, .pre {
   margin: 0;
+  white-space: pre-wrap;
 }
 
 .spin {
