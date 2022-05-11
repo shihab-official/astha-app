@@ -187,7 +187,9 @@ export default {
       .catch((error) => console.error(error));
 
     resData.user.short_name = resData.user.short_name || resData.user.name;
-    resData.user.dob = moment(resData.user.dob || '01-Jan', 'DD-MMM');
+    if (resData.user.dob) {
+      resData.user.dob = moment(resData.user.dob || '01-Jan', 'DD-MMM');
+    }
 
     return { loading: false, ...resData };
   },
