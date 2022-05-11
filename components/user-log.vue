@@ -1,7 +1,7 @@
 <template>
   <div v-if="log" class="log relative pre" :class="leave">
     <div v-if="log.work">{{log.work.detail}}</div>
-    <div v-if="log.leave" class="bg-red-50 text-red-600">{{log.leave.detail}}</div>
+    <div v-if="log.leave" class="bg-red-50 text-red-600 leave-log">{{log.leave.detail}}</div>
   </div>
 </template>
 
@@ -23,6 +23,11 @@
   }
   .leave>div {
     height: 100%;
+  }
+  .leave .leave-log {
+    position: absolute;
+    top: 0;
+    left: 0;
   }
 </style>
 
