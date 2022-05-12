@@ -153,7 +153,7 @@ export default {
             .then((leaveCount) => {
               this.getLeaveInfo(leaveData);
               const user = this.$auth.user;
-              const leaves_taken = user.leaves_taken + (leaveCount || 0);
+              const leaves_taken = user.leaves_taken + (leaveCount.data || 0);
               this.$auth.setUser({ ...user, leaves_taken });
               this.$emit('leaveApplied');
               this.$router.push(`/`);

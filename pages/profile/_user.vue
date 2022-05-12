@@ -208,7 +208,8 @@ export default {
   computed: {
     ...mapGetters(['personalLeaves']),
     maxLeaveOffset() {
-      return this.personalLeaves - this.user.leaves_taken;
+      const maxLeaveOffset = this.personalLeaves - this.user.leaves_taken;
+      return maxLeaveOffset < 0 ? 0 : maxLeaveOffset;
     },
     totalLeaves() {
       return this.user.leaves_taken + (this.user.leave_offset || 0);

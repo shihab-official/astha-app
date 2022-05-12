@@ -98,13 +98,6 @@ export default {
     },
   },
   created() {
-    const datesInRange = getDatesInRange({
-      start: this.dateRange[0],
-      end: this.dateRange[1],
-      format: this.dateFormat
-    });
-
-
     if (this.$auth.loggedIn) {
       this.getHolidays();
       this.getLeaveInfo();
