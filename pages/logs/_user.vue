@@ -9,11 +9,18 @@
       >
         <a-icon type="double-left" class="text-xs" /> Back to Logs
       </NuxtLink>
-      <span class="leave-stat ml-auto px-2 flex items-center font-medium border border-solid border-red-500 relative rounded overflow-hidden">
+      <span v-if="currentUser" class="leave-stat ml-auto px-2 flex items-center font-medium border border-solid border-red-500 relative rounded overflow-hidden">
         <span class="progress absolute top-0 left-0 bottom-0 pointer-events-none bg-red-100" :style="{width: `${leaveProgress}%`}"></span>
         <small class="mr-2 relative">Leaves remaining</small>
         <span class="relative">{{leavesRemaining}}</span>
       </span>
+      <NuxtLink
+        v-else
+        :to="`/profile/${params.user}`"
+        class="ml-auto text-sm font-medium"
+      >
+        Visit Profile
+      </NuxtLink>
     </div>
     <hr />
     <div class="logs" v-if="logs.length > 0">
@@ -101,6 +108,7 @@ export default {
       });
 
     return {
+      // currentUser: params.user === $auth.user.user_name,
       user: content.user,
       heading: params.user === $auth.user.user_name ? 'My Board' : content.user.short_name,
       userLogs: content.logs,
@@ -111,6 +119,14 @@ export default {
   },
   computed: {
     ...mapGetters(['personalLeaves']),
+    params() {
+      return this.$route.params;
+    },
+
+    currentUser() {
+      return this.params.user === this.$auth.user.user_name;
+    },
+
     leavesTaken() {
       return (+this.user.leave_offset || 0) + (+this.user.leaves_taken || 0);
     },

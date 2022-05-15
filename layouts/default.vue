@@ -102,6 +102,7 @@ export default {
       this.getHolidays();
       this.getLeaveInfo();
       this.getUsers();
+      this.getLeaveCount();
       if (this.$auth.user.admin) {
         this.getLogsByDate(this.dateRange);
       }
@@ -110,6 +111,21 @@ export default {
   methods: {
     ...mapActions('calendar', ['getHolidays', 'getLeaveInfo']),
     ...mapActions('user', ['getLogsByDate', 'getUsers']),
+    getLeaveCount() {
+      console.log('getting leave count.');
+      this.$axios
+        .get('/log/leave-count', {
+          params: {
+            user: this.$auth.user.user_name,
+          },
+        })
+        .then((res) => {
+          this.$auth.setUser({ ...this.user, leaves_taken: res.data });
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
     logout() {
       this.$auth.logout('google').then(() => {
         this.$router.push('/login');
