@@ -85,7 +85,7 @@
             <a-form-item label="Leaves Taken" style="width: fit-content;">
               <a-input-group compact class="input-field-sm text-center">
                 <a-input-number
-                  class="leave-input" style="width: 45%;"
+                  class="leave-input" style="width: 55px;"
                   :disabled="!currentUserIsAdminOrManager"
                   placeholder="Offset"
                   @change="leaveOffsetChange" :min="0"
@@ -95,7 +95,7 @@
                     { initialValue: user.leave_offset || 0, type: 'number' },
                   ]"
                 />
-                <div class="ant-input leave-input disabled" style="width: 55%">
+                <div class="ant-input leave-input disabled" style="width: calc(100% - 55px)">
                   + {{user.leaves_taken}} = <strong class="text-red-500">{{totalLeaves}}</strong>
                 </div>
               </a-input-group>
@@ -154,7 +154,8 @@
   width: 100px;
 }
 .leave-input {
-  word-spacing: 1px;
+  padding-left: 8px;
+  padding-right: 8px;
 }
 fieldset,
 fieldset legend {
