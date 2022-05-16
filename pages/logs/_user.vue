@@ -11,8 +11,14 @@
       </NuxtLink>
       <span v-if="currentUser" class="leave-stat ml-auto px-2 flex items-center font-medium border border-solid border-red-500 relative rounded overflow-hidden">
         <span class="progress absolute top-0 left-0 bottom-0 pointer-events-none bg-red-100" :style="{width: `${leaveProgress}%`}"></span>
-        <small class="mr-2 relative">Leaves remaining</small>
-        <span class="relative">{{leavesRemaining}}</span>
+        <template v-if="leavesRemaining >= 0">
+          <small class="mr-2 relative">Leaves remaining</small>
+          <span class="relative">{{leavesRemaining}}</span>
+        </template>
+        <template v-else>
+          <small class="mr-2 relative">Extra Leaves</small>
+          <span class="relative">{{-leavesRemaining}}</span>
+        </template>
       </span>
       <NuxtLink
         v-else
@@ -33,7 +39,7 @@
           class="font-semibold text-slate-700 w-fit hover:opacity-75 cursor-pointer pb-1"
         >
           {{ logData.date }}
-          <a-tag v-if="logData.leave" color="red" class="pointer-events-none">
+          <a-tag v-if="logData.leave" :color="logData.leave == 'Full day' ? 'red' : 'orange'" class="pointer-events-none">
             {{ logData.leave }}
           </a-tag>
         </summary>

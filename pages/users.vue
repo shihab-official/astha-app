@@ -17,7 +17,7 @@
           >
           <a-modal
             v-model="modalVisible"
-            title="Prepare user storage"
+            title="Create user"
             :width="350"
             footer
           >
@@ -184,7 +184,7 @@ export default {
     this.findUsers();
   },
   methods: {
-    ...mapActions('user', ['findUsers']),
+    ...mapActions('user', ['findUsers', 'getUsers']),
     search(e) {
       this.key = e.target.value;
     },
@@ -204,15 +204,17 @@ export default {
               admin: false,
               manager: false,
               show_log: true,
+              leaves_taken: 0
             })
             .then((res) => {
               this.modalVisible = false;
               this.form.resetFields();
-              if (this.$route.path === '/') {
-                this.$router.go();
-              } else {
-                this.$router.push('/');
-              }
+              this.getUsers();
+              // if (this.$route.path === '/') {
+              //   this.$router.go();
+              // } else {
+              //   this.$router.push('/users');
+              // }
             })
             .catch((error) => {
               console.error(error);

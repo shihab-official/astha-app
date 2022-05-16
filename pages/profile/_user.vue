@@ -100,9 +100,9 @@
                 </div>
               </a-input-group>
             </a-form-item>
-            <a-form-item label="Remaining" style="width: 90px;">
+            <a-form-item :label="remainingLeaves >= 0 ? 'Remaining' : 'Extra'" style="width: 90px;">
               <div class="ant-input leave-input disabled text-center">
-                {{remainingLeaves}}
+                {{remainingLeaves >= 0 ? remainingLeaves : -remainingLeaves}}
               </div>
             </a-form-item>
           </div>
