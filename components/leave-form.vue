@@ -150,11 +150,10 @@ export default {
           };
           this.$axios
             .post('/leave/apply', leaveData)
-            .then((leaveCount) => {
+            .then((res) => {
               this.getLeaveInfo(leaveData);
               const user = this.$auth.user;
-              const leaves_taken = user.leaves_taken + (leaveCount.data || 0);
-              this.$auth.setUser({ ...user, leaves_taken });
+              this.$auth.setUser({ ...user, leaves_taken: res.data });
               this.$emit('leaveApplied');
               this.$router.push(`/`);
             })

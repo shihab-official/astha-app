@@ -78,7 +78,6 @@
 
 <script>
 import moment from 'moment';
-import { getDatesInRange } from '~/server-middleware/utilities/date';
 import { mapActions } from 'vuex';
 
 export default {
@@ -102,7 +101,7 @@ export default {
       this.getHolidays();
       this.getLeaveInfo();
       this.getUsers();
-      this.getLeaveCount();
+      // this.getLeaveCount();
       if (this.$auth.user.admin) {
         this.getLogsByDate(this.dateRange);
       }

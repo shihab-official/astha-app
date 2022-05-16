@@ -189,7 +189,8 @@ export default {
             }
             this.getLeaveInfo();
             // this.user.leaves_taken -= (leaveOption === 2 ? 1 : 0.5);
-            this.user.leaves_taken -= res.data.leaves;
+            this.user.leaves_taken = res.data;
+            this.$auth.setUser({...this.$auth.user, leaves_taken: res.data});
           }
         })
         .catch((error) => {
