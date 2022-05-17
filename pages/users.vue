@@ -80,6 +80,7 @@
             <template v-if="$auth.user.admin">
               <th class="w-1">Show Log</th>
               <th class="w-1">Manager</th>
+              <th class="w-1">Team Lead</th>
               <th class="w-1">Admin</th>
             </template>
           </tr>
@@ -121,6 +122,13 @@
                 :class="user.manager ? 'text-green-500' : 'text-red-500'"
               >
                 <a-icon v-if="user.manager" type="check" />
+                <a-icon v-else type="close" />
+              </td>
+              <td
+                class="text-center"
+                :class="user.team_lead ? 'text-green-500' : 'text-red-500'"
+              >
+                <a-icon v-if="user.team_lead" type="check" />
                 <a-icon v-else type="close" />
               </td>
               <td
@@ -203,6 +211,7 @@ export default {
               user_name: values.newUser.email,
               admin: false,
               manager: false,
+              team_lead: false,
               show_log: true,
               leaves_taken: 0
             })

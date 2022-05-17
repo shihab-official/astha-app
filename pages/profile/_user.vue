@@ -44,8 +44,9 @@
           <a-form-item label="Date of Birth">
             <a-date-picker
               class="input-field-sm"
+              dropdownClassName="dob-picker"
               :read-only="!currentUser && !currentUserIsAdminOrManager"
-              format="DD-MMM"
+              format="DD-MMMM"
               :disabled-date="disabledDate"
               :allow-clear="false"
               v-decorator="[
@@ -81,32 +82,34 @@
               ]"
             />
           </a-form-item>
-          <div class="w-1/3 flex">
-            <a-form-item label="Leaves Taken" style="width: fit-content;">
-              <a-input-group compact class="input-field-sm text-center">
-                <a-input-number
-                  class="leave-input" style="width: 55px;"
-                  :disabled="!currentUserIsAdminOrManager"
-                  placeholder="Offset"
-                  @change="leaveOffsetChange" :min="0"
-                  :max="maxLeaveOffset"
-                  v-decorator="[
-                    'leave_offset',
-                    { initialValue: user.leave_offset || 0, type: 'number' },
-                  ]"
-                />
-                <div class="ant-input leave-input disabled" style="width: calc(100% - 55px)">
-                  + {{user.leaves_taken}} = <strong class="text-red-500">{{totalLeaves}}</strong>
-                </div>
-              </a-input-group>
+          <div class="w-2/3 flex">
+            <a-form-item label="Leave Offset" class="w-1/3">
+              <a-input-number
+                style="width: 100%;"
+                :disabled="!currentUserIsAdminOrManager"
+                placeholder="Offset"
+                @change="leaveOffsetChange" :min="0"
+                :max="maxLeaveOffset"
+                v-decorator="[
+                  'leave_offset',
+                  { initialValue: user.leave_offset || 0, type: 'number' },
+                ]"
+              />
             </a-form-item>
-            <a-form-item :label="remainingLeaves >= 0 ? 'Remaining' : 'Extra'" style="width: 90px;">
+            <a-form-item label="Leaves Taken" class="w-1/3">
+              <div class="ant-input leave-input disabled">
+                {{totalLeaves}}
+              </div>
+            </a-form-item>
+            <a-form-item :label="remainingLeaves >= 0 ? 'Remaining' : 'Extra'" class="w-1/3">
               <div class="ant-input leave-input disabled text-center">
                 {{remainingLeaves >= 0 ? remainingLeaves : -remainingLeaves}}
               </div>
             </a-form-item>
           </div>
-          <div class="flex w-1/3" v-if="currentUserIsAdmin">
+        </div>
+        <div class="flex flex-wrap -mx-3">
+          <div class="flex w-2/3" v-if="currentUserIsAdmin">
             <a-form-item label="Admin" style="width: 100px">
               <a-switch
                 :default-checked="user.admin"
@@ -120,6 +123,14 @@
               <a-switch
                 :default-checked="user.manager"
                 v-decorator="['manager']"
+                checked-children=" Yes "
+                un-checked-children=" No "
+              />
+            </a-form-item>
+            <a-form-item label="Team Lead" style="width: 100px">
+              <a-switch
+                :default-checked="user.team_lead"
+                v-decorator="['team_lead']"
                 checked-children=" Yes "
                 un-checked-children=" No "
               />
@@ -173,6 +184,23 @@ fieldset legend {
   padding: 0 6px;
   opacity: 0.6;
 }
+</style>
+
+<style>
+  .dob-picker .ant-calendar {
+    width: auto !important;
+  }
+  .dob-picker .ant-calendar-prev-year-btn,
+  /* .dob-picker .ant-calendar-year-select, */
+  .dob-picker .ant-calendar-next-year-btn {
+    display: none;
+  }
+  .ant-calendar-header .ant-calendar-prev-month-btn {
+    left: 18px;
+  }
+  .ant-calendar-header .ant-calendar-next-month-btn {
+    right: 18px;
+  }
 </style>
 
 <script>

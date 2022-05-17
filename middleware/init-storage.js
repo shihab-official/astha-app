@@ -10,6 +10,7 @@ export default async function ({ $auth, $axios, redirect }) {
         user_name: $auth.user.email.replace('@asthait.com', ''),
         admin: ADMIN_EMAILS.includes($auth.user.email),
         manager: false,
+        team_lead: false,
         show_log: true,
         leaves_taken: 0
       })
