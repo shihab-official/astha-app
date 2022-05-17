@@ -100,13 +100,7 @@ export const actions = {
     this.$axios
       .get('/user/all')
       .then((res) => {
-        const users = res.data.sort(function (a, b) {
-          const nameA = a.short_name.toLowerCase(),
-            nameB = b.short_name.toLowerCase();
-          return nameA > nameB ? 1 : nameA < nameB ? -1 : 0;
-        });
-
-        commit('SET_USERS', users);
+        commit('SET_USERS', res.data);
         commit('LOADING');
       })
       .catch((error) => {
