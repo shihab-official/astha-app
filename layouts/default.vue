@@ -64,7 +64,7 @@
       style="background-color: #e0e3e6"
     >
       <div class="container text-center">
-        &copy; {{ copyrightYear }} Astha IT Ventures
+        &copy; {{ year }} Astha IT Ventures
       </div>
     </a-layout-footer>
   </a-layout>
@@ -86,22 +86,30 @@ export default {
     return {
       dateFormat: 'DD-MMM-YYYY',
       dateRange: [moment().startOf('week'), moment().endOf('week')],
+      time: new Date(),
     };
   },
   computed: {
+    notificationTime: function () {
+      const t = new Date();
+      t.setHours(17);
+      t.setMinutes(0);
+      t.setSeconds(0);
+      return t;
+    },
     user: function () {
       return this.$auth.user || null;
     },
-    copyrightYear: function () {
-      return new Date().getFullYear();
-    },
+    year: function() {
+      return (new Date()).getFullYear();
+    }
   },
   created() {
     if (this.$auth.loggedIn) {
+      this.startTimer();
       this.getHolidays();
       this.getLeaveInfo();
       this.getUsers();
-      // this.getLeaveCount();
       if (this.$auth.user.admin) {
         this.getLogsByDate(this.dateRange);
       }
@@ -110,20 +118,29 @@ export default {
   methods: {
     ...mapActions('calendar', ['getHolidays', 'getLeaveInfo']),
     ...mapActions('user', ['getLogsByDate', 'getUsers']),
-    getLeaveCount() {
-      console.log('getting leave count.');
-      this.$axios
-        .get('/log/leave-count', {
-          params: {
-            user: this.$auth.user.user_name,
-          },
-        })
-        .then((res) => {
-          this.$auth.setUser({ ...this.user, leaves_taken: res.data });
-        })
-        .catch((error) => {
-          console.error(error);
+    startTimer() {
+      let t = setInterval(() => {
+        if (new Date() > this.notificationTime) {
+          this.notify();
+          clearInterval(t);
+        }
+      }, 300000);
+    },
+    notify() {
+      if (!('Notification' in window)) {
+        alert('This browser does not support desktop notification');
+      } else if (Notification.permission === 'granted') {
+        const notification = new Notification('Please post work log.');
+      } else if (Notification.permission !== 'denied') {
+        Notification.requestPermission().then(function (permission) {
+          if (permission === 'granted') {
+            const notification = new Notification('Please post work log.');
+          }
         });
+      }
+
+      // At last, if the user has denied notifications, and you
+      // want to be respectful there is no need to bother them anymore.
     },
     logout() {
       this.$auth.logout('google').then(() => {
