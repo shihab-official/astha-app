@@ -45,7 +45,11 @@ module.exports = {
   },
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: ['@/plugins/antd-ui', '~/plugins/axios'],
+  plugins: [
+    {src: '@/plugins/antd-ui'},
+    {src: '~/plugins/axios'},
+    { src: "~/plugins/ckeditor4", mode: "client" }
+  ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
