@@ -1,4 +1,4 @@
-# astha-app
+# Astha App
 
 ## Build Setup
 
