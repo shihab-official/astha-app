@@ -16,7 +16,7 @@ module.exports = {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'Astha-App',
+    title: 'Astha App',
     htmlAttrs: {
       lang: 'en',
     },
