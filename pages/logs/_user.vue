@@ -62,7 +62,7 @@
                 data.hasOwnProperty('option') ? 'bg-red-50' : 'bg-sky-50'
               } ${j === 1 ? 'mt-3' : ''}`"
             >
-              <div class="flex-grow pre break-words">{{ data.detail }}</div>
+              <div class="log flex-grow text-sm" v-html="data.detail"></div>
               <a-popconfirm
                 v-if="
                   ($auth.user.admin || $auth.user.manager) &&
@@ -98,6 +98,9 @@
 <style scoped>
 summary::marker {
   font-size: 80%;
+}
+.log {
+  margin-bottom: -0.5rem;
 }
 </style>
 

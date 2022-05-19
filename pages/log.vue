@@ -22,18 +22,21 @@
         />
       </a-form-item>
       <a-form-item label="Log">
-        <a-textarea
-          placeholder="Update log"
+        <ckeditor
+          :config="editorConfig"
+          @input="onEditorInput"
+          ref="ckeditor"
           v-decorator="[
             'log.detail',
             {
+              initialValue: log.detail,
               rules: [
                 { required: true, message: 'Please provide task update.' },
               ],
             },
           ]"
-          :auto-size="{ minRows: 4 }"
-        />
+        >
+        </ckeditor>
       </a-form-item>
       <a-form-item>
         <a-button type="primary" html-type="submit"> Submit </a-button>
@@ -44,6 +47,7 @@
 
 <script>
 import moment from 'moment';
+// import { VueEditor } from 'vue2-editor';
 
 export default {
   name: 'LogWorkUpdate',
@@ -56,6 +60,14 @@ export default {
         date: moment(new Date()),
         detail: '',
       },
+      editorConfig: {
+        toolbar: [
+          ['Undo', 'Redo'],
+          ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript'],
+          ['NumberedList', 'BulletedList', '-', 'Indent', 'Outdent', '-', 'Blockquote'],
+          ['Link', 'Unlink'],
+        ],
+      },
     };
   },
   mounted: () => {
@@ -65,17 +77,23 @@ export default {
     disabledDate(current) {
       return current > moment().endOf('day');
     },
+    onEditorInput() {
+      console.log(this.$refs.ckeditor.instance.ui.items);
+      this.form.setFieldsValue({
+        log: { detail: this.$refs.ckeditor.instance.getData() },
+      });
+    },
     submit(e) {
       e.preventDefault();
-      this.form.validateFields((err, values) => {
+      this.form.validateFields((err, { log }) => {
         if (!err) {
           this.$axios
             .post('/log/post', {
               user_id: this.$auth.user._id,
               user_name: this.$auth.user.user_name,
               name: this.$auth.user.short_name,
-              date: values.log.date.startOf('day'),
-              work: { detail: values.log.detail },
+              date: log.date.startOf('day'),
+              work: { detail: log.detail },
             })
             .then((res) => {
               if (res.status == 201) {

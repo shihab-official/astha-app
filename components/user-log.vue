@@ -1,7 +1,7 @@
 <template>
-  <div v-if="log" class="log relative pre" :class="cssClasses[leave]">
+  <div v-if="log" class="log relative text-xs" :class="cssClasses[leave]">
     <template v-if="leave !== 2">
-      <div v-if="log.work" class="work-log">{{log.work.detail}}</div>
+      <div v-if="log.work" class="work-log" v-html="log.work.detail"></div>
       <div v-else class="work-log">&nbsp;</div>
     </template>
     <div v-if="log.leave" class="bg-red-50 text-red-600 leave-log" :title="leaveInfo[leave]">{{log.leave.detail}}</div>
@@ -10,12 +10,14 @@
 
 <style scoped>
   .log {
-    font: 0.8rem/1.5 monospace;
     margin: 1px;
   }
   .log>div {
     width: 100%;
     padding: 5px 9px;
+  }
+  .log>div.work-log {
+    padding-bottom: 0;
   }
   .leave {
     margin: 0;
@@ -46,8 +48,6 @@ export default {
   computed: {
     leave: function() {
       return this.log.leave && this.log.leave.option;
-      // const leaveOption = this.log.leave && this.log.leave.option;
-      // return leaveOption === 0 ? 'flex flex-col-reverse' : (leaveOption === 1 ? 'flex flex-col' : (leaveOption === 2 ? 'leave' : ''));
     }
   }
 };

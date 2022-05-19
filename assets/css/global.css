@@ -58,6 +58,10 @@ hr {
   border-top: solid 1px;
 }
 
+.log {
+  font-family: monospace;
+}
+
 input[readonly],
 .ant-input.readonly {
   background-color: rgb(0 0 0 / 2%);
