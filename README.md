@@ -7,7 +7,7 @@
 $ npm install
 
 # serve with hot reload at localhost:4002
-$ npm run dev
+$ yarn dev
 
 # build for production and launch server
 $ npm run build
