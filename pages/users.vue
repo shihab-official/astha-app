@@ -96,7 +96,7 @@
           >
             <td class="sticky left-0 bg-orange-50">
               <NuxtLink
-                v-if="$auth.user.admin"
+                v-if="$auth.user.admin || $auth.user.manager"
                 v-highlight="key"
                 :to="`/profile${
                   user.user_name === $auth.user.user_name ? '' : `/${user.user_name}`
