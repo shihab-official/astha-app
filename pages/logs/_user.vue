@@ -42,16 +42,25 @@
         class="font-mono p-1"
       >
         <summary
-          class="font-semibold text-slate-700 w-fit hover:opacity-75 cursor-pointer pb-1"
+          class="font-semibold text-slate-700 hover:opacity-75 cursor-pointer pb-1"
         >
-          {{ logData.date }}
-          <a-tag
-            v-if="logData.leave"
-            :color="logData.leave == 'Full day' ? 'red' : 'orange'"
-            class="pointer-events-none"
-          >
-            {{ logData.leave }}
-          </a-tag>
+          <div class="inline-flex">
+            {{ logData.date }}
+            <div class="text-sm ml-4" style="line-height:24px;"> 
+              <span class="text-green-600">{{logData.entry || ''}}</span>
+              <template v-if="logData.exit">
+                &ndash;
+                <span class="text-red-600">{{logData.exit}}</span>
+              </template>
+            </div>
+            <a-tag
+              v-if="logData.leave"
+              :color="logData.leave == 'Full day' ? 'red' : 'orange'"
+              class="pointer-events-none ml-auto"
+            >
+              {{ logData.leave }}
+            </a-tag>
+          </div>
         </summary>
         <div>
           <template v-for="(data, j) of logData.log">
@@ -96,8 +105,11 @@
 </template>
 
 <style scoped>
+details:not(:first-child) {
+  border-top: solid 1px #efefef;
+}
 summary::marker {
-  font-size: 80%;
+  font-size: 75%;
 }
 .log {
   margin-bottom: -0.5rem;
@@ -181,6 +193,9 @@ export default {
           newLog.push(userLog.leave);
         }
 
+        let entry = userLog.entry ? moment(userLog.entry).format('h:mm A') : null;
+        let exit = userLog.exit ? moment(userLog.exit).format('h:mm A') : null;
+
         if (userLog.leave) {
           leave =
             userLog.leave.option === 0
@@ -188,8 +203,13 @@ export default {
               : userLog.leave.option === 1
               ? '2nd Half'
               : 'Full day';
+
+          if (userLog.leave.option == 2) {
+            entry = null;
+            exit = null;
+          }
         }
-        return { _id: userLog._id, date: userLog.date, log: newLog, leave };
+        return { _id: userLog._id, date: userLog.date, log: newLog, leave, entry, exit };
       });
     },
   },
@@ -206,7 +226,6 @@ export default {
         })
         .then((res) => {
           if (res.status == 200) {
-            const leaveOption = this.userLogs[index].leave.option;
             const log = this.userLogs[index];
             if (log.work) {
               delete log.leave;
@@ -215,7 +234,6 @@ export default {
               this.userLogs.splice(index, 1);
             }
             this.getLeaveInfo();
-            // this.user.leaves_taken -= (leaveOption === 2 ? 1 : 0.5);
             this.user.leaves_taken = res.data;
             this.$auth.setUser({ ...this.$auth.user, leaves_taken: res.data });
           }

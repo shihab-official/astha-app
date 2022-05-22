@@ -7,9 +7,16 @@
         </NuxtLink>
         <div v-if="$auth.loggedIn" class="flex" style="font-size: 90%">
           <NuxtLink
+            v-if="$auth.user.show_log"
             to="/log"
             class="block font-medium mr-6 text-white hover:text-emerald-300"
             >Log</NuxtLink
+          >
+          <NuxtLink
+            v-if="$auth.user.admin || $auth.user.manager"
+            to="/time-log"
+            class="block font-medium mr-6 text-white hover:text-emerald-300"
+            >Time Log</NuxtLink
           >
           <a-dropdown :trigger="['click']" placement="bottomRight">
             <a
