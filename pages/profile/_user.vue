@@ -166,22 +166,6 @@
   padding-left: 8px;
   padding-right: 8px;
 }
-fieldset,
-fieldset legend {
-  all: revert;
-}
-fieldset {
-  border: solid 1px #dfe2e7;
-  padding: 15px 20px 0;
-  margin: 20px 0;
-}
-fieldset legend {
-  font-size: 1rem;
-  font-weight: 500;
-  letter-spacing: 1px;
-  padding: 0 6px;
-  opacity: 0.6;
-}
 </style>
 
 <style>

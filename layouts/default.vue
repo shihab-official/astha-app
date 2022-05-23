@@ -42,9 +42,14 @@
               <a-menu-item key="u">
                 <NuxtLink to="/users"> Users </NuxtLink>
               </a-menu-item>
-              <a-menu-item key="h" v-if="user.admin || user.manager">
-                <NuxtLink to="/holidays"> Holidays </NuxtLink>
-              </a-menu-item>
+              <template v-if="user.admin || user.manager">
+                <a-menu-item key="h">
+                  <NuxtLink to="/holidays"> Holidays </NuxtLink>
+                </a-menu-item>
+                <a-menu-item key="e">
+                  <NuxtLink to="/export"> Export </NuxtLink>
+                </a-menu-item>
+              </template>
               <a-menu-item style="padding: 0"
                 ><a-divider style="margin: 3px 0px 1px"
               /></a-menu-item>
