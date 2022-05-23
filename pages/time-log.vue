@@ -5,6 +5,7 @@
         Time Log ~
         <a-date-picker
           style="font-size: inherit"
+          :disabled-date="disabledDate"
           :value="date"
           :format="config.dateFormat"
           @change="onDateChange($event)"
@@ -27,7 +28,9 @@
         </thead>
         <tbody>
           <tr v-for="(user, i) of users" :key="user._id" class="text-sm">
-            <td>{{ user.short_name }}</td>
+            <td>
+              <NuxtLink :to="`/logs/${user.user_name}`">{{ user.short_name || user.name }}</NuxtLink>
+            </td>
             <td class="text-center relative">
               <a-time-picker
                 class="text-green-600"
@@ -116,6 +119,12 @@ export default {
   methods: {
     moment,
 
+    disabledDate(current) {
+      return (
+        current > moment()
+      );
+    },
+
     handleClose(type, index) {
       return (open) => {
         console.log(type, index, open);
@@ -129,7 +138,6 @@ export default {
 
     onTimeChange(user, type, moment, idx) {
       const picker = this.$refs[type][idx];
-      picker.$refs.timePicker.setOpen(false);
 
       clearTimeout(this.config.timeout);
       if (!moment) {
@@ -146,6 +154,7 @@ export default {
       }
 
       this.config.timeout = setTimeout(() => {
+        picker.$refs.timePicker.setOpen(false);
         this.update(user, type, moment);
       }, 3000);
     },
