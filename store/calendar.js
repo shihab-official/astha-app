@@ -11,12 +11,18 @@ export const getters = {
   loading: ({ _updatingState }) => _updatingState,
 
   holidays: ({ _holidays }) => {
-    return _holidays.map((holiday) => ({
-      ...holiday,
-      utc_date: holiday.date,
-      date: moment(holiday.date).format('DD-MMM-YYYY'),
-      moment: moment(holiday.date),
-    }));
+    const currentYear = (new Date()).getFullYear();
+    let m = moment();
+
+    return _holidays.map((holiday) => {
+      m = moment(holiday.date).set('year', currentYear);
+      return {
+        ...holiday,
+        utc_date: holiday.date,
+        date: m.format('DD-MMM-YYYY'),
+        moment: m,
+      };
+    });
   },
 
   leaves: ({ _leaves }) => {
