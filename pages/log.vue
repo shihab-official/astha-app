@@ -78,7 +78,6 @@ export default {
       return current > moment().endOf('day');
     },
     onEditorInput() {
-      console.log(this.$refs.ckeditor.instance.ui.items);
       this.form.setFieldsValue({
         log: { detail: this.$refs.ckeditor.instance.getData() },
       });

@@ -145,7 +145,7 @@ export default {
             }),
             leave: {
               option: values.leave.option ?? this.leave.option,
-              detail: values.leave.detail,
+              detail: `<p>${values.leave.detail}</p>`,
             },
           };
           this.$axios
