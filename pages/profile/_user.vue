@@ -108,45 +108,43 @@
             </a-form-item>
           </div>
         </div>
-        <div class="flex flex-wrap -mx-3">
-          <div class="flex w-2/3" v-if="currentUserIsAdmin">
-            <a-form-item label="Admin" style="width: 100px">
-              <a-switch
-                :default-checked="user.admin"
-                :disabled="adminCount < 2"
-                v-decorator="['admin']"
-                checked-children=" Yes "
-                un-checked-children=" No "
-              />
-            </a-form-item>
-            <a-form-item label="Manager" style="width: 100px">
-              <a-switch
-                :default-checked="user.manager"
-                v-decorator="['manager']"
-                checked-children=" Yes "
-                un-checked-children=" No "
-              />
-            </a-form-item>
-            <a-form-item label="Team Lead" style="width: 100px">
-              <a-switch
-                :default-checked="user.team_lead"
-                v-decorator="['team_lead']"
-                checked-children=" Yes "
-                un-checked-children=" No "
-              />
-            </a-form-item>
-            <a-form-item label="Show log" style="width: 100px">
-              <a-switch
-                :default-checked="user.show_log"
-                v-decorator="['show_log']"
-                checked-children=" Yes "
-                un-checked-children=" No "
-              />
-            </a-form-item>
-          </div>
+        <div v-if="currentUserIsAdmin" class="flex flex-wrap -mx-3">
+          <a-form-item label="Admin" style="width: 100px">
+            <a-switch
+              :default-checked="user.admin"
+              :disabled="adminCount < 2"
+              v-decorator="['admin']"
+              checked-children=" Yes "
+              un-checked-children=" No "
+            />
+          </a-form-item>
+          <a-form-item label="Manager" style="width: 100px">
+            <a-switch
+              :default-checked="user.manager"
+              v-decorator="['manager']"
+              checked-children=" Yes "
+              un-checked-children=" No "
+            />
+          </a-form-item>
+          <a-form-item label="Team Lead" style="width: 100px">
+            <a-switch
+              :default-checked="user.team_lead"
+              v-decorator="['team_lead']"
+              checked-children=" Yes "
+              un-checked-children=" No "
+            />
+          </a-form-item>
+          <a-form-item label="Show log" style="width: 100px">
+            <a-switch
+              :default-checked="user.show_log"
+              v-decorator="['show_log']"
+              checked-children=" Yes "
+              un-checked-children=" No "
+            />
+          </a-form-item>
         </div>
       </fieldset>
-      <a-form-item v-if="currentUser || currentUserIsAdmin" style="padding: 0">
+      <a-form-item v-if="currentUser || currentUserIsAdminOrManager" style="padding: 0">
         <a-button type="primary" html-type="submit"> Save </a-button>
       </a-form-item>
     </a-form>

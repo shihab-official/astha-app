@@ -42,51 +42,65 @@
         class="font-mono p-1"
       >
         <summary
-          class="font-semibold text-slate-700 w-fit hover:opacity-75 cursor-pointer pb-1"
+          class="font-semibold text-slate-700 hover:opacity-75 cursor-pointer pb-1"
         >
-          {{ logData.date }}
-          <a-tag
-            v-if="logData.leave"
-            :color="logData.leave == 'Full day' ? 'red' : 'orange'"
-            class="pointer-events-none"
-          >
-            {{ logData.leave }}
-          </a-tag>
+          <div class="inline-flex">
+            {{ logData.date }}
+            <div class="text-sm ml-4" style="line-height:24px;"> 
+              <span class="text-green-600">{{logData.entry || ''}}</span>
+              <template v-if="logData.exit">
+                &ndash;
+                <span class="text-red-600">{{logData.exit}}</span>
+              </template>
+            </div>
+            <a-tag
+              v-if="logData.leave"
+              :color="logData.leave == 'Full day' ? 'red' : 'orange'"
+              class="pointer-events-none ml-auto"
+            >
+              {{ logData.leave }}
+            </a-tag>
+          </div>
         </summary>
         <div>
-          <template v-for="(data, j) of logData.log">
-            <div
-              :key="j"
-              class="flex rounded px-3.5 py-2.5 ml-3 mb-2 drop-shadow-md"
-              :class="`${
-                data.hasOwnProperty('option') ? 'bg-red-50' : 'bg-sky-50'
-              } ${j === 1 ? 'mt-3' : ''}`"
-            >
-              <div class="log flex-grow text-sm" v-html="data.detail"></div>
-              <a-popconfirm
-                v-if="
-                  ($auth.user.admin || $auth.user.manager) &&
-                  data.hasOwnProperty('option')
-                "
-                placement="left"
-                title="Cancel this leave? Are you sure?"
-                ok-text="Yes"
-                cancel-text="No"
-                @confirm="cancelLeave(logData, i)"
+          <template v-if="logData.log.length > 0">
+            <template v-for="(data, j) of logData.log">
+              <div
+                :key="j"
+                class="flex rounded px-3.5 py-2.5 ml-3 mb-2 drop-shadow-md"
+                :class="`${
+                  data.hasOwnProperty('option') ? 'bg-red-50' : 'bg-sky-50'
+                } ${j === 1 ? 'mt-3' : ''}`"
               >
-                <a-icon
-                  slot="icon"
-                  type="question-circle-o"
-                  style="color: red"
-                />
-                <span
-                  class="-mr-3.5 -my-2.5 p-3 cursor-pointer"
-                  title="Cancel Leave"
+                <div class="log flex-grow text-sm" v-html="data.detail"></div>
+                <a-popconfirm
+                  v-if="
+                    ($auth.user.admin || $auth.user.manager) &&
+                    data.hasOwnProperty('option')
+                  "
+                  placement="left"
+                  title="Cancel this leave? Are you sure?"
+                  ok-text="Yes"
+                  cancel-text="No"
+                  @confirm="cancelLeave(logData, i)"
                 >
-                  <a-icon type="delete" theme="twoTone" two-tone-color="#f00" />
-                </span>
-              </a-popconfirm>
-            </div>
+                  <a-icon
+                    slot="icon"
+                    type="question-circle-o"
+                    style="color: red"
+                  />
+                  <span
+                    class="-mr-3.5 -my-2.5 p-3 cursor-pointer"
+                    title="Cancel Leave"
+                  >
+                    <a-icon type="delete" theme="twoTone" two-tone-color="#f00" />
+                  </span>
+                </a-popconfirm>
+              </div>
+            </template>
+          </template>
+          <template v-else>
+            <div class="flex rounded bg-gray-100 px-3.5 py-2.5 ml-3 mb-2 drop-shadow-md text-sm">Log not submitted.</div>
           </template>
         </div>
       </details>
@@ -96,8 +110,11 @@
 </template>
 
 <style scoped>
+details:not(:first-child) {
+  border-top: solid 1px #efefef;
+}
 summary::marker {
-  font-size: 80%;
+  font-size: 75%;
 }
 .log {
   margin-bottom: -0.5rem;
@@ -181,6 +198,9 @@ export default {
           newLog.push(userLog.leave);
         }
 
+        let entry = userLog.entry ? moment(userLog.entry).format('h:mm A') : null;
+        let exit = userLog.exit ? moment(userLog.exit).format('h:mm A') : null;
+
         if (userLog.leave) {
           leave =
             userLog.leave.option === 0
@@ -188,8 +208,13 @@ export default {
               : userLog.leave.option === 1
               ? '2nd Half'
               : 'Full day';
+
+          if (userLog.leave.option == 2) {
+            entry = null;
+            exit = null;
+          }
         }
-        return { _id: userLog._id, date: userLog.date, log: newLog, leave };
+        return { _id: userLog._id, date: userLog.date, log: newLog, leave, entry, exit };
       });
     },
   },
@@ -206,7 +231,6 @@ export default {
         })
         .then((res) => {
           if (res.status == 200) {
-            const leaveOption = this.userLogs[index].leave.option;
             const log = this.userLogs[index];
             if (log.work) {
               delete log.leave;
@@ -215,7 +239,6 @@ export default {
               this.userLogs.splice(index, 1);
             }
             this.getLeaveInfo();
-            // this.user.leaves_taken -= (leaveOption === 2 ? 1 : 0.5);
             this.user.leaves_taken = res.data;
             this.$auth.setUser({ ...this.$auth.user, leaves_taken: res.data });
           }
