@@ -63,39 +63,44 @@
           </div>
         </summary>
         <div>
-          <template v-for="(data, j) of logData.log">
-            <div
-              :key="j"
-              class="flex rounded px-3.5 py-2.5 ml-3 mb-2 drop-shadow-md"
-              :class="`${
-                data.hasOwnProperty('option') ? 'bg-red-50' : 'bg-sky-50'
-              } ${j === 1 ? 'mt-3' : ''}`"
-            >
-              <div class="log flex-grow text-sm" v-html="data.detail"></div>
-              <a-popconfirm
-                v-if="
-                  ($auth.user.admin || $auth.user.manager) &&
-                  data.hasOwnProperty('option')
-                "
-                placement="left"
-                title="Cancel this leave? Are you sure?"
-                ok-text="Yes"
-                cancel-text="No"
-                @confirm="cancelLeave(logData, i)"
+          <template v-if="logData.log.length > 0">
+            <template v-for="(data, j) of logData.log">
+              <div
+                :key="j"
+                class="flex rounded px-3.5 py-2.5 ml-3 mb-2 drop-shadow-md"
+                :class="`${
+                  data.hasOwnProperty('option') ? 'bg-red-50' : 'bg-sky-50'
+                } ${j === 1 ? 'mt-3' : ''}`"
               >
-                <a-icon
-                  slot="icon"
-                  type="question-circle-o"
-                  style="color: red"
-                />
-                <span
-                  class="-mr-3.5 -my-2.5 p-3 cursor-pointer"
-                  title="Cancel Leave"
+                <div class="log flex-grow text-sm" v-html="data.detail"></div>
+                <a-popconfirm
+                  v-if="
+                    ($auth.user.admin || $auth.user.manager) &&
+                    data.hasOwnProperty('option')
+                  "
+                  placement="left"
+                  title="Cancel this leave? Are you sure?"
+                  ok-text="Yes"
+                  cancel-text="No"
+                  @confirm="cancelLeave(logData, i)"
                 >
-                  <a-icon type="delete" theme="twoTone" two-tone-color="#f00" />
-                </span>
-              </a-popconfirm>
-            </div>
+                  <a-icon
+                    slot="icon"
+                    type="question-circle-o"
+                    style="color: red"
+                  />
+                  <span
+                    class="-mr-3.5 -my-2.5 p-3 cursor-pointer"
+                    title="Cancel Leave"
+                  >
+                    <a-icon type="delete" theme="twoTone" two-tone-color="#f00" />
+                  </span>
+                </a-popconfirm>
+              </div>
+            </template>
+          </template>
+          <template v-else>
+            <div class="flex rounded bg-gray-100 px-3.5 py-2.5 ml-3 mb-2 drop-shadow-md text-sm">Log not submitted.</div>
           </template>
         </div>
       </details>

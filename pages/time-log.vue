@@ -4,23 +4,16 @@
       <h3 class="m-0">
         Time Log ~
         <a-date-picker
-          style="font-size: inherit;"
+          style="font-size: inherit"
           :value="date"
-          :format="dateFormat"
-          @change="onDateChange(date, $event)"
+          :format="config.dateFormat"
+          @change="onDateChange($event)"
         >
-          <span class="cursor-pointer">{{ date.format(dateFormat) }}</span>
+          <span class="cursor-pointer">{{
+            date.format(config.dateFormat)
+          }}</span>
         </a-date-picker>
       </h3>
-      <div class="space-x-3">
-        <a-button
-          type="primary"
-          @click="updateHolidays($message.success, $message.error)"
-          style="height: 28px"
-        >
-          Update
-        </a-button>
-      </div>
     </div>
     <hr />
     <div class="table-wrapper" v-if="users && users.length > 0">
@@ -33,18 +26,30 @@
           </tr>
         </thead>
         <tbody>
-          <tr
-            v-for="user of users"
-            :key="user._id"
-            class="text-sm"
-          >
+          <tr v-for="(user, i) of users" :key="user._id" class="text-sm">
             <td>{{ user.short_name }}</td>
             <td class="text-center relative">
-              <a-time-picker style="width:100%;" use12-hours :value="logs[user.user_name] && logs[user.user_name].entry" :format="timeFormat" @change="onTimeChange(user.user_name, 'entry', $event)" />
+              <a-time-picker
+                class="text-green-600"
+                style="width: 100%"
+                ref="entry"
+                use12-hours
+                :value="logs[user.user_name] && logs[user.user_name].entry"
+                :format="config.timeFormat"
+                @openChange="handleClose('entry', i)"
+                @change="onTimeChange(user, 'entry', $event, i)"
+              />
             </td>
             <td class="text-center relative">
-              <a-time-picker style="width:100%;" use12-hours :value="logs[user.user_name] && logs[user.user_name].exit" :format="timeFormat" @change="onTimeChange(user.user_name, 'exit', $event)" />
-              <!-- <a-time-picker style="width:100%;" use12-hours format="h:mm a" @change="onChange(user)" /> -->
+              <a-time-picker
+                class="text-red-600"
+                style="width: 100%"
+                use12-hours
+                ref="exit"
+                :value="logs[user.user_name] && logs[user.user_name].exit"
+                :format="config.timeFormat"
+                @change="onTimeChange(user, 'exit', $event, i)"
+              />
             </td>
           </tr>
         </tbody>
@@ -87,10 +92,13 @@ export default {
   },
   data() {
     return {
-      dateFormat: 'DD-MMM-YYYY',
-      timeFormat: 'h:mm a',
-      date: moment('26-Apr-2022', this.dateFormat),
-      logs: {}
+      config: {
+        timeout: null,
+        dateFormat: 'DD-MMM-YYYY',
+        timeFormat: 'h:mm a',
+      },
+      date: moment(),
+      logs: {},
     };
   },
   computed: {
@@ -108,35 +116,75 @@ export default {
   methods: {
     moment,
 
-    onDateChange(holiday, moment) {
-      this.date = moment;
+    handleClose(type, index) {
+      return (open) => {
+        console.log(type, index, open);
+      };
     },
 
-    onTimeChange(user_name, type, moment) {
-      this.logs = {
-        ...this.logs,
-        [user_name]: {
-          [type]: moment.format(this.timeFormat)
-        }
-      };
+    onDateChange(moment) {
+      this.date = moment;
+      this.logs = {};
+    },
+
+    onTimeChange(user, type, moment, idx) {
+      const picker = this.$refs[type][idx];
+      picker.$refs.timePicker.setOpen(false);
+
+      clearTimeout(this.config.timeout);
+      if (!moment) {
+        delete this.logs[user.user_name][type];
+        this.logs = { ...this.logs };
+      } else {
+        this.logs = {
+          ...this.logs,
+          [user.user_name]: {
+            ...this.logs[user.user_name],
+            [type]: moment,
+          },
+        };
+      }
+
+      this.config.timeout = setTimeout(() => {
+        this.update(user, type, moment);
+      }, 3000);
     },
 
     getTimeLog(date) {
       this.$axios
         .get('/log/time', {
           params: {
-            date: date.format(this.dateFormat)
+            date: date.format(this.config.dateFormat),
           },
         })
         .then((res) => {
-          res.data.forEach(log => {
-            this.logs[log.user_name] = { entry: moment(log.entry), exit: moment(log.exit) };
+          res.data.forEach((log) => {
+            this.logs[log.user_name] = {
+              entry: log.entry ? moment(log.entry) : null,
+              exit: log.exit ? moment(log.exit) : null,
+              user_name: log.user_name,
+            };
           });
+          this.logs = { ...this.logs };
         })
         .catch((error) => {
           console.error(error);
         });
-    }
+    },
+
+    update(user, type, moment) {
+      this.$axios
+        .post('/log/time', {
+          date: this.date,
+          user_id: user._id,
+          user_name: user.user_name,
+          name: user.short_name,
+          [type]: moment,
+        })
+        .then((res) => {
+          this.$message[res.data.type](res.data.message);
+        });
+    },
   },
 };
 </script>
