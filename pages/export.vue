@@ -42,8 +42,14 @@ export default {
   methods: {
     exportTimeLog() {
       this.$axios
-        .post('/export/time-log')
+        .get('/export/time-log', {
+          // params: {
+          //   date: this.date.format(this.config.dateFormat)
+          // },
+          // responseType: 'blob'
+        })
         .then(res => {
+          window['log'] = res.data;
           console.log(res.data);
         })
     },
