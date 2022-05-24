@@ -15,7 +15,9 @@
           }}</span>
         </a-date-picker>
       </h3>
-      <a-button type="primary" @click="exportTimeLog()" style="height: 28px;"> Export </a-button>
+      <a-button type="primary" @click="exportTimeLog()" style="height: 28px">
+        Export
+      </a-button>
     </div>
     <hr />
     <div class="table-wrapper" v-if="users && users.length > 0">
@@ -31,7 +33,9 @@
         <tbody>
           <tr v-for="(user, i) of users" :key="user._id" class="text-sm">
             <td>
-              <NuxtLink :to="`/logs/${user.user_name}`">{{ user.short_name || user.name }}</NuxtLink>
+              <NuxtLink :to="`/logs/${user.user_name}`">{{
+                user.short_name || user.name
+              }}</NuxtLink>
             </td>
             <td class="text-center relative">
               <a-time-picker
@@ -56,7 +60,9 @@
                 @change="onTimeChange(user, 'exit', $event, i)"
               />
             </td>
-            <td class="text-center font-bold">{{logs[user.user_name] && logs[user.user_name].duration}}</td>
+            <td class="text-center font-bold">
+              {{ logs[user.user_name] && logs[user.user_name].duration }}
+            </td>
           </tr>
         </tbody>
       </table>
@@ -109,7 +115,7 @@ export default {
       config: {
         timeout: null,
         dateFormat: 'DD-MMM-YYYY',
-        timeFormat: 'h:mm:ss a',
+        timeFormat: 'h:mm a',
       },
       date: moment(),
       logs: {},
@@ -131,9 +137,7 @@ export default {
     moment,
 
     disabledDate(current) {
-      return (
-        current > moment()
-      );
+      return current > moment();
     },
 
     handleClose(type, index) {
@@ -182,7 +186,12 @@ export default {
             this.logs[log.user_name] = {
               entry: log.entry ? moment(log.entry) : null,
               exit: log.exit ? moment(log.exit) : null,
-              duration: (log.entry && log.exit) ? moment.utc(moment(log.exit).diff(moment(log.entry))).format('h:mm') : '',
+              duration:
+                log.entry && log.exit
+                  ? moment
+                      .utc(moment(log.exit).diff(moment(log.entry)))
+                      .format('h:mm')
+                  : '',
               user_name: log.user_name,
             };
           });
@@ -209,13 +218,22 @@ export default {
 
     exportTimeLog() {
       this.$axios
-        .post('/export/time-log', {
-          date: this.date.format(this.config.dateFormat)
+        .get('/export/time-log', {
+          params: {
+            date: this.date.format(this.config.dateFormat),
+          },
+          responseType: 'blob',
         })
-        .then(res => {
-          window['log'] = res.data;
+        .then((res) => {
+          // window['log'] = res.data;
           console.log(res.data);
-        })
+          // const url = window.URL.createObjectURL(new Blob([res.data]));
+          // const link = document.createElement('a');
+          // link.href = url;
+          // link.setAttribute('download', 'file.pdf'); //or any other extension
+          // document.body.appendChild(link);
+          // link.click();
+        });
     },
   },
 };
