@@ -96,7 +96,7 @@ export default {
   name: 'Logs',
   async asyncData({ redirect, $auth, $axios }) {
     await $axios
-      .get(`/user/${$auth.user.user_name}`)
+      .get(`user/${$auth.user.user_name}`)
       .then((res) => {
         if (!res.data.user.admin && !res.data.user.management) {
           return redirect(`/logs/${$auth.user.user_name}`)

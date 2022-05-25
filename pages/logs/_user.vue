@@ -142,7 +142,7 @@ export default {
   },
   async asyncData({ params, redirect, $auth, $axios }) {
     const content = await $axios
-      .get(`/log/${params.user}`)
+      .get(`log/${params.user}`)
       .then((res) => res.data)
       .catch((error) => {
         console.error(error);
@@ -224,7 +224,7 @@ export default {
 
     cancelLeave: function (data, index) {
       this.$axios
-        .delete('/leave/cancel', {
+        .delete('leave/cancel', {
           data: {
             leave_id: data._id,
           },

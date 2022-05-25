@@ -58,6 +58,25 @@ hr {
   border-top: solid 1px;
 }
 
+fieldset,
+fieldset legend {
+  all: revert !important;
+}
+
+fieldset {
+  border: solid 1px #dfe2e7 !important;
+  padding: 15px 20px 0 !important;
+  margin: 20px 0 !important;
+}
+
+fieldset legend {
+  font-size: 1rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 1px !important;
+  padding: 0 6px !important;
+  opacity: 0.6 !important;
+}
+
 .log {
   font-family: monospace;
 }

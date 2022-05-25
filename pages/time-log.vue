@@ -15,6 +15,9 @@
           }}</span>
         </a-date-picker>
       </h3>
+      <a-button type="primary" @click="exportTimeLog()" style="height: 28px">
+        Export
+      </a-button>
     </div>
     <hr />
     <div class="table-wrapper" v-if="users && users.length > 0">
@@ -24,16 +27,19 @@
             <th>Name</th>
             <th class="w-1/5 text-center">Entry</th>
             <th class="w-1/5 text-center">Exit</th>
+            <th class="w-1/5 text-center">Duration</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(user, i) of users" :key="user._id" class="text-sm">
             <td>
-              <NuxtLink :to="`/logs/${user.user_name}`">{{ user.short_name || user.name }}</NuxtLink>
+              <NuxtLink :to="`/logs/${user.user_name}`">{{
+                user.short_name || user.name
+              }}</NuxtLink>
             </td>
             <td class="text-center relative">
               <a-time-picker
-                class="text-green-600"
+                class="entry"
                 style="width: 100%"
                 ref="entry"
                 use12-hours
@@ -45,7 +51,7 @@
             </td>
             <td class="text-center relative">
               <a-time-picker
-                class="text-red-600"
+                class="exit"
                 style="width: 100%"
                 use12-hours
                 ref="exit"
@@ -53,6 +59,9 @@
                 :format="config.timeFormat"
                 @change="onTimeChange(user, 'exit', $event, i)"
               />
+            </td>
+            <td class="text-center font-bold">
+              {{ logs[user.user_name] && logs[user.user_name].duration }}
             </td>
           </tr>
         </tbody>
@@ -65,7 +74,15 @@
 .ant-calendar-picker {
   color: inherit;
 }
+.ant-time-picker.entry {
+  color: #16a34a;
+}
+.ant-time-picker.exit {
+  color: #dc2626;
+}
 .ant-time-picker >>> input {
+  font-weight: 600;
+  color: inherit;
   text-align: center;
   background-color: transparent;
   border: 0;
@@ -120,9 +137,7 @@ export default {
     moment,
 
     disabledDate(current) {
-      return (
-        current > moment()
-      );
+      return current > moment();
     },
 
     handleClose(type, index) {
@@ -161,7 +176,7 @@ export default {
 
     getTimeLog(date) {
       this.$axios
-        .get('/log/time', {
+        .get('log/time', {
           params: {
             date: date.format(this.config.dateFormat),
           },
@@ -171,6 +186,12 @@ export default {
             this.logs[log.user_name] = {
               entry: log.entry ? moment(log.entry) : null,
               exit: log.exit ? moment(log.exit) : null,
+              duration:
+                log.entry && log.exit
+                  ? moment
+                      .utc(moment(log.exit).diff(moment(log.entry)))
+                      .format('h:mm')
+                  : '',
               user_name: log.user_name,
             };
           });
@@ -183,8 +204,8 @@ export default {
 
     update(user, type, moment) {
       this.$axios
-        .post('/log/time', {
-          date: this.date,
+        .post('log/time', {
+          date: this.date.format(this.config.dateFormat),
           user_id: user._id,
           user_name: user.user_name,
           name: user.short_name,
@@ -192,6 +213,17 @@ export default {
         })
         .then((res) => {
           this.$message[res.data.type](res.data.message);
+        });
+    },
+
+    exportTimeLog() {
+      const date = this.date.format(this.config.dateFormat);
+      this.$axios
+        .get('export/time-log', {
+          params: { date },
+        })
+        .then((res) => {
+          window.open(this.$axios.defaults.baseURL + res.data);
         });
     },
   },

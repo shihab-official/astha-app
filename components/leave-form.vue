@@ -145,11 +145,11 @@ export default {
             }),
             leave: {
               option: values.leave.option ?? this.leave.option,
-              detail: values.leave.detail,
+              detail: `<p>${values.leave.detail}</p>`,
             },
           };
           this.$axios
-            .post('/leave/apply', leaveData)
+            .post('leave/apply', leaveData)
             .then((res) => {
               this.getLeaveInfo(leaveData);
               const user = this.$auth.user;
