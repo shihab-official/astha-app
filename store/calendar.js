@@ -92,7 +92,7 @@ export const actions = {
   getHolidays({ commit }) {
     commit('LOADING', true);
     this.$axios
-      .get('/holiday/all')
+      .get('holiday/all')
       .then((res) => {
         commit('SET_HOLIDAYS', res.data);
         commit('LOADING');
@@ -110,7 +110,7 @@ export const actions = {
 
   updateHolidays({ commit, state }, showSuccess, showError) {
     this.$axios
-      .put('/holiday/update', state._updatedHolidays)
+      .put('holiday/update', state._updatedHolidays)
       .then((res) => {
         showSuccess(res.data.message);
         commit('CLEAR_UPDATED_HOLIDAYS');
@@ -126,7 +126,7 @@ export const actions = {
 
   getLeaveInfo({ commit }) {
     this.$axios
-      .get('/leave/all')
+      .get('leave/all')
       .then((res) => {
         commit('SET_LEAVE_INFO', res.data);
         commit('LOADING');

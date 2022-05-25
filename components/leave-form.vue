@@ -149,7 +149,7 @@ export default {
             },
           };
           this.$axios
-            .post('/leave/apply', leaveData)
+            .post('leave/apply', leaveData)
             .then((res) => {
               this.getLeaveInfo(leaveData);
               const user = this.$auth.user;

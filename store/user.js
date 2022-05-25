@@ -77,7 +77,7 @@ export const actions = {
       commit('LOADING', true);
       dateRange = dateRange.map(m => m.toDate());
       this.$axios
-        .get('/log/by-dates', {
+        .get('log/by-dates', {
           params: {
             range: dateRange,
           },
@@ -98,7 +98,7 @@ export const actions = {
   getUsers({ commit }) {
     commit('LOADING', true);
     this.$axios
-      .get('/user/all')
+      .get('user/all')
       .then((res) => {
         commit('SET_USERS', res.data);
         commit('LOADING');
