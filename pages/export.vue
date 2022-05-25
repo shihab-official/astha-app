@@ -42,7 +42,7 @@ export default {
   methods: {
     exportTimeLog() {
       this.$axios
-        .get('/export/time-log', {
+        .get('export/time-log', {
           // params: {
           //   date: this.date.format(this.config.dateFormat)
           // },

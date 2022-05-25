@@ -193,7 +193,7 @@ export default {
   name: 'Profile',
   async asyncData({ $axios, $auth, params }) {
     const resData = await $axios
-      .get(`/user/${params.user || $auth.user.user_name}`)
+      .get(`user/${params.user || $auth.user.user_name}`)
       .then((res) => res.data)
       .catch((error) => console.error(error));
 
@@ -276,7 +276,7 @@ export default {
 
         if (!err) {
           this.$axios
-            .put('/user/update', userData)
+            .put('user/update', userData)
             .then((res) => {
               if (res.status == 200) {
                 if (this.currentUser) {

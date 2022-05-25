@@ -176,7 +176,7 @@ export default {
 
     getTimeLog(date) {
       this.$axios
-        .get('/log/time', {
+        .get('log/time', {
           params: {
             date: date.format(this.config.dateFormat),
           },
@@ -204,7 +204,7 @@ export default {
 
     update(user, type, moment) {
       this.$axios
-        .post('/log/time', {
+        .post('log/time', {
           date: this.date.format(this.config.dateFormat),
           user_id: user._id,
           user_name: user.user_name,
@@ -217,22 +217,13 @@ export default {
     },
 
     exportTimeLog() {
+      const date = this.date.format(this.config.dateFormat);
       this.$axios
-        .get('/export/time-log', {
-          params: {
-            date: this.date.format(this.config.dateFormat),
-          },
-          responseType: 'blob',
+        .get('export/time-log', {
+          params: { date },
         })
         .then((res) => {
-          // window['log'] = res.data;
-          console.log(res.data);
-          // const url = window.URL.createObjectURL(new Blob([res.data]));
-          // const link = document.createElement('a');
-          // link.href = url;
-          // link.setAttribute('download', 'file.pdf'); //or any other extension
-          // document.body.appendChild(link);
-          // link.click();
+          window.open(this.$axios.defaults.baseURL + res.data);
         });
     },
   },

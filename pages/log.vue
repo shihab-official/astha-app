@@ -87,7 +87,7 @@ export default {
       this.form.validateFields((err, { log }) => {
         if (!err) {
           this.$axios
-            .post('/log/post', {
+            .post('log/post', {
               user_id: this.$auth.user._id,
               user_name: this.$auth.user.user_name,
               name: this.$auth.user.short_name,
