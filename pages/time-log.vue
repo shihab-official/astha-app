@@ -194,7 +194,7 @@ export default {
       this.$axios
         .get('log/time', {
           params: {
-            date: date.format(this.config.dateFormat),
+            date: moment(date.format(this.config.dateFormat)).toDate(),
           },
         })
         .then((res) => {
