@@ -45,9 +45,14 @@
                 use12-hours
                 :value="logs[user.user_name] && logs[user.user_name].entry"
                 :format="config.timeFormat"
-                @openChange="handleClose('entry', i)"
-                @change="onTimeChange(user, 'entry', $event, i)"
-              />
+                :open="config.entry[i]"
+                @openChange="handleClose(user, 'entry', i, $event)"
+                @change="onTimeChange(user, 'entry', $event)"
+              >
+                <a-button slot="addon" size="small" type="primary" @click="handleClose(user, 'entry', i, false)">
+                  Ok
+                </a-button>
+              </a-time-picker>
             </td>
             <td class="text-center relative">
               <a-time-picker
@@ -57,8 +62,14 @@
                 ref="exit"
                 :value="logs[user.user_name] && logs[user.user_name].exit"
                 :format="config.timeFormat"
-                @change="onTimeChange(user, 'exit', $event, i)"
-              />
+                :open="config.exit[i]"
+                @openChange="handleClose(user, 'exit', i, $event)"
+                @change="onTimeChange(user, 'exit', $event)"
+              >
+                <a-button slot="addon" size="small" type="primary" @click="handleClose(user, 'exit', i, false)">
+                  Ok
+                </a-button>
+              </a-time-picker>
             </td>
             <td class="text-center font-bold">
               {{ logs[user.user_name] && logs[user.user_name].duration }}
@@ -113,9 +124,10 @@ export default {
   data() {
     return {
       config: {
-        timeout: null,
         dateFormat: 'DD-MMM-YYYY',
         timeFormat: 'h:mm a',
+        entry: [],
+        exit: []
       },
       date: moment(),
       logs: {},
@@ -128,10 +140,16 @@ export default {
     date: function (newDate, oldDate) {
       this.getTimeLog(newDate);
     },
+    users: function() {
+      const l = this.users.length;
+      this.config.entry = Array(l).fill(false);
+      this.config.exit = Array(l).fill(false);
+    }
   },
   mounted: function () {
     document.title = 'Time Log';
     this.getTimeLog(this.date);
+    window['config'] = this.config;
   },
   methods: {
     moment,
@@ -140,24 +158,22 @@ export default {
       return current > moment();
     },
 
-    handleClose(type, index) {
-      return (open) => {
-        console.log(type, index, open);
-      };
+    handleClose(user, type, index, open) {
+      this.config[type][index] = open;
+      this.config[type] = [...this.config[type]];
+      if (!open) {
+        const moment = this.$refs[type][index].value;
+        if (moment) {
+          this.update(user, type, moment);
+        }
+      }
     },
 
-    onDateChange(moment) {
-      this.date = moment;
-      this.logs = {};
-    },
-
-    onTimeChange(user, type, moment, idx) {
-      const picker = this.$refs[type][idx];
-
-      clearTimeout(this.config.timeout);
+    onTimeChange(user, type, moment) {
       if (!moment) {
         delete this.logs[user.user_name][type];
         this.logs = { ...this.logs };
+        this.update(user, type, moment);
       } else {
         this.logs = {
           ...this.logs,
@@ -167,11 +183,11 @@ export default {
           },
         };
       }
+    },
 
-      this.config.timeout = setTimeout(() => {
-        picker.$refs.timePicker.setOpen(false);
-        this.update(user, type, moment);
-      }, 3000);
+    onDateChange(moment) {
+      this.date = moment;
+      this.logs = {};
     },
 
     getTimeLog(date) {

@@ -2,18 +2,34 @@
   <div>
     <a-form :layout="formLayout" :form="form" @submit="submit">
       <div class="flex justify-between">
-        <a-form-item label="Date">
-          <a-range-picker
-            class="range-picker"
-            :format="dateFormat"
-            :disabled-date="disabledDate"
-            @change="onChange"
-            v-decorator="[
-              'dateRange',
-              { rules: [{ required: true, message: 'Please select dates.' }] },
-            ]"
-          />
-        </a-form-item>
+        <div class="flex">
+          <a-form-item label="Start Date">
+            <a-date-picker
+              style="width: 128px"
+              ref="startDate"
+              :format="dateFormat"
+              :disabled-date="disabledDate"
+              :allow-clear="false"
+              v-model="startDate"
+              placeholder="Start"
+              @change="onDateChange('start', $event)"
+            />
+          </a-form-item>
+          <a-form-item label="End Date" style="margin-left: 10px">
+            <a-date-picker
+              style="width: 128px;"
+              ref="endDate"
+              :format="dateFormat"
+              :disabled-date="disabledDate"
+              :allow-clear="false"
+              v-model="endDate"
+              placeholder="End"
+              :open="endOpen"
+              @openChange="handleEndOpenChange"
+              @change="onDateChange('end', $event)"
+            />
+          </a-form-item>
+        </div>
         <div class="text-center mb-auto">
           <div
             class="px-2 py-1 bg-red-100 border border-solid border-red-300 border-b-0 rounded-t-md"
@@ -63,12 +79,16 @@ import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'PersonalLeaveForm',
+  props: ['start'],
   data() {
     return {
+      startDate: this.start,
+      endDate: this.start,
+      endOpen: false,
       formLayout: 'vertical',
       form: this.$form.createForm(this),
       dateFormat: 'DD-MMM-YYYY',
-      dateRange: [],
+      dateRange: [this.start, this.start],
       leave: {
         option: 2,
         detail: '',
@@ -121,6 +141,11 @@ export default {
       return datesInRange;
     },
   },
+  created() {
+    setTimeout(() => {
+      this.endOpen = true;
+    }, 400);
+  },
   methods: {
     ...mapActions('calendar', ['getLeaveInfo']),
     disabledDate(current) {
@@ -131,6 +156,24 @@ export default {
     },
     onChange(range) {
       this.dateRange = range;
+    },
+    handleEndOpenChange(open) {
+      if (this.startDate) {
+        this.endOpen = open;
+      }
+    },
+    onDateChange(type, moment) {
+      let startDate = type == 'start' ? moment : this.$refs['startDate'].value;
+      let endDate = type == 'end' ? moment : this.$refs['endDate'].value;
+
+      if (endDate.isBefore(startDate)) {
+        this.startDate = endDate;
+        this.endDate = startDate;
+      } else {
+        this.startDate = startDate;
+        this.endDate = endDate;
+      }
+      this.onChange([this.startDate, this.endDate]);
     },
     submit(e) {
       e.preventDefault();

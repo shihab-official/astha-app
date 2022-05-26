@@ -112,9 +112,9 @@ export default {
     user: function () {
       return this.$auth.user || null;
     },
-    year: function() {
-      return (new Date()).getFullYear();
-    }
+    year: function () {
+      return new Date().getFullYear();
+    },
   },
   created() {
     if (this.$auth.loggedIn) {
@@ -130,6 +130,7 @@ export default {
   methods: {
     ...mapActions('calendar', ['getHolidays', 'getLeaveInfo']),
     ...mapActions('user', ['getLogsByDate', 'getUsers']),
+
     startTimer() {
       let t = setInterval(() => {
         if (new Date() > this.notificationTime) {
@@ -138,22 +139,34 @@ export default {
         }
       }, 300000);
     },
+
     notify() {
       if (!('Notification' in window)) {
         alert('This browser does not support desktop notification');
       } else if (Notification.permission === 'granted') {
-        const notification = new Notification('Please post work log.');
+        this.createNotification();
       } else if (Notification.permission !== 'denied') {
         Notification.requestPermission().then(function (permission) {
           if (permission === 'granted') {
-            const notification = new Notification('Please post work log.');
+            this.createNotification();
           }
         });
       }
-
       // At last, if the user has denied notifications, and you
       // want to be respectful there is no need to bother them anymore.
     },
+
+    createNotification() {
+      const notification = new Notification('Astha App', {
+        body: 'Please post work log of the day.',
+      });
+
+      notification.addEventListener('click', () => {
+        window.focus();
+        window.location = '/log';
+      });
+    },
+
     logout() {
       this.$auth.logout('google').then(() => {
         this.$router.push('/login');
