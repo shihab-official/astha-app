@@ -10,7 +10,7 @@
       :footer="false"
       @cancel="closeLeaveForm"
     >
-      <leave-form :start="leaveStart" @leaveApplied="leaveApplied"></leave-form>
+      <leave-form v-if="leaveFormVisible" :start="leaveStart" @leaveApplied="leaveApplied"></leave-form>
     </a-modal>
     <a-calendar
       :key="calendarKey"

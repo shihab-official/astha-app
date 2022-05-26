@@ -56,7 +56,7 @@
             <a-tag
               v-if="logData.leave"
               :color="logData.leave == 'Full day' ? 'red' : 'orange'"
-              class="pointer-events-none ml-auto"
+              class="pointer-events-none" style="margin-left: 1rem;"
             >
               {{ logData.leave }}
             </a-tag>
