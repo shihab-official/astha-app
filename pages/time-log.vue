@@ -4,7 +4,14 @@
       <h3 class="m-0">
         Time Log ~
         <a-date-picker
-          style="font-size: inherit;color: rgb(0 0 0 / 65%);padding: 0 8px;box-shadow: 0 0 1px 1px #d9d9d9 inset;border-radius: 4px;background-color: rgb(0 0 0 / 2%);"
+          style="
+            font-size: inherit;
+            color: rgb(0 0 0 / 65%);
+            padding: 0 8px;
+            box-shadow: 0 0 1px 1px #d9d9d9 inset;
+            border-radius: 4px;
+            background-color: rgb(0 0 0 / 2%);
+          "
           :disabled-date="disabledDate"
           :value="date"
           :format="config.dateFormat"
@@ -49,7 +56,12 @@
                 @openChange="handleClose(user, 'entry', i, $event)"
                 @change="onTimeChange(user, 'entry', $event)"
               >
-                <a-button slot="addon" size="small" type="primary" @click="handleClose(user, 'entry', i, false)">
+                <a-button
+                  slot="addon"
+                  size="small"
+                  type="primary"
+                  @click="handleClose(user, 'entry', i, false)"
+                >
                   Ok
                 </a-button>
               </a-time-picker>
@@ -66,7 +78,12 @@
                 @openChange="handleClose(user, 'exit', i, $event)"
                 @change="onTimeChange(user, 'exit', $event)"
               >
-                <a-button slot="addon" size="small" type="primary" @click="handleClose(user, 'exit', i, false)">
+                <a-button
+                  slot="addon"
+                  size="small"
+                  type="primary"
+                  @click="handleClose(user, 'exit', i, false)"
+                >
                   Ok
                 </a-button>
               </a-time-picker>
@@ -104,6 +121,8 @@
 </style>
 
 <script>
+import { generateXLSX } from '~/helpers/xlsx-helper';
+import { saveFile } from '~/helpers/file-helper';
 import moment from 'moment';
 import { mapGetters } from 'vuex';
 
@@ -127,7 +146,7 @@ export default {
         dateFormat: 'DD-MMM-YYYY',
         timeFormat: 'h:mm a',
         entry: [],
-        exit: []
+        exit: [],
       },
       date: moment(),
       logs: {},
@@ -140,11 +159,11 @@ export default {
     date: function (newDate, oldDate) {
       this.getTimeLog(newDate);
     },
-    users: function() {
+    users: function () {
       const l = this.users.length;
       this.config.entry = Array(l).fill(false);
       this.config.exit = Array(l).fill(false);
-    }
+    },
   },
   mounted: function () {
     document.title = 'Time Log';
@@ -234,12 +253,19 @@ export default {
 
     exportTimeLog() {
       const date = this.date.format(this.config.dateFormat);
+      const downloadBlob = this.downloadBlob;
+
       this.$axios
         .get('export/time-log', {
           params: { date },
         })
         .then((res) => {
-          window.open(this.$axios.defaults.baseURL + res.data);
+          if (res.status === 200) {
+            const blob = new Blob([generateXLSX(res.data)], {
+              type: 'application/octet-stream',
+            });
+            saveFile(blob, `${date}.xlsx`);
+          }
         });
     },
   },
