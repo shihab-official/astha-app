@@ -252,19 +252,16 @@ export default {
     },
 
     exportTimeLog() {
-      const date = this.date.format(this.config.dateFormat);
-      const downloadBlob = this.downloadBlob;
-
       this.$axios
         .get('export/time-log', {
-          params: { date },
+          params: { date: this.date.startOf('day').toDate() },
         })
         .then((res) => {
           if (res.status === 200) {
             const blob = new Blob([generateXLSX(res.data)], {
               type: 'application/octet-stream',
             });
-            saveFile(blob, `${date}.xlsx`);
+            saveFile(blob, `${this.date.format(this.config.dateFormat)}.xlsx`);
           }
         });
     },
