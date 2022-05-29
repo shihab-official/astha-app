@@ -4,7 +4,7 @@
       <h3 class="m-0">
         Time Log ~
         <a-date-picker
-          style="font-size: inherit"
+          style="font-size: inherit;color: rgb(0 0 0 / 65%);padding: 0 8px;box-shadow: 0 0 1px 1px #d9d9d9 inset;border-radius: 4px;background-color: rgb(0 0 0 / 2%);"
           :disabled-date="disabledDate"
           :value="date"
           :format="config.dateFormat"
