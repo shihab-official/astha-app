@@ -10,7 +10,8 @@ const generateXLSX = function(timeLogs) {
   const users = Array.from(new Set(logs.map((d) => d.name)));
   const header1 = [],
     header2 = [],
-    rowValues = [];
+    rowValues = [],
+    cols = [];
 
   users.forEach((user, i) => {
     if (i > 0) {
@@ -21,6 +22,8 @@ const generateXLSX = function(timeLogs) {
     header1.push('');
     header2.push('Entry');
     header2.push('Exit');
+
+    cols.push(...[{wch: 'auto'}, {wch: 'auto'}, {wch: 1}]);
   });
 
   logs.forEach((l, i) => {
@@ -32,6 +35,8 @@ const generateXLSX = function(timeLogs) {
   });
 
   const worksheet = xlsx.utils.aoa_to_sheet([header1, header2, rowValues]);
+  worksheet['!cols'] = cols;
+
   for (let i in worksheet) {
     if (typeof worksheet[i] != 'object') continue;
     let cell = xlsx.utils.decode_cell(i);
@@ -69,6 +74,10 @@ const generateXLSX = function(timeLogs) {
             bold: true,
             color: { rgb: 'dc2626' },
           },
+        };
+      } else if (cell.c % 3 == 2) {
+        worksheet[i].s = {
+          wch: 3,
         };
       }
     }

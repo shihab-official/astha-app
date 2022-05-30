@@ -123,7 +123,7 @@
 <script>
 import { generateXLSX } from '~/helpers/xlsx-helper';
 import { saveFile } from '~/helpers/file-helper';
-import moment from 'moment';
+import moment from '~/extensions/moment';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -213,7 +213,7 @@ export default {
       this.$axios
         .get('log/time', {
           params: {
-            date: moment(date.format(this.config.dateFormat)).toDate(),
+            date: date.startOfDay(),
           },
         })
         .then((res) => {
@@ -240,11 +240,11 @@ export default {
     update(user, type, moment) {
       this.$axios
         .post('log/time', {
-          date: this.date.format(this.config.dateFormat),
+          date: this.date.startOfDay(),
           user_id: user._id,
           user_name: user.user_name,
           name: user.short_name,
-          [type]: moment,
+          [type]: moment ? new Date(`${this.date.format(this.config.dateFormat)} ${moment.format('h:mm:ss a')}`) : null,
         })
         .then((res) => {
           this.$message[res.data.type](res.data.message);
@@ -254,7 +254,9 @@ export default {
     exportTimeLog() {
       this.$axios
         .get('export/time-log', {
-          params: { date: this.date.startOf('day').toDate() },
+          params: {
+            date: this.date.startOfDay()
+          },
         })
         .then((res) => {
           if (res.status === 200) {
