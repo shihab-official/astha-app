@@ -24,7 +24,7 @@ const generateXLSX = function (timeLogs) {
     header2.push('Entry');
     header2.push('Exit');
 
-    cols.push(...[{ wch: 'auto' }, { wch: 'auto' }, { wch: 1 }]);
+    cols.push(...[{ wch: 8 }, { wch: 8 }, { wch: 1 }]);
     merge.push(
       ...[{
         s: { r: 0, c: 3 * (i + 1) - 3 },
@@ -87,10 +87,6 @@ const generateXLSX = function (timeLogs) {
             bold: true,
             color: { rgb: 'dc2626' },
           },
-        };
-      } else if (cell.c % 3 == 2) {
-        worksheet[i].s = {
-          wch: 3,
         };
       }
     }
