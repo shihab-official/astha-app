@@ -1,7 +1,7 @@
 import * as xlsx from 'sheetjs-style';
 import moment from 'moment';
 
-const generateXLSX = function(timeLogs) {
+const generateXLSX = function (timeLogs) {
   const timeLog = timeLogs[0];
   const date = moment(timeLog.date).format('DD-MMM-YYYY');
   const workbook = xlsx.utils.book_new();
@@ -10,7 +10,9 @@ const generateXLSX = function(timeLogs) {
   const users = Array.from(new Set(logs.map((d) => d.name)));
   const header1 = [],
     header2 = [],
-    rowValues = [];
+    rowValues = [],
+    cols = [],
+    merge = [];
 
   users.forEach((user, i) => {
     if (i > 0) {
@@ -21,6 +23,17 @@ const generateXLSX = function(timeLogs) {
     header1.push('');
     header2.push('Entry');
     header2.push('Exit');
+
+    cols.push(...[{ wch: 'auto' }, { wch: 'auto' }, { wch: 1 }]);
+    merge.push(
+      ...[{
+        s: { r: 0, c: 3 * (i + 1) - 3 },
+        e: { r: 0, c: 3 * (i + 1) - 2 }
+      }, {        
+        s: { r: 0, c: 3 * (i + 1) - 1 },
+        e: { r: 2, c: 3 * (i + 1) - 1 }
+      }]
+    );
   });
 
   logs.forEach((l, i) => {
@@ -32,6 +45,11 @@ const generateXLSX = function(timeLogs) {
   });
 
   const worksheet = xlsx.utils.aoa_to_sheet([header1, header2, rowValues]);
+  cols.pop();
+  merge.pop();
+  worksheet['!cols'] = cols;
+  worksheet['!merges'] = merge;
+
   for (let i in worksheet) {
     if (typeof worksheet[i] != 'object') continue;
     let cell = xlsx.utils.decode_cell(i);
@@ -70,6 +88,10 @@ const generateXLSX = function(timeLogs) {
             color: { rgb: 'dc2626' },
           },
         };
+      } else if (cell.c % 3 == 2) {
+        worksheet[i].s = {
+          wch: 3,
+        };
       }
     }
   }
@@ -82,6 +104,6 @@ const generateXLSX = function(timeLogs) {
     view[i] = binary.charCodeAt(i) & 0xff; //convert to octet
   }
   return buffer;
-}
+};
 
 export { generateXLSX };
