@@ -226,7 +226,7 @@ export default {
       return this.user.leaves_taken + (this.user.leave_offset || 0);
     },
     remainingLeaves() {
-      return this.personalLeaves - this.totalLeaves;
+      return parseFloat((this.personalLeaves - this.totalLeaves).toFixed(2));
     },
     currentUser() {
       return !(
