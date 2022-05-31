@@ -209,6 +209,12 @@ export default {
       this.logs = {};
     },
 
+    duration(start, end) {
+      return !start || !end
+        ? ''
+        : moment.utc(moment(end).diff(moment(start))).format('h:mm');
+    },
+
     getTimeLog(date) {
       this.$axios
         .get('log/time', {
@@ -221,12 +227,7 @@ export default {
             this.logs[log.user_name] = {
               entry: log.entry ? moment(log.entry) : null,
               exit: log.exit ? moment(log.exit) : null,
-              duration:
-                log.entry && log.exit
-                  ? moment
-                      .utc(moment(log.exit).diff(moment(log.entry)))
-                      .format('h:mm')
-                  : '',
+              duration: this.duration(log.entry, log.exit),
               user_name: log.user_name,
             };
           });
@@ -238,13 +239,22 @@ export default {
     },
 
     update(user, type, moment) {
+      const log = this.logs[user.user_name];
+      log.duration = this.duration(log.entry, log.exit);
+
       this.$axios
         .post('log/time', {
           date: this.date.startOfDay(),
           user_id: user._id,
           user_name: user.user_name,
           name: user.short_name,
-          [type]: moment ? new Date(`${this.date.format(this.config.dateFormat)} ${moment.format('h:mm:ss a')}`) : null,
+          [type]: moment
+            ? new Date(
+                `${this.date.format(this.config.dateFormat)} ${moment.format(
+                  'h:mm:ss a'
+                )}`
+              )
+            : null,
         })
         .then((res) => {
           this.$message[res.data.type](res.data.message);
@@ -255,7 +265,7 @@ export default {
       this.$axios
         .get('export/time-log', {
           params: {
-            date: this.date.startOfDay()
+            date: this.date.startOfDay(),
           },
         })
         .then((res) => {
