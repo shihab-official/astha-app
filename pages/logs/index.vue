@@ -132,7 +132,7 @@ export default {
     this.scrollToToday();
   },
   updated: function () {
-    // this.scrollToToday();
+    this.scrollToToday();
   },
   methods: {
     moment,
