@@ -81,6 +81,10 @@ fieldset legend {
   font-family: monospace;
 }
 
+.log > .work-log ul, .log > .work-log ol {
+  padding-left: 20px;
+}
+
 input[readonly],
 .ant-input.readonly {
   background-color: rgb(0 0 0 / 2%);
