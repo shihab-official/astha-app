@@ -129,17 +129,21 @@ export default {
   },
   mounted: function () {
     document.title = 'Work Update';
+    this.scrollToToday();
   },
   updated: function () {
-    if (this.$refs?.today?.length > 0) {
-      this.$refs.tableWrapper.scrollTo(this.$refs.today[0].offsetLeft - 120, 0);
-    }
+    // this.scrollToToday();
   },
   methods: {
     moment,
     ...mapActions('user', ['getLogsByDate']),
     disabledDate: function (current) {
       return current && current.day() > 4;
+    },
+    scrollToToday() {
+      if (this.$refs?.today?.length > 0) {
+        this.$refs.tableWrapper.scrollTo(this.$refs.today[0].offsetLeft - 120, 0);
+      }
     },
     onChange: function (date) {
       this.date = date;
