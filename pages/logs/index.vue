@@ -1,8 +1,14 @@
 <template>
   <div>
-    <div class="flex justify-between items-center">
+    <div class="flex items-center">
       <h3 class="m-0">Summary</h3>
-      <div class="week-picker ant-input relative">
+      <!-- <a-input
+        @change="search"
+        @keyup="search"
+        placeholder="Search"
+        :allowClear="true"
+      /> -->
+      <div class="week-picker ant-input relative" style="margin-left: 10px; margin-right: auto;">
         <div class="flex justify-between">
           <span>{{dateRange[0].format(dateFormat)}}</span>
           <strong>&#129042;</strong>
@@ -18,6 +24,13 @@
           @change="onChange"
         />
       </div>
+      <a-input
+        style="width: 150px;"
+        @change="search"
+        @keyup="search"
+        placeholder="Search"
+        :allowClear="true"
+      />
     </div>
     <hr />
     <div class="table-wrapper" ref="tableWrapper" v-if="users.length > 0">
@@ -60,11 +73,11 @@
           <tr v-for="user of users" :key="user.user_name">
             <template v-if="user.show_log">
               <td class="sticky left-0 bg-orange-50">
-                <NuxtLink :to="`/logs/${user.user_name}`">{{ user.short_name || user.name }}</NuxtLink>
+                <NuxtLink v-highlight="key" :to="`/logs/${user.user_name}`">{{ user.short_name || user.name }}</NuxtLink>
               </td>
               <template v-for="date of datesInRange">
                 <td :key="date.code" :class="`relative ${date.weekend ? 'weekend text-gray-400 bg-gray-50' : '' }`">
-                  <user-log :log="logs[`${user.user_name}_${date.code}`]"></user-log>
+                  <user-log :date="date.formatted" :log="logs[`${user.user_name}_${date.code}`]"></user-log>
                 </td>
               </template>
             </template>
@@ -84,6 +97,9 @@ td {
 }
 td:not(:first-child, .weekend) {
   min-width: 400px;
+}
+.weekend {
+  min-width: 93px;
 }
 </style>
 
@@ -109,7 +125,13 @@ export default {
   data() {
     return {
       date: moment(),
+      key: '',
     };
+  },
+  watch: {
+    key: function (newKey, oldKey) {
+      this.findUsers(newKey);
+    },
   },
   computed: {
     ...mapGetters('user', ['loading', 'users', 'logs']),
@@ -136,13 +158,20 @@ export default {
   },
   methods: {
     moment,
-    ...mapActions('user', ['getLogsByDate']),
+    ...mapActions('user', ['findUsers', 'getLogsByDate']),
+    search(e) {
+      this.key = e.target.value;
+    },
     disabledDate: function (current) {
       return current && current.day() > 4;
     },
     scrollToToday() {
-      if (this.$refs?.today?.length > 0) {
-        this.$refs.tableWrapper.scrollTo(this.$refs.today[0].offsetLeft - 120, 0);
+      if (this.$refs.tableWrapper) {
+        if (this.$refs.today?.length > 0) {
+          this.$refs.tableWrapper.scrollTo(this.$refs.today[0].offsetLeft - 120, 0);
+        } else {
+          this.$refs.tableWrapper.scrollTo(2000, 0);
+        }
       }
     },
     onChange: function (date) {
@@ -151,6 +180,17 @@ export default {
     },
     showLogs: function () {
       this.getLogsByDate(this.dateRange);
+    },
+  },
+  directives: {
+    highlight: {
+      componentUpdated: (el, { value }) => {
+        const regex = new RegExp(value, 'gi');
+        const response = el.innerText.replace(regex, function (str) {
+          return !str ? str : `<span class="search-highlight">${str}</span>`;
+        });
+        el.innerHTML = response;
+      },
     },
   },
 };
