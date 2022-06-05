@@ -79,6 +79,7 @@ fieldset legend {
 
 .log {
   font-family: monospace;
+  word-break: break-word;
 }
 
 .log > .work-log ul, .log > .work-log ol {
