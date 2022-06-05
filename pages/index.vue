@@ -44,7 +44,7 @@
             <div v-for="item of getData(date)" :key="(item.title || item.name)" class="mb-0.5">
               <div
                 v-if="item.type === 'holiday'"
-                class="leave text-right text-green-600"
+                class="holiday text-right text-green-600"
               >
                 {{ item.title }}
               </div>
@@ -131,7 +131,7 @@
   padding: 4px 6px;
   bottom: 0;
 }
-.ant-fullcalendar-fullscreen .leave:before {
+.ant-fullcalendar-fullscreen .holiday:before {
   content: '';
   position: absolute;
   top: 0;
@@ -140,6 +140,7 @@
   left: 0;
   background-color: rgb(0 255 0 / 5%);
   z-index: 0;
+  pointer-events: none;
 }
 .ant-fullcalendar-fullscreen .ant-tag:before,
 .ant-fullcalendar-fullscreen .ant-tag:after {
