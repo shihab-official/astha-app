@@ -97,14 +97,11 @@
   .ant-fullcalendar-value {
   font-weight: 500;
   color: #1890ff;
-  display: flex;
-  justify-content: space-between;
   text-shadow: 0 0 5px rgb(0 0 0 / 10%);
 }
 .ant-fullcalendar-fullscreen
-  >>> .ant-fullcalendar-today
-  .ant-fullcalendar-value:before {
-  content: 'Today';
+  >>> .ant-fullcalendar-today {
+  background-color: rgb(24 143 255 / 5%);
 }
 .ant-fullcalendar-fullscreen >>> .ant-fullcalendar-content {
   flex-grow: 1;
