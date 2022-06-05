@@ -32,7 +32,7 @@
                       </NuxtLink>
                     </div>
                   </template>
-                  <BirthdayIcon class="w-4 cursor-pointer" :fill="{cake_bottom: '#23b9ff'}"></BirthdayIcon>
+                  <BirthdayIcon class="w-4 drop-shadow cursor-pointer" :fill="{cake_bottom: '#23b9ff'}"></BirthdayIcon>
                 </a-popover>
               </div>
               <span class="ml-auto">
