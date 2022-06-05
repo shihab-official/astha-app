@@ -98,9 +98,7 @@
               <NuxtLink
                 v-if="$auth.user.admin || $auth.user.manager"
                 v-highlight="key"
-                :to="`/profile${
-                  user.user_name === $auth.user.user_name ? '' : `/${user.user_name}`
-                }`"
+                :to="`/profile${user.user_name === $auth.user.user_name ? '' : `/${user.user_name}`}`"
                 >{{ user.short_name }}</NuxtLink
               >
               <template v-else>{{ user.short_name }}</template>

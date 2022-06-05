@@ -19,26 +19,49 @@
       :disabled-date="disabledDate"
       @select="onDateSelection"
     >
-      <div slot="dateCellRender" slot-scope="value" class="events">
-        <div v-for="item of getData(value)" :key="(item.title || item.name)" class="mb-0.5">
-          <div
-            v-if="item.type === 'holiday'"
-            class="leave text-right text-green-600"
-          >
-            {{ item.title }}
+      <div slot="dateFullCellRender" slot-scope="date" class="events">
+        <div class="ant-fullcalendar-date">
+          <div class="ant-fullcalendar-value">
+            <div class="flex">
+              <div v-if="getBirthdays(date).length > 0">
+                <a-popover title="Birthday">
+                  <template #content>
+                    <div v-for="(user, i) of getBirthdays(date)" :key="user.user_name" :class="{'mt-1': (i > 0)}">
+                      <NuxtLink class="font-medium" :to="`/profile${user.user_name === $auth.user.user_name ? '' : `/${user.user_name}`}`">
+                        {{ user.short_name || user.name }}
+                      </NuxtLink>
+                    </div>
+                  </template>
+                  <BirthdayIcon class="w-4 cursor-pointer" fill="#f18500"></BirthdayIcon>
+                </a-popover>
+              </div>
+              <span class="ml-auto">
+                {{date.format('DD')}}
+              </span>
+            </div>
           </div>
-          <template v-else>
-            <a-tag
-              color="red"
-              style="margin-right: 0"
-              :style="{cursor: ($auth.user.admin || $auth.user.manager ? 'pointer' : '')}"
-              @click="userLog($event, item.user_name)"
-              :class="`w-full relative ${item.option === 0 ? 'option-0 text-right' : item.option === 1 ? 'option-1 text-left' : 'text-center'}`"
-              :title="`${item.option === 0 ? '1st half - ' : item.option === 1 ? '2nd half - ' : ''}`"
-            >
-              <span class="relative z-10">{{ item.name }}</span>
-            </a-tag>
-          </template>
+          <div class="ant-fullcalendar-content">
+            <div v-for="item of getData(date)" :key="(item.title || item.name)" class="mb-0.5">
+              <div
+                v-if="item.type === 'holiday'"
+                class="leave text-right text-green-600"
+              >
+                {{ item.title }}
+              </div>
+              <template v-else>
+                <a-tag
+                  color="red"
+                  style="margin-right: 0"
+                  :style="{cursor: ($auth.user.admin || $auth.user.manager ? 'pointer' : '')}"
+                  @click="userLog($event, item.user_name)"
+                  :class="`w-full relative ${item.option === 0 ? 'option-0 text-right' : item.option === 1 ? 'option-1 text-left' : 'text-center'}`"
+                  :title="`${item.option === 0 ? '1st half - ' : item.option === 1 ? '2nd half - ' : ''}`"
+                >
+                  <span class="relative z-10">{{ item.name }}</span>
+                </a-tag>
+              </template>
+            </div>
+          </div>
         </div>
       </div>
     </a-calendar>
@@ -158,8 +181,11 @@
 import moment from 'moment';
 import { mapGetters } from 'vuex';
 
+import BirthdayIcon from '~/components/icons/BirthdayIcon.vue'
+
 export default {
   name: 'Home',
+  components: { BirthdayIcon },
   data() {
     return {
       leaveStart: null,
@@ -172,6 +198,7 @@ export default {
   },
   computed: {
     ...mapGetters('calendar', ['holidays', 'leaves']),
+    ...mapGetters('user', ['users']),
     approvedHolidays: function () {
       return this.holidays
         .filter((holiday) => holiday.approved)
@@ -194,9 +221,14 @@ export default {
       );
     },
 
-    getData(value) {
+    getBirthdays(dateObj) {
+      const date = dateObj.format('DD-MMM');
+      return this.users.filter(user => user.dob === date);
+    },
+
+    getData(dateObj) {
       const items = [];
-      const date = value.format('DD-MMM-YYYY');
+      const date = dateObj.format('DD-MMM-YYYY');
       const holiday = this.holidays.find(
         (holiday) => holiday.approved && holiday.date === date
       );
