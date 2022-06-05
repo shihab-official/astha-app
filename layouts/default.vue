@@ -98,7 +98,6 @@ export default {
     return {
       dateFormat: 'DD-MMM-YYYY',
       dateRange: [moment().startOf('week'), moment().endOf('week')],
-      time: new Date(),
     };
   },
   computed: {
@@ -136,6 +135,7 @@ export default {
         if (new Date() > this.notificationTime) {
           this.notify();
           clearInterval(t);
+          t = null;
         }
       }, 300000);
     },
