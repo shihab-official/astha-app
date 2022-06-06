@@ -46,7 +46,8 @@
         >
           <div class="inline-flex">
             {{ logData.date }}
-            <div class="text-sm ml-4" style="line-height:24px;"> 
+            <TimerIcon v-if="logData.late" class="w-5 ml-4" title="Late" />
+            <div v-if="logData.entry || logData.exit" class="text-sm ml-4" style="line-height:24px;"> 
               <span class="text-green-600">{{logData.entry || ''}}</span>
               <template v-if="logData.exit">
                 &ndash;
@@ -125,8 +126,11 @@ summary::marker {
 import moment from 'moment';
 import { mapGetters, mapActions } from 'vuex';
 
+import TimerIcon from '~/components/icons/TimerIcon.vue';
+
 export default {
   name: 'UserLogs',
+  components: { TimerIcon },
   middleware({ params, $auth, redirect }) {
     if (!$auth.loggedIn) {
       return redirect(`/login`);
@@ -214,7 +218,7 @@ export default {
             exit = null;
           }
         }
-        return { _id: userLog._id, date: userLog.date, log: newLog, leave, entry, exit };
+        return { _id: userLog._id, date: userLog.date, log: newLog, leave, late: userLog.late, entry, exit };
       });
     },
   },

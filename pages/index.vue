@@ -182,7 +182,7 @@
 import moment from 'moment';
 import { mapGetters } from 'vuex';
 
-import BirthdayIcon from '~/components/icons/BirthdayIcon.vue'
+import BirthdayIcon from '~/components/icons/BirthdayIcon.vue';
 
 export default {
   name: 'Home',
