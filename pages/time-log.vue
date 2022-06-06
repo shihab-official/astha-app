@@ -32,6 +32,7 @@
         <thead>
           <tr>
             <th>Name</th>
+            <th class="w-1 text-center">Late</th>
             <th class="w-1/5 text-center">Entry</th>
             <th class="w-1/5 text-center">Exit</th>
             <th class="w-1/5 text-center">Duration</th>
@@ -43,6 +44,14 @@
               <NuxtLink :to="`/logs/${user.user_name}`">{{
                 user.short_name || user.name
               }}</NuxtLink>
+            </td>
+            <td class="text-center">
+              <a-switch
+                :checked="logs[user.user_name] && logs[user.user_name].late"
+                checked-children=" Yes "
+                un-checked-children=" No "
+                @change="onLateEntryChange(user, $event)"
+              />
             </td>
             <td class="text-center relative">
               <a-time-picker
@@ -168,7 +177,6 @@ export default {
   mounted: function () {
     document.title = 'Time Log';
     this.getTimeLog(this.date);
-    window['config'] = this.config;
   },
   methods: {
     moment,
@@ -209,6 +217,24 @@ export default {
       this.logs = {};
     },
 
+    onLateEntryChange(user, late) {
+      this.logs = {
+        ...this.logs,
+        [user.user_name]: {
+          ...this.logs[user.user_name],
+          late
+        },
+      };
+
+      this.submit({
+        date: this.date.startOfDay(),
+        user_id: user._id,
+        user_name: user.user_name,
+        name: user.short_name,
+        late
+      });
+    },
+
     duration(start, end) {
       return !start || !end
         ? ''
@@ -225,6 +251,7 @@ export default {
         .then((res) => {
           res.data.forEach((log) => {
             this.logs[log.user_name] = {
+              late: log.late || false,
               entry: log.entry ? moment(log.entry) : null,
               exit: log.exit ? moment(log.exit) : null,
               duration: this.duration(log.entry, log.exit),
@@ -242,23 +269,25 @@ export default {
       const log = this.logs[user.user_name];
       log.duration = this.duration(log.entry, log.exit);
 
-      this.$axios
-        .post('log/time', {
-          date: this.date.startOfDay(),
-          user_id: user._id,
-          user_name: user.user_name,
-          name: user.short_name,
-          [type]: moment
-            ? new Date(
-                `${this.date.format(this.config.dateFormat)} ${moment.format(
-                  'h:mm:ss a'
-                )}`
-              )
-            : null,
-        })
-        .then((res) => {
-          this.$message[res.data.type](res.data.message);
-        });
+      this.submit({
+        date: this.date.startOfDay(),
+        user_id: user._id,
+        user_name: user.user_name,
+        name: user.short_name,
+        [type]: moment
+          ? new Date(
+              `${this.date.format(this.config.dateFormat)} ${moment.format(
+                'h:mm:ss a'
+              )}`
+            )
+          : null,
+      });
+    },
+
+    submit(payload) {
+      this.$axios.post('log/time', payload).then((res) => {
+        this.$message[res.data.type](res.data.message);
+      });
     },
 
     exportTimeLog() {
