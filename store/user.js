@@ -96,10 +96,15 @@ export const actions = {
     }
   },
 
-  getUsers({ commit }) {
+  getUsers({ commit }, active) {
     commit('LOADING', true);
+    let params = {};
+    if (active === false) {
+      params = {active};
+    }
+
     this.$axios
-      .get('user/all')
+      .get('user/all', {params})
       .then((res) => {
         commit(
           'SET_USERS',

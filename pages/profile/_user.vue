@@ -143,6 +143,18 @@
             />
           </a-form-item>
         </div>
+
+          <hr style="border-color: rgb(255 0 0 / 31%);margin: 5px 0 20px;">
+          <div class="flex flex-wrap -mx-3">
+            <a-form-item label="Active" style="width: 100px">
+              <a-switch
+                :default-checked="user.active"
+                v-decorator="['active']"
+                checked-children=" Yes "
+                un-checked-children=" No "
+              />
+            </a-form-item>
+          </div>
       </fieldset>
       <a-form-item v-if="currentUser || currentUserIsAdminOrManager" style="padding: 0">
         <a-button type="primary" html-type="submit"> Save </a-button>
@@ -245,7 +257,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('user', ['setUser']),
+    ...mapActions('user', ['setUser', 'getUsers']),
     disabledDate(current) {
       return current < moment().startOf('year') || current > moment().endOf('year');
     },
@@ -283,6 +295,7 @@ export default {
                   this.$auth.setUser({ ...this.$auth.user, ...userData });
                 }
                 this.setUser(userData);
+                this.getUsers();
                 this.$message[res.data.type](res.data.message);
               }
             })
