@@ -45,7 +45,7 @@
           class="font-semibold text-slate-700 hover:opacity-75 cursor-pointer pb-1"
         >
           <div class="inline-flex">
-            {{ logData.date }}
+            <span :class="{'text-gray-400': logData.log.length === 0}">{{ logData.date }}</span>
             <TimerIcon v-if="logData.late" class="w-5 ml-4" title="Late" />
             <div v-if="logData.entry || logData.exit" class="text-sm ml-4" style="line-height:24px;"> 
               <span class="text-green-600">{{logData.entry || ''}}</span>

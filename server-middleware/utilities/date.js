@@ -3,6 +3,9 @@ const moment = require('moment');
 module.exports = {
   // Find the all the dates between two dates.
   getDatesInRange: function ({ start, end, format, holidays }) {
+    start = moment(start.format('DD-MMM-YYYY'));
+    end = moment(end.format('DD-MMM-YYYY'));
+
     const dates = [],
       diff = end.diff(start, 'days');
 

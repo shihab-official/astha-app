@@ -46,8 +46,7 @@
 </template>
 
 <script>
-import moment from 'moment';
-// import { VueEditor } from 'vue2-editor';
+import moment from '~/extensions/moment';
 
 export default {
   name: 'LogWorkUpdate',
@@ -91,7 +90,7 @@ export default {
               user_id: this.$auth.user._id,
               user_name: this.$auth.user.user_name,
               name: this.$auth.user.short_name,
-              date: log.date.startOf('day'),
+              date: log.date.startOfDay(),
               work: { detail: log.detail },
             })
             .then((res) => {

@@ -274,6 +274,7 @@ export default {
         user_id: user._id,
         user_name: user.user_name,
         name: user.short_name,
+        late: log.late,
         [type]: moment
           ? new Date(
               `${this.date.format(this.config.dateFormat)} ${moment.format(
