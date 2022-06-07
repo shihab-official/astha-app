@@ -1,14 +1,8 @@
 <template>
   <div>
     <div class="flex items-baseline">
+      <Back v-if="$auth.user.admin" to="/logs" />
       <h3 class="m-0">{{ heading }}</h3>
-      <NuxtLink
-        v-if="$auth.user.admin"
-        to="/logs/"
-        class="ml-5 text-gray-400 text-sm"
-      >
-        <a-icon type="double-left" class="text-xs" /> Back to Logs
-      </NuxtLink>
       <span
         v-if="currentUser"
         class="leave-stat ml-auto px-2 flex items-center font-medium border border-solid border-red-500 relative rounded overflow-hidden"
@@ -157,8 +151,8 @@ export default {
       user: content.user,
       heading:
         params.user === $auth.user.user_name
-          ? 'My Board'
-          : content.user.short_name,
+          ? 'My Logs'
+          : `${content.user.short_name}'s Logs`,
       userLogs: content.logs,
     };
   },
