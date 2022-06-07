@@ -1,12 +1,10 @@
 <template>
   <div>
     <div class="flex items-baseline">
-      <NuxtLink to="/users" class="mr-5 text-gray-400 text-sm">
-        <a-icon type="double-left" class="text-xs" /> Back to Users
-      </NuxtLink>
+      <Back to="/users" />
       <h3 class="m-0">
         <template v-if="currentUser">My Profile</template>
-        <template v-else>Profile of {{ user.short_name }}</template>
+        <template v-else>{{ user.short_name }}'s Profile</template>
       </h3>
       <NuxtLink
         :to="`/logs/${user.user_name}`"
