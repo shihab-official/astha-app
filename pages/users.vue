@@ -1,8 +1,17 @@
 <template>
   <div>
-    <div class="flex justify-between items-center">
+    <div class="flex items-center">
       <h3 class="m-0">Users</h3>
-      <div class="flex">
+      <a-select
+        v-if="$auth.user.admin || $auth.user.manager"
+        style="width: 120px; margin-left: 10px;"
+        :value="filter"
+        @change="handleChange"
+      >
+        <a-select-option value="active">Active</a-select-option>
+        <a-select-option value="inactive">Inactive</a-select-option>
+      </a-select>
+      <div class="flex ml-auto">
         <a-input
           @change="search"
           @keyup="search"
@@ -146,13 +155,6 @@
 </template>
 
 <style scoped>
-/* td {
-  white-space: normal;
-} */
-/* td.sticky {
-  width: 1%;
-  min-width: 1%;
-} */
 tr.self:after {
   background-color: rgb(0 220 130 / 6%);
 }
@@ -173,7 +175,11 @@ export default {
       },
       modalVisible: false,
       key: '',
+      filter: 'active'
     };
+  },
+  beforeMount: function() {
+    this.getUsers();
   },
   mounted: function () {
     document.title = 'Users';
@@ -191,6 +197,12 @@ export default {
   },
   methods: {
     ...mapActions('user', ['findUsers', 'getUsers']),
+
+    handleChange(value) {
+      this.filter = value;
+      this.getUsers(value === 'active');
+    },
+
     search(e) {
       this.key = e.target.value;
     },
@@ -217,11 +229,6 @@ export default {
               this.modalVisible = false;
               this.form.resetFields();
               this.getUsers();
-              // if (this.$route.path === '/') {
-              //   this.$router.go();
-              // } else {
-              //   this.$router.push('/users');
-              // }
             })
             .catch((error) => {
               console.error(error);
