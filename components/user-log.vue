@@ -22,7 +22,7 @@
   .log >>> p,
   .log >>> ul,
   .log >>> ol {
-    margin-bottom: 5px;
+    margin-bottom: 7px;
   }
   .leave {
     margin: 0;
