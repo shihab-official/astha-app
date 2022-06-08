@@ -164,15 +164,15 @@ td {
 }
 
 .table-wrapper > table.hover > tbody > tr:hover > td {
-  text-shadow: 1px 1px 3px rgb(0 0 0 / 25%);
+  text-shadow: 0 0 1px rgb(0 0 0 / 20%);
 }
 
 .table-wrapper>table.hover>tbody>tr:hover>td svg {
-  filter: drop-shadow(1px 1px 3px rgb(0 0 0 / 25%));
+  filter: drop-shadow(0 0 1px rgb(0 0 0 / 20%));
 }
 
 .table-wrapper > table.hover > tbody > tr:hover:after {
-  background-color: rgb(0 160 220 / 6%);
+  background-color: rgb(0 160 220 / 3%);
 }
 
 th.sticky {

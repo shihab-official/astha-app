@@ -1,8 +1,6 @@
 <template>
-  <div v-if="log" class="log relative text-xs" :class="[cssClasses[leave], {empty: emptyCell}]">
-    <template v-if="emptyCell">
-      <span class="text-lg">{{date}}</span>
-    </template>
+  <div class="log relative text-xs" :class="[cssClasses[leave], {empty: emptyCell}]">
+    <span v-if="emptyCell" class="text-lg">{{date}}</span>
     <template v-else>
       <template v-if="leave !== 2">
         <div v-if="log.work" class="work-log" v-html="log.work.detail"></div>
@@ -19,10 +17,12 @@
   }
   .log>div {
     width: 100%;
-    padding: 5px 9px;
+    padding: 5px 8px 0;
   }
-  .log>div.work-log {
-    padding-bottom: 0;
+  .log >>> p,
+  .log >>> ul,
+  .log >>> ol {
+    margin-bottom: 5px;
   }
   .leave {
     margin: 0;
@@ -39,6 +39,9 @@
     top: 0;
     left: 0;
   }
+  .leave-log {
+    box-shadow: 0 0 0 1px #ff9b9b inset;
+  }
   .empty {
     font-weight: 600;
     color: #eb4848;
@@ -52,6 +55,7 @@
     right: 0;
     bottom: 0;
     left: 0;
+    box-shadow: 0 0 0 1px #f1d470 inset;
   }
 </style>
 
@@ -66,10 +70,10 @@ export default {
   },
   computed: {
     leave: function() {
-      return this.log.leave && this.log.leave.option;
+      return this.log?.leave && this.log?.leave.option;
     },
     emptyCell: function() {
-      return !this.log.work?.detail && !this.log.leave?.detail;
+      return !this.log?.work?.detail && !this.log?.leave?.detail;
     }
   }
 };

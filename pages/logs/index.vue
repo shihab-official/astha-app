@@ -28,13 +28,13 @@
         style="width: 150px;"
         @change="search"
         @keyup="search"
-        placeholder="Search"
+        placeholder="Search by name"
         :allowClear="true"
       />
     </div>
     <hr />
     <div class="table-wrapper" ref="tableWrapper" v-if="users.length > 0">
-      <table>
+      <table class="hover">
         <thead>
           <tr>
             <th
@@ -76,7 +76,7 @@
                 <NuxtLink v-highlight="key" :to="`/logs/${user.user_name}`">{{ user.short_name || user.name }}</NuxtLink>
               </td>
               <template v-for="date of datesInRange">
-                <td :key="date.code" :class="`relative ${date.weekend ? 'weekend text-gray-400 bg-gray-50' : '' }`">
+                <td :key="date.code" :class="`relative ${date.today ? 'today' : ''} ${date.weekend ? 'weekend text-gray-400 bg-gray-50' : '' }`">
                   <user-log :date="date.formatted" :log="logs[`${user.user_name}_${date.code}`]"></user-log>
                 </td>
               </template>
@@ -100,6 +100,11 @@ td:not(:first-child, .weekend) {
 }
 .weekend {
   min-width: 93px;
+}
+.today .empty,
+.today ~ td .empty, 
+.weekend .empty {
+  display: none;
 }
 </style>
 
