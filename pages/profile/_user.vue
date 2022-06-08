@@ -148,6 +148,7 @@
           </a-form-item>
         </div>
 
+        <template v-if="currentUserIsAdmin">
           <hr style="border-color: rgb(255 0 0 / 31%);margin: 5px 0 20px;">
           <div class="flex flex-wrap -mx-3">
             <a-form-item label="Active" style="width: 100px">
@@ -159,6 +160,7 @@
               />
             </a-form-item>
           </div>
+        </template>
       </fieldset>
       <a-form-item v-if="currentUser || currentUserIsAdminOrManager" style="padding: 0">
         <a-button type="primary" html-type="submit"> Save </a-button>

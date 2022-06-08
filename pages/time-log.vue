@@ -62,6 +62,7 @@
                 :value="logs[user.user_name] && logs[user.user_name].entry"
                 :format="config.timeFormat"
                 :open="config.entry[i]"
+                @keyup.enter="onTimeChange(user, 'entry', $event)"
                 @openChange="handleClose(user, 'entry', i, $event)"
                 @change="onTimeChange(user, 'entry', $event)"
               >
@@ -84,6 +85,7 @@
                 :value="logs[user.user_name] && logs[user.user_name].exit"
                 :format="config.timeFormat"
                 :open="config.exit[i]"
+                @keyup.enter="onTimeChange(user, 'exit', $event)"
                 @openChange="handleClose(user, 'exit', i, $event)"
                 @change="onTimeChange(user, 'exit', $event)"
               >
@@ -274,7 +276,7 @@ export default {
         user_id: user._id,
         user_name: user.user_name,
         name: user.short_name,
-        late: log.late,
+        late: log.late || false,
         [type]: moment
           ? new Date(
               `${this.date.format(this.config.dateFormat)} ${moment.format(
