@@ -7,8 +7,8 @@
 <style scoped>
   .back:hover {
     color: #fff;
-    background-color: #b175e7;
-    border-color: #b175e7;
+    background-color: #27c584;
+    border-color: #27c584;
   }
 </style>
 

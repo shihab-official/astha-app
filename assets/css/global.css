@@ -44,12 +44,9 @@ body {
   max-width: 1200px;
 }
 
-a {
-  color: #7300dc;
-}
-
 a:hover {
-  color: #b175e7;
+  color: #27c584;
+  /* color: #00dc82; */
 }
 
 hr {
