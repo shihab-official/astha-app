@@ -87,6 +87,8 @@
             <th class="w-28">Mobile</th>
             <th class="w-72">Email</th>
             <template v-if="$auth.user.admin">
+              <th class="w-1">Leave Offset</th>
+              <th class="w-1">Leaves Taken</th>
               <th class="w-1">Show Log</th>
               <th class="w-1">Manager</th>
               <th class="w-1">Team Lead</th>
@@ -117,6 +119,8 @@
             <td v-highlight="key">{{ user.mobile }}</td>
             <td v-highlight="key">{{ user.email }}</td>
             <template v-if="$auth.user.admin">
+              <td class="text-center">{{ user.leave_offset }}</td>
+              <td class="text-center">{{ user.leaves_taken }}</td>
               <td
                 class="text-center"
                 :class="user.show_log ? 'text-green-500' : 'text-red-500'"
