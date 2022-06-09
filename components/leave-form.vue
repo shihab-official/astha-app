@@ -76,6 +76,7 @@
 <script>
 import { getDatesInRange } from '~/server-middleware/utilities/date';
 import { mapGetters, mapActions } from 'vuex';
+import moment from 'moment';
 
 export default {
   name: 'PersonalLeaveForm',
@@ -151,7 +152,8 @@ export default {
     disabledDate(current) {
       return (
         current.day() > 4 ||
-        this.approvedHolidays.includes(current.format('DD-MMM-YYYY'))
+        this.approvedHolidays.includes(current.format('DD-MMM-YYYY')) ||
+        current.isBefore(moment().add(-2, 'week'))
       );
     },
     onChange(range) {

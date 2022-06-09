@@ -321,8 +321,10 @@ export default {
     },
 
     onDateSelection(date) {
-      this.leaveStart = date;
-      this.leaveFormVisible = true;
+      if (!date.isBefore(moment().add(-2, 'week'))) {
+        this.leaveStart = date;
+        this.leaveFormVisible = true;
+      }
     },
 
     leaveApplied() {
