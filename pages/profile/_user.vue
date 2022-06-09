@@ -100,9 +100,9 @@
                 ]"
               />
             </a-form-item>
-            <a-form-item label="Leaves Taken (Total)" class="w-1/3">
+            <a-form-item label="Leaves Taken" class="w-1/3">
               <div class="ant-input leave-input disabled">
-                {{totalLeaves}}
+                {{user.leaves_taken}}
               </div>
             </a-form-item>
             <a-form-item :label="remainingLeaves >= 0 ? 'Remaining' : 'Extra'" class="w-1/3">
