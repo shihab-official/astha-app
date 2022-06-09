@@ -54,50 +54,54 @@
               />
             </td>
             <td class="text-center relative">
-              <a-time-picker
-                class="entry"
-                style="width: 100%"
-                ref="entry"
-                use12-hours
-                :value="logs[user.user_name] && logs[user.user_name].entry"
-                :format="config.timeFormat"
-                :open="config.entry[i]"
-                @keyup.enter="onTimeChange(user, 'entry', $event)"
-                @openChange="handleClose(user, 'entry', i, $event)"
-                @change="onTimeChange(user, 'entry', $event)"
-              >
-                <a-button
-                  slot="addon"
-                  size="small"
-                  type="primary"
-                  @click="handleClose(user, 'entry', i, false)"
+              <form @keyup.enter="handleClose(user, 'entry', i, false)">
+                <a-time-picker
+                  class="entry"
+                  style="width: 100%"
+                  ref="entry"
+                  use12-hours
+                  :value="logs[user.user_name] && logs[user.user_name].entry"
+                  :format="config.timeFormat"
+                  :open="config.entry[i]"
+                  :getPopupContainer="parentContainer"
+                  @openChange="handleClose(user, 'entry', i, $event)"
+                  @change="onTimeChange(user, 'entry', $event)"
                 >
-                  Ok
-                </a-button>
-              </a-time-picker>
+                  <a-button
+                    slot="addon"
+                    size="small"
+                    type="primary"
+                    @click="handleClose(user, 'entry', i, false)"
+                  >
+                    Ok
+                  </a-button>
+                </a-time-picker>
+              </form>
             </td>
             <td class="text-center relative">
-              <a-time-picker
-                class="exit"
-                style="width: 100%"
-                use12-hours
-                ref="exit"
-                :value="logs[user.user_name] && logs[user.user_name].exit"
-                :format="config.timeFormat"
-                :open="config.exit[i]"
-                @keyup.enter="onTimeChange(user, 'exit', $event)"
-                @openChange="handleClose(user, 'exit', i, $event)"
-                @change="onTimeChange(user, 'exit', $event)"
-              >
-                <a-button
-                  slot="addon"
-                  size="small"
-                  type="primary"
-                  @click="handleClose(user, 'exit', i, false)"
+              <form @keyup.enter="handleClose(user, 'exit', i, false)">
+                <a-time-picker
+                  class="exit"
+                  style="width: 100%"
+                  use12-hours
+                  ref="exit"
+                  :value="logs[user.user_name] && logs[user.user_name].exit"
+                  :format="config.timeFormat"
+                  :open="config.exit[i]"
+                  :getPopupContainer="parentContainer"
+                  @openChange="handleClose(user, 'exit', i, $event)"
+                  @change="onTimeChange(user, 'exit', $event)"
                 >
-                  Ok
-                </a-button>
-              </a-time-picker>
+                  <a-button
+                    slot="addon"
+                    size="small"
+                    type="primary"
+                    @click="handleClose(user, 'exit', i, false)"
+                  >
+                    Ok
+                  </a-button>
+                </a-time-picker>
+              </form>
             </td>
             <td class="text-center font-bold">
               {{ logs[user.user_name] && logs[user.user_name].duration }}
@@ -185,6 +189,10 @@ export default {
 
     disabledDate(current) {
       return current > moment();
+    },
+
+    parentContainer(triggerNode) {
+      return triggerNode.parentNode;
     },
 
     handleClose(user, type, index, open) {
