@@ -110,7 +110,7 @@ td:not(:first-child, .weekend) {
 
 <script>
 import moment from 'moment';
-import { getDatesInRange } from '~/server-middleware/utilities/date';
+import { getDatesInRange } from '~/helpers/date-helper';
 import { mapGetters, mapActions } from "vuex";
 
 export default {

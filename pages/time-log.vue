@@ -138,7 +138,8 @@
 <script>
 import { generateXLSX } from '~/helpers/xlsx-helper';
 import { saveFile } from '~/helpers/file-helper';
-import moment from '~/extensions/moment';
+import moment from 'moment';
+import { startOfDay } from '~/helpers/date-helper';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -232,16 +233,16 @@ export default {
         ...this.logs,
         [user.user_name]: {
           ...this.logs[user.user_name],
-          late
+          late,
         },
       };
 
       this.submit({
-        date: this.date.startOfDay(),
+        date: startOfDay(this.date),
         user_id: user._id,
         user_name: user.user_name,
         name: user.short_name,
-        late
+        late,
       });
     },
 
@@ -255,7 +256,7 @@ export default {
       this.$axios
         .get('log/time', {
           params: {
-            date: date.startOfDay(),
+            date: startOfDay(date),
           },
         })
         .then((res) => {
@@ -280,7 +281,7 @@ export default {
       log.duration = this.duration(log.entry, log.exit);
 
       this.submit({
-        date: this.date.startOfDay(),
+        date: startOfDay(this.date),
         user_id: user._id,
         user_name: user.user_name,
         name: user.short_name,
@@ -305,7 +306,7 @@ export default {
       this.$axios
         .get('export/time-log', {
           params: {
-            date: this.date.startOfDay(),
+            date: startOfDay(this.date),
           },
         })
         .then((res) => {

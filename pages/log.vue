@@ -46,7 +46,8 @@
 </template>
 
 <script>
-import moment from '~/extensions/moment';
+import moment from 'moment';
+import { startOfDay } from '~/helpers/date-helper';
 
 export default {
   name: 'LogWorkUpdate',
@@ -63,7 +64,15 @@ export default {
         toolbar: [
           ['Undo', 'Redo'],
           ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript'],
-          ['NumberedList', 'BulletedList', '-', 'Indent', 'Outdent', '-', 'Blockquote'],
+          [
+            'NumberedList',
+            'BulletedList',
+            '-',
+            'Indent',
+            'Outdent',
+            '-',
+            'Blockquote',
+          ],
           ['Link', 'Unlink'],
         ],
       },
@@ -90,7 +99,7 @@ export default {
               user_id: this.$auth.user._id,
               user_name: this.$auth.user.user_name,
               name: this.$auth.user.short_name,
-              date: log.date.startOfDay(),
+              date: startOfDay(log.date),
               work: { detail: log.detail },
             })
             .then((res) => {
