@@ -1,6 +1,12 @@
-const moment = require('moment');
+import moment from 'moment';
 
-module.exports = {
+export default {
+  startOfDay: (date, format) => {
+    return new Date(
+      (format ? moment(date, format) : moment(date)).format('YYYY-MM-DD') +
+        ' 00:00:00'
+    );
+  },
   // Find the all the dates between two dates.
   getDatesInRange: function ({ start, end, format, holidays }) {
     start = moment(start.format('DD-MMM-YYYY'));

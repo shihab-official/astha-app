@@ -74,9 +74,9 @@
 </template>
 
 <script>
-import { getDatesInRange } from '~/server-middleware/utilities/date';
 import { mapGetters, mapActions } from 'vuex';
 import moment from 'moment';
+import { startOfDay, getDatesInRange } from '~/helpers/date-helper';
 
 export default {
   name: 'PersonalLeaveForm',
@@ -130,8 +130,8 @@ export default {
       let datesInRange = [];
       if (this.dateRange.length > 0) {
         datesInRange = getDatesInRange({
-          start: this.dateRange[0].startOf('day'),
-          end: this.dateRange[1].startOf('day'),
+          start: startOfDay(this.dateRange[0]),
+          end: startOfDay(this.dateRange[1]),
           format: this.dateFormat,
           holidays: this.holidays,
         });
