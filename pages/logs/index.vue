@@ -72,7 +72,7 @@
         <tbody>
           <tr v-for="user of users" :key="user.user_name">
             <template v-if="user.show_log">
-              <td class="sticky left-0 bg-orange-50">
+              <td class="sticky left-0 bg-orange-50" style="min-width: 100px;">
                 <NuxtLink v-highlight="key" :to="`/logs/${user.user_name}`">{{ user.short_name || user.name }}</NuxtLink>
               </td>
               <template v-for="date of datesInRange">
@@ -173,7 +173,7 @@ export default {
     scrollToToday() {
       if (this.$refs.tableWrapper) {
         if (this.$refs.today?.length > 0) {
-          this.$refs.tableWrapper.scrollTo(this.$refs.today[0].offsetLeft - 120, 0);
+          this.$refs.tableWrapper.scrollTo(this.$refs.today[0].offsetLeft - 100, 0);
         } else {
           this.$refs.tableWrapper.scrollTo(2000, 0);
         }
