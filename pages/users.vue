@@ -81,7 +81,7 @@
       <table class="hover">
         <thead>
           <tr>
-            <th class="sticky left-0 bg-orange-100">Name</th>
+            <th class="sticky left-0 bg-orange-100" style="min-width: 100px;">Name</th>
             <th>Full Name</th>
             <th class="w-1">Date of Birth</th>
             <th class="w-28">Mobile</th>

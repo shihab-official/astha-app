@@ -38,6 +38,7 @@
         <thead>
           <tr>
             <th
+              style="min-width: 100px;"
               class="text-center sticky left-0 bg-orange-100 p-0 cursor-pointer"
               @click="showLogs()"
             >
@@ -70,18 +71,20 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="user of users" :key="user.user_name">
+          <template v-for="user of users">
             <template v-if="user.show_log">
-              <td class="sticky left-0 bg-orange-50" style="min-width: 100px;">
-                <NuxtLink v-highlight="key" :to="`/logs/${user.user_name}`">{{ user.short_name || user.name }}</NuxtLink>
-              </td>
-              <template v-for="date of datesInRange">
-                <td :key="date.code" :class="`relative ${date.today ? 'today' : ''} ${date.weekend ? 'weekend text-gray-400 bg-gray-50' : '' }`">
-                  <user-log :date="date.formatted" :log="logs[`${user.user_name}_${date.code}`]"></user-log>
+              <tr :key="user.user_name">
+                <td class="sticky left-0 bg-orange-50">
+                  <NuxtLink v-highlight="key" :to="`/logs/${user.user_name}`">{{ user.short_name || user.name }}</NuxtLink>
                 </td>
-              </template>
+                <template v-for="date of datesInRange">
+                  <td :key="date.code" :class="`relative ${date.today ? 'today' : ''} ${date.weekend ? 'weekend text-gray-400 bg-gray-50' : '' }`">
+                    <user-log :date="date.formatted" :log="logs[`${user.user_name}_${date.code}`]"></user-log>
+                  </td>
+                </template>
+              </tr>
             </template>
-          </tr>
+          </template>
         </tbody>
       </table>
     </div>
