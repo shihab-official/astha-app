@@ -94,6 +94,11 @@ module.exports = {
       google: {
         clientId: GOOGLE_CLIENT_ID,
         codeChallengeMethod: '',
+        token: {
+          property: 'access_token',
+          type: 'Bearer',
+          maxAge: 604800,
+        },
         scope: ['profile', 'email'],
         responseType: 'token id_token',
       },
