@@ -12,7 +12,7 @@ pipelines:
             script:             
               - npm install
               - npm run build
-              # - npm run generate
+              - npm run generate
               # - cd ./dist
               #- apt-get update
               #- apt-get install zip -y
