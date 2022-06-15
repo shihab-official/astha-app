@@ -29,7 +29,7 @@ pipelines:
                 AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
                 AWS_DEFAULT_REGION: 'ap-southeast-1'
                 S3_BUCKET: 'astha-app-vuejs'
-                # ACL: "public-read"
+                ACL: "public-read"
                 LOCAL_PATH: 'dist'
             # - pipe: atlassian/aws-cloudfront-invalidate:0.1.1
             #   variables:
