@@ -10,7 +10,7 @@ pipelines:
             caches:
               - node
             script:             
-              - npm ci
+              - npm install
               - npm run build
               # - npm run generate
               # - cd ./dist
