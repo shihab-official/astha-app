@@ -8,6 +8,7 @@
     "analyze": "nuxt build --analyze",
     "dev": "nuxt",
     "build": "nuxt build",
+    "deploy": "aws s3 sync ./dist s3://astha-app-vuejs",
     "start": "nuxt start",
     "generate": "nuxt generate",
     "heroku-postbuild": "nuxt generate"
