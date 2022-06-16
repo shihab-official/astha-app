@@ -1,4 +1,4 @@
-# Astha App
+# Astha Team App
 
 ## Build Setup
 
