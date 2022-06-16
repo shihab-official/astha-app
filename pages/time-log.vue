@@ -45,67 +45,74 @@
                 user.short_name || user.name
               }}</NuxtLink>
             </td>
-            <td class="text-center">
-              <a-switch
-                :checked="logs[user.user_name] && logs[user.user_name].late"
-                checked-children=" Yes "
-                un-checked-children=" No "
-                @change="onLateEntryChange(user, $event)"
-              />
-            </td>
-            <td class="text-center relative">
-              <form @keyup.enter="handleClose(user, 'entry', i, false)">
-                <a-time-picker
-                  class="entry"
-                  style="width: 100%"
-                  ref="entry"
-                  use12-hours
-                  :value="logs[user.user_name] && logs[user.user_name].entry"
-                  :format="config.timeFormat"
-                  :open="config.entry[i]"
-                  :getPopupContainer="parentContainer"
-                  @openChange="handleClose(user, 'entry', i, $event)"
-                  @change="onTimeChange(user, 'entry', $event)"
-                >
-                  <a-button
-                    slot="addon"
-                    size="small"
-                    type="primary"
-                    @click="handleClose(user, 'entry', i, false)"
+            <template v-if="logs[user.user_name] && logs[user.user_name].leave">
+              <td class="text-center relative font-bold bg-red-50 text-red-500" style="height: 45px;" colspan="100%">
+                On leave
+              </td>
+            </template>
+            <template v-else>
+              <td class="text-center">
+                <a-switch
+                  :checked="logs[user.user_name] && logs[user.user_name].late"
+                  checked-children=" Yes "
+                  un-checked-children=" No "
+                  @change="onLateEntryChange(user, $event)"
+                />
+              </td>
+              <td class="text-center relative">
+                <form @keyup.enter="handleClose(user, 'entry', i, false)">
+                  <a-time-picker
+                    class="entry"
+                    style="width: 100%"
+                    ref="entry"
+                    use12-hours
+                    :value="logs[user.user_name] && logs[user.user_name].entry"
+                    :format="config.timeFormat"
+                    :open="config.entry[i]"
+                    :getPopupContainer="parentContainer"
+                    @openChange="handleClose(user, 'entry', i, $event)"
+                    @change="onTimeChange(user, 'entry', $event)"
                   >
-                    Ok
-                  </a-button>
-                </a-time-picker>
-              </form>
-            </td>
-            <td class="text-center relative">
-              <form @keyup.enter="handleClose(user, 'exit', i, false)">
-                <a-time-picker
-                  class="exit"
-                  style="width: 100%"
-                  use12-hours
-                  ref="exit"
-                  :value="logs[user.user_name] && logs[user.user_name].exit"
-                  :format="config.timeFormat"
-                  :open="config.exit[i]"
-                  :getPopupContainer="parentContainer"
-                  @openChange="handleClose(user, 'exit', i, $event)"
-                  @change="onTimeChange(user, 'exit', $event)"
-                >
-                  <a-button
-                    slot="addon"
-                    size="small"
-                    type="primary"
-                    @click="handleClose(user, 'exit', i, false)"
+                    <a-button
+                      slot="addon"
+                      size="small"
+                      type="primary"
+                      @click="handleClose(user, 'entry', i, false)"
+                    >
+                      Ok
+                    </a-button>
+                  </a-time-picker>
+                </form>
+              </td>
+              <td class="text-center relative">
+                <form @keyup.enter="handleClose(user, 'exit', i, false)">
+                  <a-time-picker
+                    class="exit"
+                    style="width: 100%"
+                    use12-hours
+                    ref="exit"
+                    :value="logs[user.user_name] && logs[user.user_name].exit"
+                    :format="config.timeFormat"
+                    :open="config.exit[i]"
+                    :getPopupContainer="parentContainer"
+                    @openChange="handleClose(user, 'exit', i, $event)"
+                    @change="onTimeChange(user, 'exit', $event)"
                   >
-                    Ok
-                  </a-button>
-                </a-time-picker>
-              </form>
-            </td>
-            <td class="text-center font-bold">
-              {{ logs[user.user_name] && logs[user.user_name].duration }}
-            </td>
+                    <a-button
+                      slot="addon"
+                      size="small"
+                      type="primary"
+                      @click="handleClose(user, 'exit', i, false)"
+                    >
+                      Ok
+                    </a-button>
+                  </a-time-picker>
+                </form>
+              </td>
+              <td class="text-center font-bold">
+                {{ logs[user.user_name] && logs[user.user_name].duration }}
+              </td>
+            </template>
           </tr>
         </tbody>
       </table>
@@ -263,6 +270,7 @@ export default {
           res.data.forEach((log) => {
             this.logs[log.user_name] = {
               late: log.late || false,
+              leave: log.leave?.option === 2,
               entry: log.entry ? moment(log.entry) : null,
               exit: log.exit ? moment(log.exit) : null,
               duration: this.duration(log.entry, log.exit),
