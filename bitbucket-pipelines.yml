@@ -1,0 +1,39 @@
+image: node:16
+
+pipelines:
+ branches:
+    main:
+      - step:
+            name: Build
+            size: 2x 
+            # image: asthaitdevops/node-zip
+            caches:
+              - node
+            script:             
+              - npm install
+              - npm run build
+              - npm run generate
+              # - cd ./dist
+              #- apt-get update
+              #- apt-get install zip -y
+              # - zip -r dist.zip .
+            artifacts:
+              - dist/**        
+      - step:
+          name: Deploy to S3
+          deployment: production
+          script:
+            - pipe: atlassian/aws-s3-deploy:1.1.0
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: 'ap-southeast-1'
+                S3_BUCKET: 'app.asthait.com'
+                ACL: "public-read"
+                LOCAL_PATH: 'dist'
+            # - pipe: atlassian/aws-cloudfront-invalidate:0.1.1
+            #   variables:
+            #     AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+            #     AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+            #     AWS_DEFAULT_REGION:  'ap-southeast-1'
+            #     DISTRIBUTION_ID: 'E3K7MQP8UCPF76'               
