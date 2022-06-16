@@ -2,8 +2,8 @@ import moment from 'moment';
 
 // Find the all the dates between two dates.
 const getDatesInRange = ({ start, end, format, holidays }) => {
-  start = moment(start.format('DD-MMM-YYYY'));
-  end = moment(end.format('DD-MMM-YYYY'));
+  start = moment(moment(start).format('DD-MMM-YYYY'));
+  end = moment(moment(end).format('DD-MMM-YYYY'));
 
   const dates = [],
     diff = end.diff(start, 'days');
