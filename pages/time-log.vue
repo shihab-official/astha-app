@@ -175,7 +175,7 @@ export default {
         entry: {},
         exit: {},
       },
-      date: moment(),
+      date: this.$route.query.date ? moment(this.$route.query.date, 'DD-MMM-YYYY') : moment(),
       logs: {},
     };
   },
@@ -183,6 +183,9 @@ export default {
     ...mapGetters('user', ['users']),
   },
   watch: {
+    '$route.query.date': function(newDate, oldDate) {
+      this.date = newDate ? moment(newDate, 'DD-MMM-YYYY') : moment();
+    },
     date: function (newDate, oldDate) {
       this.getTimeLog(newDate);
     },
@@ -212,8 +215,6 @@ export default {
 
     handleClose(user, type, open) {
       this.config[type] = {...this.config[type], [user.user_name]: open};
-      // this.config[type][user.user_name] = open;
-      // this.config[type] = {...this.config[type]};
       if (!open) {
         const moment = this.$refs[`${type}_${user.user_name}`][0].value;
         if (moment) {
@@ -239,8 +240,9 @@ export default {
     },
 
     onDateChange(moment) {
-      this.date = moment;
-      this.logs = {};
+      this.$router.push({query: { date: moment.format(this.config.dateFormat) }});
+      // this.date = moment;
+      // this.logs = {};
     },
 
     onLateEntryChange(user, late) {
@@ -275,6 +277,7 @@ export default {
           },
         })
         .then((res) => {
+          this.logs = {};
           res.data.forEach((log) => {
             this.logs[log.user_name] = {
               late: log.late || false,
