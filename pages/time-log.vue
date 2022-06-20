@@ -46,7 +46,11 @@
               }}</NuxtLink>
             </td>
             <template v-if="logs[user.user_name] && logs[user.user_name].leave">
-              <td class="text-center relative font-bold bg-red-50 text-red-500" style="height: 45px;" colspan="100%">
+              <td
+                class="text-center relative font-bold bg-red-50 text-red-500"
+                style="height: 45px"
+                colspan="100%"
+              >
                 On leave
               </td>
             </template>
@@ -60,24 +64,24 @@
                 />
               </td>
               <td class="text-center relative">
-                <form @keyup.enter="handleClose(user, 'entry', i, false)">
+                <form @keyup.enter="handleClose(user, 'entry', false)">
                   <a-time-picker
                     class="entry"
                     style="width: 100%"
-                    ref="entry"
+                    :ref="`entry_${user.user_name}`"
                     use12-hours
                     :value="logs[user.user_name] && logs[user.user_name].entry"
                     :format="config.timeFormat"
-                    :open="config.entry[i]"
+                    :open="config.entry[user.user_name]"
                     :getPopupContainer="parentContainer"
-                    @openChange="handleClose(user, 'entry', i, $event)"
+                    @openChange="handleClose(user, 'entry', $event)"
                     @change="onTimeChange(user, 'entry', $event)"
                   >
                     <a-button
                       slot="addon"
                       size="small"
                       type="primary"
-                      @click="handleClose(user, 'entry', i, false)"
+                      @click="handleClose(user, 'entry', false)"
                     >
                       Ok
                     </a-button>
@@ -85,24 +89,24 @@
                 </form>
               </td>
               <td class="text-center relative">
-                <form @keyup.enter="handleClose(user, 'exit', i, false)">
+                <form @keyup.enter="handleClose(user, 'exit', false)">
                   <a-time-picker
                     class="exit"
                     style="width: 100%"
                     use12-hours
-                    ref="exit"
+                    :ref="`exit_${user.user_name}`"
                     :value="logs[user.user_name] && logs[user.user_name].exit"
                     :format="config.timeFormat"
-                    :open="config.exit[i]"
+                    :open="config.exit[user.user_name]"
                     :getPopupContainer="parentContainer"
-                    @openChange="handleClose(user, 'exit', i, $event)"
+                    @openChange="handleClose(user, 'exit', $event)"
                     @change="onTimeChange(user, 'exit', $event)"
                   >
                     <a-button
                       slot="addon"
                       size="small"
                       type="primary"
-                      @click="handleClose(user, 'exit', i, false)"
+                      @click="handleClose(user, 'exit', false)"
                     >
                       Ok
                     </a-button>
@@ -168,8 +172,8 @@ export default {
       config: {
         dateFormat: 'DD-MMM-YYYY',
         timeFormat: 'h:mm a',
-        entry: [],
-        exit: [],
+        entry: {},
+        exit: {},
       },
       date: moment(),
       logs: {},
@@ -183,9 +187,12 @@ export default {
       this.getTimeLog(newDate);
     },
     users: function () {
-      const l = this.users.length;
-      this.config.entry = Array(l).fill(false);
-      this.config.exit = Array(l).fill(false);
+      const timePickers = {};
+      this.users.forEach((user) => {
+        timePickers[user.user_name] = false;
+      });
+      this.config.entry = timePickers;
+      this.config.exit = timePickers;
     },
   },
   mounted: function () {
@@ -203,11 +210,12 @@ export default {
       return triggerNode.parentNode;
     },
 
-    handleClose(user, type, index, open) {
-      this.config[type][index] = open;
-      this.config[type] = [...this.config[type]];
+    handleClose(user, type, open) {
+      this.config[type] = {...this.config[type], [user.user_name]: open};
+      // this.config[type][user.user_name] = open;
+      // this.config[type] = {...this.config[type]};
       if (!open) {
-        const moment = this.$refs[type][index].value;
+        const moment = this.$refs[`${type}_${user.user_name}`][0].value;
         if (moment) {
           this.update(user, type, moment);
         }
