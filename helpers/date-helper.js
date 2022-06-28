@@ -32,11 +32,9 @@ const getDatesInRange = ({ start, end, format, holidays }) => {
   return dates;
 };
 
-const startOfDay = (date, format) => {
-  return new Date(
-    (format ? moment(date, format) : moment(date)).format('YYYY-MM-DD') +
-      ' 00:00:00'
-  );
+const startOfDay = (date) => {
+  const m = moment(date);
+  return new Date(m.year(), m.month(), m.date());
 };
 
 export { getDatesInRange, startOfDay };
